@@ -18,6 +18,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Exception_Grid extends Ma
     public function __construct() {
         parent::__construct();
         $this->setId('amazonpayments_log_exception_grid');
+        $this->setFilterVisibility(false);
         $this->setSaveParametersInSession(true);
     }
 
@@ -34,12 +35,15 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Exception_Grid extends Ma
             'index'         => 'timestamp',
             'type'          => 'datetime',
             'width'         => '150px',
+            'renderer'      => 'Creativestyle_AmazonPayments_Block_Adminhtml_Renderer_Timestamp',
+            'filter'        => false,
             'sortable'      => false
         ));
 
         $this->addColumn('exception_message', array(
             'header'        => Mage::helper('amazonpayments')->__('Exception message'),
             'index'         => 'exception_message',
+            'filter'        => false,
             'sortable'      => false
         ));
 
@@ -48,6 +52,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Exception_Grid extends Ma
             'index'         => 'exception_code',
             'align'         => 'center',
             'width'         => '50px',
+            'filter'        => false,
             'sortable'      => false
         ));
 

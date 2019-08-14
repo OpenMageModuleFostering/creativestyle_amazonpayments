@@ -39,7 +39,7 @@ abstract class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Abstract extends
                     'class'     => 'scalable',
                     'disabled'  => true
                 ), -1);
-            }            
+            }
         }
         return parent::_prepareLayout();
     }

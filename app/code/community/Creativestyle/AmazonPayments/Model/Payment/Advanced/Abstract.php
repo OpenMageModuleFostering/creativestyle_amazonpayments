@@ -159,18 +159,11 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         }
         $checkResult->isAvailable = $isActive;
         $checkResult->isDeniedInConfig = !$isActive;
-        try {
-            Mage::dispatchEvent('payment_method_is_active', array(
-                'result' => $checkResult,
-                'method_instance' => $this,
-                'quote' => $quote,
-            ));
-            if ($isActive && !$checkResult->isAvailable) {
-                throw new Creativestyle_AmazonPayments_Exception($this->getTitle() . ' payment has been disabled while processing \'payment_method_is_active\' event.');
-            }
-        } catch (Exception $e) {
-            Creativestyle_AmazonPayments_Model_Logger::logPaymentAvailabilityException($e);
-        }
+        Mage::dispatchEvent('payment_method_is_active', array(
+            'result' => $checkResult,
+            'method_instance' => $this,
+            'quote' => $quote,
+        ));
         return $checkResult->isAvailable;
     }
 
@@ -272,7 +265,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
     public function order(Varien_Object $payment, $amount) {
         $order = $payment->getOrder();
 
-        $this->_getApi()->setOrderReferenceDetails($order->getExtOrderId(), $amount, $order->getBaseCurrencyCode());
+        $this->_getApi()->setOrderReferenceDetails($order->getExtOrderId(), $amount, $order->getBaseCurrencyCode(), $order->getIncrementId());
         $this->_getApi()->confirmOrderReference($order->getExtOrderId());
 
         $payment->setIsTransactionClosed(false);

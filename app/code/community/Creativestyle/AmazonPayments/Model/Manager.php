@@ -325,7 +325,7 @@ class Creativestyle_AmazonPayments_Model_Manager {
 */
         // check if authorization should be re-submitted
         $authTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH);
-        if ($authTransaction && $authTransaction->getIsClosed()) {
+        if ($authTransaction && $authTransaction->getIsClosed() && ($order->getBaseTotalDue() > 0)) {
             $payment->authorize(true, $order->getBaseTotalDue())->save();
 //            $transactionSave->addObject($payment);
         }

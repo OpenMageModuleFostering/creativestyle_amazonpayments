@@ -297,8 +297,10 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
             Creativestyle_AmazonPayments_Model_Logger::logException($e);
             Mage::helper('checkout')->sendPaymentFailedEmail($this->_getQuote(), $e->getMessage());
             $this->_getCheckoutSession()->addError($this->__('There was an error processing your order. Please contact us or try again later.'));
-            $this->_redirect('checkout/cart');
-            return;
+            $result = array();
+            $result['success'] = false;
+            $result['redirect'] = Mage::getUrl('checkout/cart');
+            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         }
     }
 

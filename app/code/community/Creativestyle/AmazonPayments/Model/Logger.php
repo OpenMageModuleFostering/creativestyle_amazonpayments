@@ -130,19 +130,6 @@ final class Creativestyle_AmazonPayments_Model_Logger {
         }
     }
 
-    /**
-     * Logs an exception thrown by isAvailable() method of APA payment model.
-     * This exception indicates modification of payment method availability
-     * done during dispatching payment_method_is_available event
-     *
-     * @param Exception $e
-     */
-    public static function logPaymentAvailabilityException(Exception $e) {
-        if (self::_getConfig()->isPaymentAvailabilityLogEnabled()) {
-            self::logException($e);
-        }
-    }
-
     public static function getColumnMapping($logType) {
         switch ($logType) {
             case 'api':

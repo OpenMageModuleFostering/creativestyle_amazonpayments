@@ -37,7 +37,7 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
         return null;
     }
 
-    public function setOrderReferenceDetails($orderReferenceId, $orderAmount, $orderCurrency) {
+    public function setOrderReferenceDetails($orderReferenceId, $orderAmount, $orderCurrency, $magentoOrderId = null) {
         $request = new OffAmazonPaymentsService_Model_SetOrderReferenceDetailsRequest(array(
             'SellerId' => $this->getMerchantId(),
             'AmazonOrderReferenceId' => $orderReferenceId,
@@ -46,7 +46,8 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 'OrderTotal' => array(
                     'Amount' => $orderAmount,
                     'CurrencyCode' => $orderCurrency
-                )
+                ),
+                'SellerOrderAttributes' => ($magentoOrderId ? array('SellerOrderId' => $magentoOrderId) : null)
             )
         ));
         $response = $this->_getApi()->setOrderReferenceDetails($request);

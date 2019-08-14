@@ -40,7 +40,6 @@ class Creativestyle_AmazonPayments_Model_Config {
 
     const XML_PATH_DEVELOPER_ALLOWED_IPS        = 'amazonpayments/developer/allowed_ips';
     const XML_PATH_DEVELOPER_LOG_ACTIVE         = 'amazonpayments/developer/log_active';
-    const XML_PATH_DEVELOPER_AVAILABILITY_LOG   = 'amazonpayments/developer/log_availability';
 
     protected $_config = null;
     protected $_globalData = null;
@@ -231,7 +230,4 @@ class Creativestyle_AmazonPayments_Model_Config {
         return Mage::getStoreConfigFlag(self::XML_PATH_DEVELOPER_LOG_ACTIVE);
     }
 
-    public function isPaymentAvailabilityLogEnabled() {
-        return Mage::getStoreConfigFlag(self::XML_PATH_DEVELOPER_AVAILABILITY_LOG);
-    }
 }

@@ -63,7 +63,7 @@ ol.apa.desktop-layout {
     margin-top: 0;
 }
 .apa .section {
-    margin: 0 0 15px 0;    
+    margin: 0 0 15px 0;
 }
 .apa .store-widget {
     clear: both;
@@ -77,6 +77,15 @@ ol.apa.desktop-layout {
 }
 .desktop-layout .amazon-widget {
     float: left;
+}
+.apa .amazon-widget-overlay {
+    position: fixed;
+    display: block;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
 }
 .apa .step-title {
     margin: 12px;

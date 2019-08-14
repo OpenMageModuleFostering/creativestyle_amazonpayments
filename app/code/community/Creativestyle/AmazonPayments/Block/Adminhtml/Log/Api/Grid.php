@@ -18,6 +18,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api_Grid extends Mage_Adm
     public function __construct() {
         parent::__construct();
         $this->setId('amazonpayments_log_api_grid');
+        $this->setFilterVisibility(false);
         $this->setSaveParametersInSession(true);
     }
 
@@ -34,18 +35,22 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api_Grid extends Mage_Adm
             'index'         => 'timestamp',
             'type'          => 'datetime',
             'width'         => '150px',
+            'renderer'      => 'Creativestyle_AmazonPayments_Block_Adminhtml_Renderer_Timestamp',
+            'filter'        => false,
             'sortable'      => false
         ));
 
         $this->addColumn('call_action', array(
             'header'        => Mage::helper('amazonpayments')->__('Action'),
             'index'         => 'call_action',
+            'filter'        => false,
             'sortable'      => false
         ));
 
         $this->addColumn('call_url', array(
             'header'        => Mage::helper('amazonpayments')->__('URL'),
             'index'         => 'call_url',
+            'filter'        => false,
             'sortable'      => false
         ));
 
@@ -54,6 +59,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api_Grid extends Mage_Adm
             'index'         => 'response_code',
             'align'         => 'center',
             'width'         => '50px',
+            'filter'        => false,
             'sortable'      => false
         ));
 

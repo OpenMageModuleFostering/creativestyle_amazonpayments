@@ -38,28 +38,52 @@ class Creativestyle_AmazonPayments_Model_Log_Collection extends Varien_Data_Coll
     }
 
     protected function _loadData() {
-        if (empty($this->_items)) {
-            $logFilePath = Creativestyle_AmazonPayments_Model_Logger::getAbsoluteLogFilePath($this->_logType);
-            if (file_exists($logFilePath)) {
-                if (($fileHandle = fopen($logFilePath, 'r')) !== false) {
-                    $id = 0;
-                    $columnMapping = Creativestyle_AmazonPayments_Model_Logger::getColumnMapping($this->_logType);
-                    while (($row = fgetcsv($fileHandle, 0, $this->_getConfig()->getLogDelimiter(), $this->_getConfig()->getLogEnclosure())) !== false) {
-                        $log = array('id' => ++$id);
-                        foreach ($columnMapping as $index => $columnName) {
-                            $log[$columnName] = isset($row[$index]) ? $row[$index] : '';
-                        }
-                        if ($log = $this->_applyFilters($log)) {
-                            $this->addItem(new Varien_Object($log));
-                        }
+        if ($this->isLoaded()) {
+            return $this;
+        }
+
+        $logFilePath = Creativestyle_AmazonPayments_Model_Logger::getAbsoluteLogFilePath($this->_logType);
+
+        if (file_exists($logFilePath)) {
+
+            $logArray = array();
+
+            if (($fileHandle = fopen($logFilePath, 'r')) !== false) {
+                $id = 0;
+                $columnMapping = Creativestyle_AmazonPayments_Model_Logger::getColumnMapping($this->_logType);
+                while (($row = fgetcsv($fileHandle, 0, $this->_getConfig()->getLogDelimiter(), $this->_getConfig()->getLogEnclosure())) !== false) {
+                    $log = array('id' => ++$id);
+                    foreach ($columnMapping as $index => $columnName) {
+                        $log[$columnName] = isset($row[$index]) ? $row[$index] : '';
+                    }
+                    if ($log = $this->_applyFilters($log)) {
+                        $logArray[] = new Varien_Object($log);
                     }
                 }
             }
+
+            if (!empty($logArray)) {
+                krsort($logArray);
+                $this->_totalRecords = count($logArray);
+                $this->_setIsLoaded();
+                $from = ($this->getCurPage() - 1) * $this->getPageSize();
+                $to = $from + $this->getPageSize() - 1;
+                $isPaginated = $this->getPageSize() > 0;
+                $count = 0;
+                foreach ($logArray as $log) {
+                    $count++;
+                    if ($isPaginated && ($count < $from || $count > $to)) {
+                        continue;
+                    }
+                    $this->addItem($log);
+                }
+            }
         }
-        return $this->_sortCollection();
+
+        return $this;
     }
 
-    protected function _sortCollection() {
+    protected function _sortArray() {
         if (!empty($this->_items)) {
             krsort($this->_items);
         }

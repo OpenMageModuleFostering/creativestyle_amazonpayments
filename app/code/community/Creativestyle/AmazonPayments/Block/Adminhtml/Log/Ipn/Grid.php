@@ -18,6 +18,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Ipn_Grid extends Mage_Adm
     public function __construct() {
         parent::__construct();
         $this->setId('amazonpayments_log_ipn_grid');
+        $this->setFilterVisibility(false);
         $this->setSaveParametersInSession(true);
     }
 
@@ -34,12 +35,15 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Ipn_Grid extends Mage_Adm
             'index'         => 'timestamp',
             'type'          => 'datetime',
             'width'         => '150px',
+            'renderer'      => 'Creativestyle_AmazonPayments_Block_Adminhtml_Renderer_Timestamp',
+            'filter'        => false,
             'sortable'      => false
         ));
 
         $this->addColumn('notification_type', array(
             'header'        => Mage::helper('amazonpayments')->__('Notification type'),
             'index'         => 'notification_type',
+            'filter'        => false,
             'sortable'      => false
         ));
 
@@ -48,6 +52,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Ipn_Grid extends Mage_Adm
             'index'         => 'response_code',
             'align'         => 'center',
             'width'         => '80px',
+            'filter'        => false,
             'sortable'      => false
         ));
 

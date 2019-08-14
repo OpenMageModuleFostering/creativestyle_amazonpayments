@@ -17,7 +17,7 @@
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.1.0</version>
+            <version>1.1.2</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -105,10 +105,6 @@
                 <regions>
                     <de>Germany</de>
                     <uk>United Kingdom</uk>
-                    <us>United States</us>
-                    <!--
-                    <na>North America</na>
-                    -->
                 </regions>
                 <button_urls>
                     <de>
@@ -119,14 +115,6 @@
                         <sandbox>https://payments-sandbox.amazon.co.uk/gp/widgets/button</sandbox>
                         <live>https://payments.amazon.co.uk/gp/widgets/button</live>
                     </uk>
-                    <us>
-                        <sandbox>https://payments-sandbox.amazon.com/gp/widgets/button</sandbox>
-                        <live>https://payments.amazon.com/gp/widgets/button</live>
-                    </us>
-                    <na>
-                        <sandbox>https://payments-sandbox.amazon.com/gp/widgets/button</sandbox>
-                        <live>https://payments.amazon.com/gp/widgets/button</live>
-                    </na>
                 </button_urls>
                 <objects>
                     <OrderReference>
@@ -210,7 +198,7 @@
                                     <ExpiredUnused>
                                         <simulation_allowed>1</simulation_allowed>
                                         <simulation_options>
-                                            <ExpirationTimeInMins>60</ExpirationTimeInMins>
+                                            <ExpirationTimeInMins type="int">60</ExpirationTimeInMins>
                                         </simulation_options>
                                     </ExpiredUnused>
                                     <MaxCapturesProcessed>
@@ -409,7 +397,6 @@
             </design>
             <developer>
                 <log_active>1</log_active>
-                <log_availability>0</log_availability>
             </developer>
         </amazonpayments>
     </default>
