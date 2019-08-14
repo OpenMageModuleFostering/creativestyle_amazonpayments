@@ -1,26 +1,29 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Lookup_Design_Button_Size_LoginPay extends Creativestyle_AmazonPayments_Model_Lookup_Abstract {
-
+class Creativestyle_AmazonPayments_Model_Lookup_Design_Button_Size_LoginPay
+    extends Creativestyle_AmazonPayments_Model_Lookup_Abstract
+{
     const SIZE_SMALL    = 'small';
     const SIZE_MEDIUM   = 'medium';
     const SIZE_LARGE    = 'large';
     const SIZE_XLARGE   = 'x-large';
 
-    public function toOptionArray() {
+    public function toOptionArray() 
+    {
         if (null === $this->_options) {
             $this->_options = array(
                 array('value' => self::SIZE_SMALL, 'label' => Mage::helper('amazonpayments')->__('Small')),
@@ -29,7 +32,7 @@ class Creativestyle_AmazonPayments_Model_Lookup_Design_Button_Size_LoginPay exte
                 array('value' => self::SIZE_XLARGE, 'label' => Mage::helper('amazonpayments')->__('X-Large'))
             );
         }
+
         return $this->_options;
     }
-
 }

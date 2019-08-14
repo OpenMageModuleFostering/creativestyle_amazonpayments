@@ -1,51 +1,98 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2015 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Grid_Abstract extends Mage_Adminhtml_Block_Widget_Grid {
+abstract class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Grid_Abstract extends Mage_Adminhtml_Block_Widget_Grid
+{
+    /**
+     * @inheritdoc
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setId('amazonpayments_log_' . $this->getLogType() . '_grid');
+        $this->setFilterVisibility(false);
+        $this->setSaveParametersInSession(true);
+    }
 
-    protected $_logType = null;
+    /**
+     * Returns collection of the logs of the given type
+     *
+     * @return Creativestyle_AmazonPayments_Model_Log_Collection
+     */
+    protected function _getLogCollection()
+    {
+        /** @var Creativestyle_AmazonPayments_Model_Log_Collection $collection */
+        $collection = Mage::getModel('amazonpayments/log_collection');
+        return $collection->setLogType($this->getLogType());
+    }
 
-    protected function _prepareCollection() {
-        $collection = Mage::getModel('amazonpayments/log_collection')->setLogType($this->_logType);
-        $this->setCollection($collection);
+    /**
+     * @inheritdoc
+     */
+    protected function _prepareCollection()
+    {
+        $this->setCollection($this->_getLogCollection());
         return parent::_prepareCollection();
     }
 
-    protected function _prepareColumns() {
-        $this->addColumn('preview_action', array(
-            'header'    => Mage::helper('amazonpayments')->__('Preview'),
-            'type'      => 'action',
-            'align'     => 'center',
-            'width'     => '50px',
-            'getter'    => 'getId',
-            'actions'   => array(
-                array(
-                    'caption' => Mage::helper('amazonpayments')->__('Preview'),
-                    'url'     => array('base' => '*/*/view'),
-                    'field'   => 'id'
+    /**
+     * Prepares columns for the log grid
+     *
+     * @return $this
+     */
+    protected function _prepareColumns()
+    {
+        $this->addColumn(
+            'preview_action',
+            array(
+                'header'    => $this->__('Preview'),
+                'type'      => 'action',
+                'align'     => 'center',
+                'width'     => '50px',
+                'getter'    => 'getId',
+                'filter'    => false,
+                'sortable'  => false,
+                'is_system' => true,
+                'actions'   => array(
+                    array(
+                        'caption'   => $this->__('Preview'),
+                        'url'       => array('base' => '*/*/view'),
+                        'field'     => 'id'
+                    )
                 )
-            ),
-            'filter'    => false,
-            'sortable'  => false,
-            'is_system' => true
-        ));
+            )
+        );
         return parent::_prepareColumns();
     }
 
-    public function getRowUrl($row) {
+    /**
+     * Returns row url for js event handlers
+     *
+     * @param Varien_Object $row
+     * @return string
+     */
+    public function getRowUrl($row)
+    {
         return $this->getUrl('*/*/view', array('id' => $row->getId()));
     }
 
+    /**
+     * Returns the type of handled log
+     *
+     * @return string
+     */
+    abstract public function getLogType();
 }

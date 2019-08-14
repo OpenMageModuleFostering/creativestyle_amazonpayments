@@ -1,17 +1,18 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
 
 /**
@@ -20,9 +21,15 @@
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
  */
-class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract {
-
-    protected function _getConfig() {
+class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
+{
+    /**
+     * Returns instance of Amazon Payments config object
+     *
+     * @return Creativestyle_AmazonPayments_Model_Config
+     */
+    protected function _getConfig()
+    {
         return Mage::getSingleton('amazonpayments/config');
     }
 
@@ -30,14 +37,16 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
      * Sends an email to the customer if authorization has been declined
      *
      * @param Mage_Sales_Model_Order $order
-     *
-     * @return Creativestyle_AmazonPayments_Helper_Data
+     * @return $this
      */
-    public function sendAuthorizationDeclinedEmail($order) {
+    public function sendAuthorizationDeclinedEmail($order) 
+    {
+        /** @var Mage_Core_Model_Translate $translate */
         $translate = Mage::getSingleton('core/translate');
         $translate->setTranslateInline(false);
-        $mailTemplate = Mage::getModel('core/email_template');
 
+        /** @var Mage_Core_Model_Email_Template $mailTemplate */
+        $mailTemplate = Mage::getModel('core/email_template');
         $mailTemplate->setDesignConfig(array('area' => 'frontend', 'store' => $order->getStore()->getId()))
             ->sendTransactional(
                 $this->_getConfig()->getAuthorizationDeclinedEmailTemplate($order->getStore()->getId()),
@@ -59,7 +68,8 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
-    public function getAvailablePaymentMethods() {
+    public function getAvailablePaymentMethods() 
+    {
         return array(
             'amazonpayments_advanced',
             'amazonpayments_advanced_sandbox'
@@ -71,115 +81,141 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function isMobileDevice() {
+    public function isMobileDevice() 
+    {
         $userAgent = Mage::app()->getRequest()->getServer('HTTP_USER_AGENT');
         if (empty($userAgent)) {
             return false;
         }
-        return preg_match('/iPhone|iPod|BlackBerry|Palm|Googlebot-Mobile|Mobile|mobile|mobi|Windows Mobile|Safari Mobile|Android|Opera Mini/', $userAgent);
+
+        return preg_match(
+            '/iPhone|iPod|BlackBerry|Palm|Googlebot-Mobile|Mobile'
+                .'|mobile|mobi|Windows Mobile|Safari Mobile|Android|Opera Mini/',
+            $userAgent
+        );
     }
 
     /**
-     * @deprecated deprecated since 1.6.2
-     */
-    public function getTransactionStatus($transaction) {
-        $statusArray = $transaction->getAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS);
-        if (is_array($statusArray) && array_key_exists('State', $statusArray)) {
-            return $statusArray['State'];
-        }
-        return null;
-    }
-
-    /**
-     * TODO: [getTransactionInformation description]
+     * Splits customer name into first and last name
+     * and returns it as an object
      *
-     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
-     * @param string $key
-     *
-     * @return array|string|null
+     * @param string $customerName
+     * @param string $emptyValuePlaceholder
+     * @return Varien_Object
      */
-    public function getTransactionInformation($transaction, $key = null) {
-        $additionalInformation = $transaction->getAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS);
-        if (is_array($additionalInformation)) {
-            if (null !== $key) {
-                if (array_key_exists($key, $additionalInformation)) {
-                    return $additionalInformation[$key];
-                }
-            } else {
-                return $additionalInformation;
-            }
-        }
-        return null;
-    }
-
-    public function getTransactionReasonCode($transaction) {
-        $statusArray = $transaction->getAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS);
-        if (is_array($statusArray) && array_key_exists('ReasonCode', $statusArray)) {
-            return $statusArray['ReasonCode'];
-        }
-        return null;
-    }
-
-    public function explodeCustomerName($customerName, $emptyValuePlaceholder = 'n/a') {
+    public function explodeCustomerName($customerName, $emptyValuePlaceholder = 'n/a')
+    {
         $explodedName = explode(' ', trim($customerName));
         $result = array();
         if (count($explodedName) > 1) {
             $result['firstname'] = array_shift($explodedName);
             $result['lastname'] = implode(' ', $explodedName);
         } else {
-            $result['firstname'] = $emptyValuePlaceholder ? Mage::helper('amazonpayments')->__($emptyValuePlaceholder) : null;
+            $result['firstname'] = $emptyValuePlaceholder
+                ? Mage::helper('amazonpayments')->__($emptyValuePlaceholder) : null;
             $result['lastname'] = reset($explodedName);
         }
+
         return new Varien_Object($result);
     }
 
-    public function getHeadCss() {
-        if ($this->_getConfig()->isActive()) {
+    /**
+     * Returns extension common CSS
+     *
+     * @return string|null
+     */
+    public function getHeadCss() 
+    {
+        if ($this->_getConfig()->isPayActive() || $this->_getConfig()->isLoginActive()) {
             return 'creativestyle/css/amazonpayments.css';
         }
+
+        return null;
     }
 
-    public function getWidgetsCss() {
-        if ($this->_getConfig()->isActive()) {
+    /**
+     * Returns Amazon Pay widgets CSS
+     *
+     * @return string|null
+     */
+    public function getWidgetsCss() 
+    {
+        if ($this->_getConfig()->isPayActive()) {
             if ($this->_getConfig()->isResponsive()) {
                 return 'creativestyle/css/amazonpayments-responsive-widgets.css';
             } else {
                 return 'creativestyle/css/amazonpayments-widgets.css';
             }
         }
+
+        return null;
     }
 
-    public function getHeadJs() {
-        if ($this->_getConfig()->isActive()) {
-            if ($this->_getConfig()->isSandbox()) {
-                return 'creativestyle/apa_checkout.js';
-            }
-            return 'creativestyle/apa_checkout.min.js';
-        }
-    }
-
-    public function getHeadTooltipJs() {
-        if ($this->_getConfig()->isActive()) {
+    /**
+     * Returns Prototype Tooltip library JS
+     *
+     * @return string|null
+     */
+    public function getTooltipJs()
+    {
+        if ($this->_getConfig()->isPayActive()) {
             return 'prototype/tooltip.js';
         }
+
+        return null;
     }
 
-    public function getPayWithAmazonButton($buttonType = null, $buttonSize = null, $buttonColor = null, $idSuffix = null) {
-        return Mage::getSingleton('core/layout')->createBlock('amazonpayments/pay_button')
-            ->setData('button_type', $buttonType)
-            ->setData('button_size', $buttonSize)
-            ->setData('button_color', $buttonColor)
-            ->setData('id_suffix', $idSuffix)
+    /**
+     * Returns Amazon Pay button HTML markup
+     *
+     * @param string|null $buttonType
+     * @param string|null $buttonSize
+     * @param string|null $buttonColor
+     * @param string|null $idSuffix
+     * @return string
+     */
+    public function getPayWithAmazonButton(
+        $buttonType = null,
+        $buttonSize = null,
+        $buttonColor = null,
+        $idSuffix = null
+    ) {
+        /** @var Mage_Core_Model_Layout $layout */
+        $layout = Mage::getSingleton('core/layout');
+        /** @var Creativestyle_AmazonPayments_Block_Pay_Button $block */
+        $block = $layout->createBlock('amazonpayments/pay_button');
+
+        return $block->setButtonType($buttonType)
+            ->setButtonSize($buttonSize)
+            ->setButtonColor($buttonColor)
+            ->setIdSuffix($idSuffix)
             ->toHtml();
     }
 
-    public function getLoginWithAmazonButton($buttonType = null, $buttonSize = null, $buttonColor = null, $idSuffix = null) {
-        return Mage::getSingleton('core/layout')->createBlock('amazonpayments/login_button')
-            ->setData('button_type', $buttonType)
-            ->setData('button_size', $buttonSize)
-            ->setData('button_color', $buttonColor)
-            ->setData('id_suffix', $idSuffix)
+    /**
+     * Returns Login with Amazon button HTML markup
+     *
+     * @param string|null $buttonType
+     * @param string|null $buttonSize
+     * @param string|null $buttonColor
+     * @param string|null $idSuffix
+     * @return string
+     */
+    public function getLoginWithAmazonButton(
+        $buttonType = null,
+        $buttonSize = null,
+        $buttonColor = null,
+        $idSuffix = null
+    ) {
+        /** @var Mage_Core_Model_Layout $layout */
+        $layout = Mage::getSingleton('core/layout');
+        /** @var Creativestyle_AmazonPayments_Block_Login_Button $block */
+        $block = $layout->createBlock('amazonpayments/login_button');
+
+        return $block->setButtonType($buttonType)
+            ->setButtonSize($buttonSize)
+            ->setButtonColor($buttonColor)
+            ->setIdSuffix($idSuffix)
             ->toHtml();
     }
-
 }

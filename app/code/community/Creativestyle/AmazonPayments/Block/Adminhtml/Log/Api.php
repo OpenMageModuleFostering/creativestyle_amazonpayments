@@ -1,26 +1,38 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api extends Creativestyle_AmazonPayments_Block_Adminhtml_Log_Abstract {
+class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api extends
+ Creativestyle_AmazonPayments_Block_Adminhtml_Log_Abstract
+{
+    const LOG_TYPE = 'api';
+    const LOG_TITLE = 'Amazon Pay API Calls';
 
-    protected $_logType = 'api';
-
-    public function __construct() {
-        parent::__construct();
-        $this->_controller = 'adminhtml_log_api';
-        $this->_headerText = Mage::helper('amazonpayments')->__('Amazon Pay API Calls');
+    /**
+     * @inheritdoc
+     */
+    public function getLogType()
+    {
+        return self::LOG_TYPE;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getTitle()
+    {
+        return self::LOG_TITLE;
+    }
 }

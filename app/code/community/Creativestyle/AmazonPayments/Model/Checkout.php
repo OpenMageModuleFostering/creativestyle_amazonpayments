@@ -1,36 +1,47 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Type_Onepage {
-
-    protected function _getConfig() {
+class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Type_Onepage
+{
+    /**
+     * Returns instance of Amazon Payments config object
+     *
+     * @return Creativestyle_AmazonPayments_Model_Config
+     */
+    protected function _getConfig()
+    {
         return Mage::getSingleton('amazonpayments/config');
     }
 
-    protected function _getPaymentMethod() {
-        if ($this->_getConfig()->isSandbox()) {
+    protected function _getPaymentMethod()
+    {
+        if ($this->_getConfig()->isSandboxActive()) {
             return array('method' => 'amazonpayments_advanced_sandbox');
         }
+
         return array('method' => 'amazonpayments_advanced');
     }
 
-    protected function _sanitizeShippingAddress($addressData) {
+    protected function _sanitizeShippingAddress($addressData)
+    {
         $allowedCountries = explode(',', (string)Mage::getStoreConfig('general/country/allow'));
         if (!(isset($addressData['country_id']) && in_array($addressData['country_id'], $allowedCountries))) {
             $addressData['country_id'] = null;
         }
+
         return $addressData;
     }
 
@@ -44,10 +55,12 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
         if ($couponCode = $this->getCheckout()->getCartCouponCode()) {
             $this->getQuote()->setCouponCode($couponCode);
         }
+
         return $this;
     }
 
-    public function savePayment($data) {
+    public function savePayment($data)
+    {
         $data = $this->_getPaymentMethod();
         if ($this->getQuote()->isVirtual()) {
             $this->getQuote()->getBillingAddress()->setPaymentMethod(isset($data['method']) ? $data['method'] : null);
@@ -78,7 +91,8 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
         return array();
     }
 
-    public function saveShipping($data, $customerAddressId) {
+    public function saveShipping($data, $customerAddressId)
+    {
         if (empty($data)) {
             return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid data.'));
         }
@@ -122,15 +136,18 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
         return array();
     }
 
-    public function saveShippingMethod($shippingMethod) {
+    public function saveShippingMethod($shippingMethod)
+    {
         if (empty($shippingMethod)) {
             $this->getQuote()->getShippingAddress()->unsetShippingMethod();
             return array();
         }
+
         $rate = $this->getQuote()->getShippingAddress()->getShippingRateByCode($shippingMethod);
         if (!$rate) {
-            return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid shipping method.'));
+            throw new Creativestyle_AmazonPayments_Exception(Mage::helper('checkout')->__('Invalid shipping method.'));
         }
+
         $this->getQuote()->getShippingAddress()
             ->setShippingMethod($shippingMethod)
             ->collectTotals()
@@ -143,7 +160,8 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
         return array();
     }
 
-    public function saveOrder() {
+    public function saveOrder() 
+    {
         $this->getQuote()->collectTotals();
         $this->validate();
         $isNewCustomer = false;
@@ -160,6 +178,7 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
                 break;
         }
 
+        /** @var Creativestyle_AmazonPayments_Model_Service_Quote $service */
         $service = Mage::getModel('amazonpayments/service_quote', $this->getQuote());
         $service->submitOrder();
 
@@ -177,15 +196,16 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
 
         $order = $service->getOrder();
         if ($order) {
-            Mage::dispatchEvent('checkout_type_onepage_save_order_after',
-                array('order' => $order, 'quote' => $this->getQuote()));
+            Mage::dispatchEvent(
+                'checkout_type_onepage_save_order_after',
+                array('order' => $order, 'quote' => $this->getQuote())
+            );
 
             // add order information to the session
             $this->_checkoutSession->setLastOrderId($order->getId())
                 ->setLastRealOrderId($order->getIncrementId())
-                ->setOrderReferenceId(null)
+                ->setAmazonOrderReferenceId(null)
                 ->setAmazonSequenceNumber(null);
-
         }
 
         Mage::dispatchEvent(

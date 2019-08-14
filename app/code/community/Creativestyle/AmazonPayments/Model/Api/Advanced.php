@@ -1,33 +1,52 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_AmazonPayments_Model_Api_Abstract {
-
-    protected function _getApi() {
+class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_AmazonPayments_Model_Api_Abstract
+{
+    /**
+     * Returns Amazon Pay API client instance
+     *
+     * @return OffAmazonPaymentsService_Client
+     */
+    protected function _getApi()
+    {
         if (null === $this->_api) {
-            $this->_api = new OffAmazonPaymentsService_Client($this->_getConfig()->getConnectionData(null, $this->_store));
+            $this->_api = new OffAmazonPaymentsService_Client(
+                $this->_getConfig()->getApiConnectionParams($this->_store)
+            );
         }
+
         return $this->_api;
     }
 
-    public function getOrderReferenceDetails($orderReferenceId, $accessToken = null) {
-        $request = new OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonOrderReferenceId' => $orderReferenceId,
-            'AddressConsentToken' => $accessToken
-        ));
+    /**
+     * @param string $orderReferenceId
+     * @param string|null $accessToken
+     * @return OffAmazonPaymentsService_Model_OrderReferenceDetails|null
+     */
+    public function getOrderReferenceDetails($orderReferenceId, $accessToken = null)
+    {
+        $request = new OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonOrderReferenceId' => $orderReferenceId,
+                'AddressConsentToken' => $accessToken
+            )
+        );
+
         $response = $this->_getApi()->getOrderReferenceDetails($request);
         if ($response->isSetGetOrderReferenceDetailsResult()) {
             $result = $response->getGetOrderReferenceDetailsResult();
@@ -35,26 +54,46 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 return $result->getOrderReferenceDetails();
             }
         }
+
         return null;
     }
 
-    public function setOrderReferenceDetails($orderReferenceId, $orderAmount, $orderCurrency, $magentoOrderId = null, $storeName = null) {
-        $request = new OffAmazonPaymentsService_Model_SetOrderReferenceDetailsRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonOrderReferenceId' => $orderReferenceId,
-            'OrderReferenceAttributes' => array(
-                'PlatformId' => 'AIOVPYYF70KB5',
-                'OrderTotal' => array(
-                    'Amount' => $orderAmount,
-                    'CurrencyCode' => $orderCurrency
-                ),
-                'SellerOrderAttributes' => array(
-                    'SellerOrderId' => $magentoOrderId ? $magentoOrderId : null,
-                    'StoreName' => $storeName ? $storeName : null,
-                    'CustomInformation' => 'Created by Creativestyle_AmazonPayments/' . (string)Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version') . ' (Platform=Magento/' . trim(Mage::getVersion()) . ')'
+    /**
+     * @param float $orderAmount
+     * @param string $orderCurrency
+     * @param string $orderReferenceId
+     * @param string|null $magentoOrderId
+     * @param string|null $storeName
+     * @return null|OffAmazonPaymentsService_Model_OrderReferenceDetails
+     */
+    public function setOrderReferenceDetails(
+        $orderAmount,
+        $orderCurrency,
+        $orderReferenceId,
+        $magentoOrderId = null,
+        $storeName = null
+    ) {
+        $request = new OffAmazonPaymentsService_Model_SetOrderReferenceDetailsRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonOrderReferenceId' => $orderReferenceId,
+                'OrderReferenceAttributes' => array(
+                    'PlatformId' => 'AIOVPYYF70KB5',
+                    'OrderTotal' => array(
+                        'Amount' => $orderAmount,
+                        'CurrencyCode' => $orderCurrency
+                    ),
+                    'SellerOrderAttributes' => array(
+                        'SellerOrderId' => $magentoOrderId ? $magentoOrderId : null,
+                        'StoreName' => $storeName ? $storeName : null,
+                        'CustomInformation' => 'Created by Creativestyle_AmazonPayments/'
+                            . (string)Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version')
+                            . ' (Platform=Magento/' . trim(Mage::getVersion()) . ')'
+                    )
                 )
             )
-        ));
+        );
+
         $response = $this->_getApi()->setOrderReferenceDetails($request);
         if ($response->isSetSetOrderReferenceDetailsResult()) {
             $result = $response->getSetOrderReferenceDetailsResult();
@@ -62,71 +101,120 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 return $result->getOrderReferenceDetails();
             }
         }
+
         return null;
     }
 
-    public function confirmOrderReference($orderReferenceId) {
-        $request = new OffAmazonPaymentsService_Model_ConfirmOrderReferenceRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonOrderReferenceId' => $orderReferenceId
-        ));
+    public function confirmOrderReference($orderReferenceId) 
+    {
+        $request = new OffAmazonPaymentsService_Model_ConfirmOrderReferenceRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonOrderReferenceId' => $orderReferenceId
+            )
+        );
         $response = $this->_getApi()->confirmOrderReference($request);
         return $response;
     }
 
-    public function cancelOrderReference($orderReferenceId) {
-        $request = new OffAmazonPaymentsService_Model_CancelOrderReferenceRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonOrderReferenceId' => $orderReferenceId
-        ));
+    public function cancelOrderReference($orderReferenceId) 
+    {
+        $request = new OffAmazonPaymentsService_Model_CancelOrderReferenceRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonOrderReferenceId' => $orderReferenceId
+            )
+        );
         $response = $this->_getApi()->cancelOrderReference($request);
         return $response;
     }
 
-    public function closeOrderReference($orderReferenceId, $closureReason = null) {
-        $request = new OffAmazonPaymentsService_Model_CloseOrderReferenceRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonOrderReferenceId' => $orderReferenceId,
-        ));
+    /**
+     * @param string $orderReferenceId
+     * @param string|null $closureReason
+     * @return OffAmazonPaymentsService_Model_CloseOrderReferenceResponse
+     */
+    public function closeOrderReference($orderReferenceId, $closureReason = null)
+    {
+        $request = new OffAmazonPaymentsService_Model_CloseOrderReferenceRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonOrderReferenceId' => $orderReferenceId,
+            )
+        );
         if (null !== $closureReason) {
             $request->setClosureReason($closureReason);
         }
+
         $response = $this->_getApi()->closeOrderReference($request);
         return $response;
     }
 
-    public function authorize($orderReferenceId, $authorizationReferenceId, $authorizationAmount, $authorizationCurrency, $sellerAuthorizationNote = null, $captureNow = false, $transactionTimeout = null) {
-        $request = new OffAmazonPaymentsService_Model_AuthorizeRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonOrderReferenceId' => $orderReferenceId,
-            'AuthorizationReferenceId' => $authorizationReferenceId,
-            'AuthorizationAmount' => array(
-                'Amount' => $authorizationAmount,
-                'CurrencyCode' => $authorizationCurrency
-            ),
-            'CaptureNow' => $captureNow
-        ));
+    /**
+     * @param float $authorizationAmount
+     * @param string $authorizationCurrency
+     * @param string $authorizationReferenceId
+     * @param string $orderReferenceId
+     * @param int|null $transactionTimeout
+     * @param bool $captureNow
+     * @param string|null $sellerAuthorizationNote
+     * @return OffAmazonPaymentsService_Model_AuthorizationDetails|null
+     */
+    public function authorize(
+        $authorizationAmount,
+        $authorizationCurrency,
+        $authorizationReferenceId,
+        $orderReferenceId,
+        $transactionTimeout = null,
+        $captureNow = false,
+        $sellerAuthorizationNote = null
+    ) {
+        $request = new OffAmazonPaymentsService_Model_AuthorizeRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonOrderReferenceId' => $orderReferenceId,
+                'AuthorizationReferenceId' => $authorizationReferenceId,
+                'AuthorizationAmount' => array(
+                    'Amount' => $authorizationAmount,
+                    'CurrencyCode' => $authorizationCurrency
+                ),
+                'CaptureNow' => $captureNow
+            )
+        );
+
         if (null !== $sellerAuthorizationNote) {
             $request->setSellerAuthorizationNote($sellerAuthorizationNote);
         }
+
         if (null !== $transactionTimeout) {
             $request->setTransactionTimeout($transactionTimeout);
         }
+
         $response = $this->_getApi()->authorize($request);
         if ($response->isSetAuthorizeResult()) {
             $result = $response->getAuthorizeResult();
             if ($result->isSetAuthorizationDetails()) {
-                return $result->getAuthorizationDetails();
+                $resp = $result->getAuthorizationDetails();
+                return $resp;
             }
         }
+
         return null;
     }
 
-    public function getAuthorizationDetails($authorizationId) {
-        $request = new OffAmazonPaymentsService_Model_GetAuthorizationDetailsRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonAuthorizationId' => $authorizationId
-        ));
+    /**
+     * @param string $authorizationId
+     * @return null|OffAmazonPaymentsService_Model_AuthorizationDetails
+     */
+    public function getAuthorizationDetails($authorizationId) 
+    {
+        $request = new OffAmazonPaymentsService_Model_GetAuthorizationDetailsRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonAuthorizationId' => $authorizationId
+            )
+        );
+
         $response = $this->_getApi()->getAuthorizationDetails($request);
         if ($response->isSetGetAuthorizationDetailsResult()) {
             $result = $response->getGetAuthorizationDetailsResult();
@@ -134,22 +222,40 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 return $result->getAuthorizationDetails();
             }
         }
+
         return null;
     }
 
-    public function capture($authorizationReferenceId, $captureReferenceId, $captureAmount, $captureCurrency, $sellerCaptureNote = null) {
-        $request = new OffAmazonPaymentsService_Model_CaptureRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonAuthorizationId' => $authorizationReferenceId,
-            'CaptureReferenceId' => $captureReferenceId,
-            'CaptureAmount' => array(
-                'Amount' => $captureAmount,
-                'CurrencyCode' => $captureCurrency
+    /**
+     * @param float $captureAmount
+     * @param string $captureCurrency
+     * @param string $captureReferenceId
+     * @param string $authParentId
+     * @param string|null $sellerCaptureNote
+     * @return null|OffAmazonPaymentsService_Model_CaptureDetails
+     */
+    public function capture(
+        $captureAmount,
+        $captureCurrency,
+        $captureReferenceId,
+        $authParentId,
+        $sellerCaptureNote = null
+    ) {
+        $request = new OffAmazonPaymentsService_Model_CaptureRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonAuthorizationId' => $authParentId,
+                'CaptureReferenceId' => $captureReferenceId,
+                'CaptureAmount' => array(
+                    'Amount' => $captureAmount,
+                    'CurrencyCode' => $captureCurrency
+                )
             )
-        ));
+        );
         if (null !== $sellerCaptureNote) {
             $request->setSellerCaptureNote($sellerCaptureNote);
         }
+
         $response = $this->_getApi()->capture($request);
         if ($response->isSetCaptureResult()) {
             $result = $response->getCaptureResult();
@@ -157,14 +263,19 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 return $result->getCaptureDetails();
             }
         }
+
         return null;
     }
 
-    public function getCaptureDetails($captureId) {
-        $request = new OffAmazonPaymentsService_Model_GetCaptureDetailsRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonCaptureId' => $captureId
-        ));
+    public function getCaptureDetails($captureId) 
+    {
+        $request = new OffAmazonPaymentsService_Model_GetCaptureDetailsRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonCaptureId' => $captureId
+            )
+        );
+
         $response = $this->_getApi()->getCaptureDetails($request);
         if ($response->isSetGetCaptureDetailsResult()) {
             $result = $response->getGetCaptureDetailsResult();
@@ -172,22 +283,40 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 return $result->getCaptureDetails();
             }
         }
+
         return null;
     }
 
-    public function refund($captureReferenceId, $refundReferenceId, $refundAmount, $refundCurrency, $sellerRefundNote = null) {
-        $request = new OffAmazonPaymentsService_Model_RefundRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonCaptureId' => $captureReferenceId,
-            'RefundReferenceId' => $refundReferenceId,
-            'RefundAmount' => array(
-                'Amount' => $refundAmount,
-                'CurrencyCode' => $refundCurrency
+    /**
+     * @param float $refundAmount
+     * @param string $refundCurrency
+     * @param string $refundReferenceId
+     * @param string $captureParentId
+     * @param string|null $sellerRefundNote
+     * @return null|OffAmazonPaymentsService_Model_RefundDetails
+     */
+    public function refund(
+        $refundAmount,
+        $refundCurrency,
+        $refundReferenceId,
+        $captureParentId,
+        $sellerRefundNote = null
+    ) {
+        $request = new OffAmazonPaymentsService_Model_RefundRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonCaptureId' => $captureParentId,
+                'RefundReferenceId' => $refundReferenceId,
+                'RefundAmount' => array(
+                    'Amount' => $refundAmount,
+                    'CurrencyCode' => $refundCurrency
+                )
             )
-        ));
+        );
         if (null !== $sellerRefundNote) {
             $request->setSellerRefundNote($sellerRefundNote);
         }
+
         $response = $this->_getApi()->refund($request);
         if ($response->isSetRefundResult()) {
             $result = $response->getRefundResult();
@@ -195,14 +324,23 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 return $result->getRefundDetails();
             }
         }
+
         return null;
     }
 
-    public function getRefundDetails($refundId) {
-        $request = new OffAmazonPaymentsService_Model_GetRefundDetailsRequest(array(
-            'SellerId' => $this->getMerchantId(),
-            'AmazonRefundId' => $refundId
-        ));
+    /**
+     * @param string $refundId
+     * @return null|OffAmazonPaymentsService_Model_RefundDetails
+     */
+    public function getRefundDetails($refundId) 
+    {
+        $request = new OffAmazonPaymentsService_Model_GetRefundDetailsRequest(
+            array(
+                'SellerId' => $this->getMerchantId(),
+                'AmazonRefundId' => $refundId
+            )
+        );
+
         $response = $this->_getApi()->getRefundDetails($request);
         if ($response->isSetGetRefundDetailsResult()) {
             $result = $response->getGetRefundDetailsResult();
@@ -210,7 +348,7 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                 return $result->getRefundDetails();
             }
         }
+
         return null;
     }
-
 }

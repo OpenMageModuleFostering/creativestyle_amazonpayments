@@ -1,20 +1,21 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Lookup_Frequency extends Creativestyle_AmazonPayments_Model_Lookup_Abstract {
-
+class Creativestyle_AmazonPayments_Model_Lookup_Frequency extends Creativestyle_AmazonPayments_Model_Lookup_Abstract
+{
     const FREQUENCY_5_MINUTES       = '5 minutes';
     const FREQUENCY_10_MINUTES      = '10 minutes';
     const FREQUENCY_15_MINUTES      = '15 minutes';
@@ -32,7 +33,8 @@ class Creativestyle_AmazonPayments_Model_Lookup_Frequency extends Creativestyle_
     const FREQUENCY_15_DAYS         = '15 days';
     const FREQUENCY_30_DAYS         = '30 days';
 
-    public function toOptionArray() {
+    public function toOptionArray() 
+    {
         if (null === $this->_options) {
             $this->_options = array(
                 array(
@@ -101,7 +103,7 @@ class Creativestyle_AmazonPayments_Model_Lookup_Frequency extends Creativestyle_
                 )
             );
         }
+
         return $this->_options;
     }
-
 }

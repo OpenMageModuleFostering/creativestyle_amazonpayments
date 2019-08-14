@@ -1,16 +1,18 @@
 <?php
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2017 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
 ?>
 <div class="dashboard">
@@ -18,11 +20,14 @@
         <div class="box-head">
             <h2><?php echo $this->helper('amazonpayments')->__('Login with Amazon'); ?></h2>
             <?php if ($this->isCustomerConnectedWithAmazon()): ?>
-                <a href="<?php echo $this->getUrl('amazonpayments/advanced_login/disconnect'); ?>"><?php echo $this->helper('amazonpayments')->__('Disconnect'); ?></a>
+                <a href="<?php echo $this->getUrl('amazonpayments/advanced_login/disconnect'); ?>">
+                    <?php echo $this->helper('amazonpayments')->__('Disconnect'); ?>
+                </a>
             <?php endif; ?>
         </div>
         <div class="box">
             <div class="box-content">
+                <?php // @codingStandardsIgnoreStart ?>
                 <?php if ($this->isCustomerConnectedWithAmazon()): ?>
                     <p><?php echo $this->helper('amazonpayments')->__('Currently, you can use your Amazon account to log into your shop account. In order to remove the connection to your Amazon account click on "Disconnect".'); ?></p>
                 <?php else: ?>
@@ -31,6 +36,7 @@
                         <?php echo $this->helper('amazonpayments')->__('By selecting Login with Amazon, you will be asked to sign-in securely to your Amazon account without leaving the shop.'); ?>
                     </p>
                 <?php endif; ?>
+                <?php // @codingStandardsIgnoreEnd ?>
             </div>
             <?php if (!$this->isCustomerConnectedWithAmazon()): ?>
                 <div class="buttons">

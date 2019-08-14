@@ -1,55 +1,65 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2016 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Adminhtml_Register extends Mage_Adminhtml_Block_Template {
-
-    protected function _construct() {
+class Creativestyle_AmazonPayments_Block_Adminhtml_Register extends Mage_Adminhtml_Block_Template
+{
+    protected function _construct()
+    {
         $this->setTemplate('creativestyle/amazonpayments/register.phtml');
         return parent::_construct();
     }
 
-    protected function _getConfig() {
+    /**
+     * Returns Amazon Pay config model instance
+     *
+     * @return Creativestyle_AmazonPayments_Model_Config
+     */
+    protected function _getConfig()
+    {
         return Mage::getSingleton('amazonpayments/config');
     }
 
-    public function getAccountRegionOptions() {
+    public function getAccountRegionOptions()
+    {
         return Mage::getSingleton('amazonpayments/lookup_accountRegion')->toOptionArray();
     }
 
-    public function getLanguageOptions() {
+    public function getLanguageOptions()
+    {
         return Mage::getSingleton('amazonpayments/lookup_language')->toOptionArray();
     }
 
-    public function getDefaultAccountRegion() {
+    public function getDefaultAccountRegion()
+    {
         return Mage::getStoreConfig('currency/options/base');
-        switch (Mage::getStoreConfig('currency/options/base')) {
-            case 'GBP':
-                return 'GBP';
-            default:
-                return 'EUR';
-        }
     }
 
-    public function getDefaultLanguage() {
-        return Mage::getSingleton('amazonpayments/lookup_language')->getLanguageByLocale(Mage::app()->getLocale()->getLocaleCode(), false);
+    public function getDefaultLanguage()
+    {
+        /** @var Creativestyle_AmazonPayments_Model_Lookup_Language $languageLookupModel */
+        $languageLookupModel = Mage::getSingleton('amazonpayments/lookup_language');
+        return $languageLookupModel->getLanguageByLocale(Mage::app()->getLocale()->getLocaleCode(), true);
     }
 
-    public function getState() {
+    public function getState()
+    {
         if ($this->_getConfig()->getMerchantId()) {
             return 0;
         }
+
         return 1;
     }
 }

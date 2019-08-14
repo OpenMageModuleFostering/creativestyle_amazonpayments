@@ -1,26 +1,29 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_Service_Quote {
+class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_Service_Quote
+{
 
     /**
      * Validate quote data before converting to order
      *
      * @return Mage_Sales_Model_Service_Quote
      */
-    protected function _validate() {
+    protected function _validate()
+    {
         if (!$this->getQuote()->isVirtual()) {
             $address = $this->getQuote()->getShippingAddress();
             $method= $address->getShippingMethod();
@@ -37,12 +40,14 @@ class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_
         return $this;
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Submit the quote. Quote submit process will create the order based on quote data
-     *
      * @return Mage_Sales_Model_Order
+     * @throws Exception
      */
-    public function submitOrder() {
+    public function submitOrder()
+    {
         $this->_deleteNominalItems();
         $this->_validate();
         $quote = $this->_quote;
@@ -52,6 +57,7 @@ class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_
         if ($quote->getCustomerId()) {
             $transaction->addObject($quote->getCustomer());
         }
+
         $transaction->addObject($quote);
 
         $quote->reserveOrderId();
@@ -60,25 +66,39 @@ class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_
         } else {
             $order = $this->_convertor->addressToOrder($quote->getShippingAddress());
         }
+
         $order->setBillingAddress($this->_convertor->addressToOrderAddress($quote->getBillingAddress()));
         if ($quote->getBillingAddress()->getCustomerAddress()) {
             $order->getBillingAddress()->setCustomerAddress($quote->getBillingAddress()->getCustomerAddress());
         }
+
         if (!$isVirtual) {
             $order->setShippingAddress($this->_convertor->addressToOrderAddress($quote->getShippingAddress()));
             if ($quote->getShippingAddress()->getCustomerAddress()) {
                 $order->getShippingAddress()->setCustomerAddress($quote->getShippingAddress()->getCustomerAddress());
             }
         }
+
         $order->setPayment($this->_convertor->paymentToOrderPayment($quote->getPayment()));
         $order->getPayment()->setTransactionId($quote->getPayment()->getTransactionId());
-        $order->getPayment()->setAdditionalInformation('amazon_order_reference_id', $quote->getPayment()->getTransactionId());
+        $order->getPayment()->setAdditionalInformation(
+            'amazon_order_reference_id',
+            $quote->getPayment()->getTransactionId()
+        );
         if ($quote->getPayment()->getSimulationData()) {
-            $order->getPayment()->setAdditionalInformation('_simulation_data', $quote->getPayment()->getSimulationData());
+            $order->getPayment()->setAdditionalInformation(
+                '_simulation_data',
+                $quote->getPayment()->getSimulationData()
+            );
         }
+
         if ($quote->getPayment()->getAmazonSequenceNumber()) {
-            $order->getPayment()->setAdditionalInformation('amazon_sequence_number', $quote->getPayment()->getAmazonSequenceNumber());
+            $order->getPayment()->setAdditionalInformation(
+                'amazon_sequence_number',
+                $quote->getPayment()->getAmazonSequenceNumber()
+            );
         }
+
         if ($quote->getPayment()->getSkipOrderReferenceProcessing()) {
             $order->getPayment()->setSkipOrderReferenceProcessing(true);
         }
@@ -92,6 +112,7 @@ class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_
             if ($item->getParentItem()) {
                 $orderItem->setParentItem($order->getItemByQuoteItemId($item->getParentItem()->getId()));
             }
+
             $order->addItem($orderItem);
         }
 
@@ -113,7 +134,6 @@ class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_
             $this->_inactivateQuote();
             Mage::dispatchEvent('sales_model_service_quote_submit_success', array('order'=>$order, 'quote'=>$quote));
         } catch (Exception $e) {
-
             if (!Mage::getSingleton('customer/session')->isLoggedIn()) {
                 // reset customer ID's on exception, because customer not saved
                 $quote->getCustomer()->setId(null);
@@ -130,9 +150,10 @@ class Creativestyle_AmazonPayments_Model_Service_Quote extends Mage_Sales_Model_
             Mage::dispatchEvent('sales_model_service_quote_submit_failure', array('order'=>$order, 'quote'=>$quote));
             throw $e;
         }
+
         Mage::dispatchEvent('sales_model_service_quote_submit_after', array('order'=>$order, 'quote'=>$quote));
         $this->_order = $order;
         return $order;
     }
-
+    // @codingStandardsIgnoreEnd
 }

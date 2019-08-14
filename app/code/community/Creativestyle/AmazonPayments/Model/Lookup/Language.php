@@ -1,71 +1,86 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Lookup_Language extends Creativestyle_AmazonPayments_Model_Lookup_Abstract {
-
+class Creativestyle_AmazonPayments_Model_Lookup_Language extends Creativestyle_AmazonPayments_Model_Lookup_Abstract
+{
     const LANGUAGE_EN_GB = 'en-GB';
     const LANGUAGE_DE_DE = 'de-DE';
     const LANGUAGE_FR_FR = 'fr-FR';
     const LANGUAGE_IT_IT = 'it-IT';
     const LANGUAGE_ES_ES = 'es-ES';
 
-    public function toOptionArray() {
+    /**
+     * Array of allowed display languages for Amazon widgets
+     *
+     * @var array
+     */
+    protected $_allowedLanguages = array(
+        self::LANGUAGE_EN_GB => 'English',
+        self::LANGUAGE_DE_DE => 'German',
+        self::LANGUAGE_FR_FR => 'French',
+        self::LANGUAGE_IT_IT => 'Italian',
+        self::LANGUAGE_ES_ES => 'Spanish'
+    );
+
+    /**
+     * @return array
+     */
+    public function toOptionArray()
+    {
         if (null === $this->_options) {
-            $this->_options = array(
-                array(
-                    'value' => '',
-                    'label' => Mage::helper('amazonpayments')->__('Auto')
-                ),
-                array(
-                    'value' => self::LANGUAGE_EN_GB,
-                    'label' => Mage::helper('amazonpayments')->__('English')
-                ),
-                array(
-                    'value' => self::LANGUAGE_DE_DE,
-                    'label' => Mage::helper('amazonpayments')->__('German')
-                ),
-                array(
-                    'value' => self::LANGUAGE_FR_FR,
-                    'label' => Mage::helper('amazonpayments')->__('French')
-                ),
-                array(
-                    'value' => self::LANGUAGE_IT_IT,
-                    'label' => Mage::helper('amazonpayments')->__('Italian')
-                ),
-                array(
-                    'value' => self::LANGUAGE_ES_ES,
-                    'label' => Mage::helper('amazonpayments')->__('Spanish')
-                )
-            );
+            $this->_options = array(array(
+                'value' => '',
+                'label' => Mage::helper('amazonpayments')->__('Auto')
+            ));
+            foreach ($this->_allowedLanguages as $languageCode => $languageName) {
+                $this->_options[] = array(
+                    'value' => $languageCode,
+                    'label' => Mage::helper('amazonpayments')->__($languageName)
+                );
+            }
         }
+
         return $this->_options;
     }
 
-    public function getLanguageByLocale($locale, $normalize = true) {
-        $allowedLanguages = array(self::LANGUAGE_EN_GB, self::LANGUAGE_DE_DE, self::LANGUAGE_FR_FR, self::LANGUAGE_IT_IT, self::LANGUAGE_ES_ES);
-        $localeNormalize = str_replace('_', '-', $locale);
-        if (in_array($localeNormalize, $allowedLanguages)) {
-            return $normalize ? $localeNormalize : $locale;
+    /**
+     * @param string|null $locale
+     * @param bool $isoFormatReturn
+     * @return string|null
+     */
+    public function getLanguageByLocale($locale = null, $isoFormatReturn = false)
+    {
+        if (null === $locale) {
+            $locale = Mage::app()->getLocale()->getLocaleCode();
         }
-        $localeLanguage = substr($localeNormalize, 0, 2);
-        foreach ($allowedLanguages as $allowedLanguage) {
-            if (false !== strpos($allowedLanguage, $localeLanguage)) {
-                return $normalize ? $allowedLanguage : str_replace('-', '_', $allowedLanguage);
+
+        $amazonLocale = str_replace('_', '-', $locale);
+
+        if (in_array($amazonLocale, array_keys($this->_allowedLanguages))) {
+            return $isoFormatReturn ? $locale : $amazonLocale;
+        }
+
+        $localeLanguagePart = substr($locale, 0, 2);
+
+        foreach ($this->_allowedLanguages as $languageCode => $languageName) {
+            if (false !== strpos($languageCode, $localeLanguagePart)) {
+                return $isoFormatReturn ? str_replace('-', '_', $languageCode) : $languageCode;
             }
         }
+
         return null;
     }
-
 }

@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2017 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
 -->
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.8.6</version>
+            <version>2.0.0</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -40,7 +42,7 @@
             <amazonpayments_setup>
                 <setup>
                     <module>Creativestyle_AmazonPayments</module>
-                    <class>Creativestyle_AmazonPayments_Model_Setup</class>
+                    <class>Creativestyle_AmazonPayments_Model_Resource_Setup</class>
                 </setup>
                 <connection>
                     <use>core_setup</use>
@@ -67,7 +69,7 @@
                     </amazonpayments_advanced_observer>
                 </observers>
             </amazonpayments_advanced_api_post_call>
-            <amazonpayments_advanced_ipn_request>
+            <amazonpayments_ipn_request>
                 <observers>
                     <amazonpayments_advanced_observer>
                         <type>singleton</type>
@@ -75,7 +77,7 @@
                         <method>logIpnCall</method>
                     </amazonpayments_advanced_observer>
                 </observers>
-            </amazonpayments_advanced_ipn_request>
+            </amazonpayments_ipn_request>
             <controller_action_layout_render_before_adminhtml_sales_order_view>
                 <observers>
                     <amazonpayments_advanced_observer>
@@ -85,24 +87,6 @@
                     </amazonpayments_advanced_observer>
                 </observers>
             </controller_action_layout_render_before_adminhtml_sales_order_view>
-            <sales_order_payment_transaction_save_before>
-                <observers>
-                    <amazonpayments_advanced_observer>
-                        <type>singleton</type>
-                        <class>Creativestyle_AmazonPayments_Model_Observer</class>
-                        <method>closeTransaction</method>
-                    </amazonpayments_advanced_observer>
-                </observers>
-            </sales_order_payment_transaction_save_before>
-            <sales_order_payment_transaction_save_after>
-                <observers>
-                    <amazonpayments_advanced_observer>
-                        <type>singleton</type>
-                        <class>Creativestyle_AmazonPayments_Model_Observer</class>
-                        <method>updateParentTransaction</method>
-                    </amazonpayments_advanced_observer>
-                </observers>
-            </sales_order_payment_transaction_save_after>
             <controller_front_init_before>
                 <observers>
                     <amazonpayments_advanced_observer>
@@ -112,6 +96,15 @@
                     </amazonpayments_advanced_observer>
                 </observers>
             </controller_front_init_before>
+            <sales_order_payment_transaction_save_before>
+                <observers>
+                    <amazonpayments_advanced_observer>
+                        <type>singleton</type>
+                        <class>Creativestyle_AmazonPayments_Model_Observer</class>
+                        <method>saveTransactionBefore</method>
+                    </amazonpayments_advanced_observer>
+                </observers>
+            </sales_order_payment_transaction_save_before>
         </events>
         <payment>
             <groups>
@@ -361,9 +354,10 @@
             </modules>
         </translate>
         <secure_url>
-            <amazonpayments_checkout>/amazonpayments/advanced_checkout</amazonpayments_checkout>
+            <amazonpayments_checkout>/amazonpayments/checkout</amazonpayments_checkout>
             <amazonpayments_login>/amazonpayments/advanced_login</amazonpayments_login>
-            <amazonpayments_ipn>/amazonpayments/advanced_ipn</amazonpayments_ipn>
+            <amazonpayments_ipn>/amazonpayments/ipn</amazonpayments_ipn>
+            <amazonpayments_ipn_legacy>/amazonpayments/advanced_ipn</amazonpayments_ipn_legacy>
         </secure_url>
     </frontend>
     <admin>
@@ -402,7 +396,7 @@
                 <run><model>amazonpayments/observer::rotateLogfiles</model></run>
             </amazonpayments_advanced_log_rotate>
             <amazonpayments_advanced_data_poll>
-                <run><model>amazonpayments/observer::pollObjectsData</model></run>
+                <run><model>amazonpayments/observer::pollPaymentTransactionData</model></run>
             </amazonpayments_advanced_data_poll>
         </jobs>
     </crontab>
@@ -448,14 +442,13 @@
                 <sandbox_toolbox>0</sandbox_toolbox>
                 <ipn_active>1</ipn_active>
                 <payment_action>authorize</payment_action>
-                <authorization_mode>asynchronous</authorization_mode>
+                <authorization_mode>auto</authorization_mode>
                 <new_order_status>pending</new_order_status>
                 <authorized_order_status>processing</authorized_order_status>
                 <language></language>
                 <authentication>auto</authentication>
             </general>
             <email>
-                <order_confirmation>1</order_confirmation>
                 <authorization_declined_template>amazonpayments_advanced_authorization_declined</authorization_declined_template>
                 <authorization_declined_identity>sales</authorization_declined_identity>
             </email>

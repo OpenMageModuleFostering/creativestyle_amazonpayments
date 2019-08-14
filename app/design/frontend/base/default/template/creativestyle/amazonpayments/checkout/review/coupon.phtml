@@ -13,17 +13,35 @@
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 ?>
+<?php /** @var Mage_Checkout_Block_Cart_Coupon $this */ ?>
+<?php $coreHelper = $this->helper('core'); ?>
+<?php $checkoutHelper = $this->helper('checkout'); ?>
 <form id="discount-coupon-form" method="post" onsubmit="return false;">
     <div class="discount">
         <div class="discount-form">
-            <label for="coupon_code"><?php echo $this->helper('checkout')->__('Discount Codes') ?></label>
-            <input type="hidden" name="remove" id="remove-coupone" value="0" />
+            <label for="coupon_code"><?php echo $checkoutHelper->__('Discount Codes') ?></label>
             <div class="field-wrapper">
-                <input class="input-text" type="text" id="coupon_code" name="coupon_code" value="<?php echo $this->escapeHtml($this->getCouponCode()) ?>" />
+                <input type="text"
+                       id="coupon_code"
+                       name="coupon_code"
+                       class="input-text required-entry"
+                       value="<?php echo $this->escapeHtml($this->getCouponCode()) ?>" />
                 <div class="button-wrapper">
-                    <button type="button" id="coupon_code_apply_button" title="<?php echo Mage::helper('core')->quoteEscape($this->helper('checkout')->__('Apply')) ?>" class="button2" onclick="APA.submitCoupon()" value="<?php echo $this->helper('checkout')->__('Apply') ?>"><span><span><?php echo $this->helper('checkout')->__('Apply') ?></span></span></button>
-                    <?php if (strlen($this->getCouponCode())): ?>
-                        <button type="button" title="<?php echo Mage::helper('core')->quoteEscape($this->helper('checkout')->__('Cancel')) ?>" class="button2 cancel-coupon" onclick="APA.cancelCoupon()" value="<?php echo $this->helper('checkout')->__('Cancel') ?>"><span><span><?php echo $this->helper('checkout')->__('Cancel') ?></span></span>
+                    <button type="button"
+                            id="coupon_code_apply_button"
+                            class="button2"
+                            title="<?php echo $coreHelper->quoteEscape($checkoutHelper->__('Apply')) ?>"
+                            value="<?php echo $checkoutHelper->__('Apply') ?>"
+                            onclick="AmazonPayments.submitCoupon(false)">
+                        <span><span><?php echo $checkoutHelper->__('Apply') ?></span></span>
+                    </button>
+                    <?php if (strlen($this->getCouponCode())) : ?>
+                        <button type="button"
+                                class="button2 cancel-coupon"
+                                title="<?php echo $coreHelper->quoteEscape($checkoutHelper->__('Cancel')) ?>"
+                                value="<?php echo $checkoutHelper->__('Cancel') ?>"
+                                onclick="AmazonPayments.submitCoupon(true)">
+                            <span><span><?php echo $checkoutHelper->__('Cancel') ?></span></span>
                         </button>
                     <?php endif;?>
                 </div>
@@ -32,19 +50,17 @@
     </div>
 </form>
 <script type="text/javascript">
-//<![CDATA[
     document.getElementById('coupon_code').addEventListener('keyup', function(event) {
         event.preventDefault();
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             document.getElementById('coupon_code_apply_button').click();
         }
     });
     document.getElementById('coupon_code').addEventListener('change', function(event) {
         event.preventDefault();
         var couponCode = document.getElementById('coupon_code').value;
-        if (couponCode && couponCode != '<?php echo $this->getCouponCode(); ?>' && couponCode.length > 1) {
+        if (couponCode && couponCode !== '<?php echo $this->getCouponCode(); ?>' && couponCode.length > 1) {
             document.getElementById('coupon_code_apply_button').click();
         }
     });
-//]]>
 </script>

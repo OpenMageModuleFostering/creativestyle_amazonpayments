@@ -1,20 +1,21 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Config {
-
+class Creativestyle_AmazonPayments_Model_Config
+{
     const XML_PATH_ACCOUNT_MERCHANT_ID          = 'amazonpayments/account/merchant_id';
     const XML_PATH_ACCOUNT_ACCESS_KEY           = 'amazonpayments/account/access_key';
     const XML_PATH_ACCOUNT_SECRET_KEY           = 'amazonpayments/account/secret_key';
@@ -60,113 +61,121 @@ class Creativestyle_AmazonPayments_Model_Config {
     const XML_PATH_DEVELOPER_ALLOWED_IPS        = 'amazonpayments/developer/allowed_ips';
     const XML_PATH_DEVELOPER_LOG_ACTIVE         = 'amazonpayments/developer/log_active';
 
-    const PAY_WITH_AMAZON_ACTIVE                = 1;
-    const LOGIN_WITH_AMAZON_ACTIVE              = 2;
+    /**
+     * Global config data array
+     *
+     * @var array|null
+     */
+    protected $_globalConfigData = null;
 
-    protected $_config = array();
-    protected $_globalData = null;
-    protected $_merchantValues = null;
-
-    protected function _getConfig($store = null)  {
-        if (!array_key_exists($store, $this->_config)) {
-            $this->_config[$store] = array(
-                'merchantId' => $this->getMerchantId($store),
-                'accessKey' => trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_ACCESS_KEY, $store)),
-                'secretKey' => trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_SECRET_KEY, $store)),
-                'applicationName' => 'Creativestyle Amazon Payments Advanced Magento Extension',
-                'applicationVersion' => Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version'),
-                'region' => $this->getRegion($store),
-                'environment' => $this->isSandbox($store) ? 'sandbox' : 'live',
-                'serviceURL' => '',
-                'widgetURL' => '',
-                'caBundleFile' => $this->getCaBundleFile(),
-                'clientId' => '',
-                'cnName' => 'sns.amazonaws.com'
-            );
-        }
-        return $this->_config[$store];
+    /**
+     * Returns configured authentication experience
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    protected function _getAuthenticationExperience($store = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_LOGIN_AUTHENTICATION, $store);
     }
 
-    protected function _getGlobalData()  {
-        if (null === $this->_globalData) {
-            $this->_globalData = Mage::getConfig()->getNode('global/creativestyle/amazonpayments')->asArray();
-        }
-        return $this->_globalData;
-    }
-
-    public function getConnectionData($key = null, $store = null) {
-        if (null !== $key) {
-            $config = $this->_getConfig($store);
-            if (array_key_exists($key, $config)) {
-                return $config[$key];
-            }
-            return null;
-        }
-        return $this->_getConfig($store);
-    }
-
-    public function getGlobalDataValue($key = null) {
-        if (null !== $key) {
-            $data = $this->_getGlobalData();
-            if (array_key_exists($key, $data)) {
-                return $data[$key];
-            }
-            return null;
-        }
-        return $this->_getGlobalData();
-    }
-
-    public function getMerchantValues($store = null) {
-        if (null === $this->_merchantValues) {
-            $this->_merchantValues = OffAmazonPaymentsService_MerchantValuesBuilder::create(array(
-                'merchantId' => $this->getConnectionData('merchantId', $store),
-                'accessKey' => $this->getConnectionData('accessKey', $store),
-                'secretKey' => $this->getConnectionData('secretKey', $store),
-                'applicationName' => $this->getConnectionData('applicationName', $store),
-                'applicationVersion' => $this->getConnectionData('applicationVersion', $store),
-                'region' => $this->getConnectionData('region', $store),
-                'environment' => $this->getConnectionData('environment', $store),
-                'serviceUrl' => $this->getConnectionData('serviceURL', $store),
-                'widgetUrl' => $this->getConnectionData('widgetURL', $store),
-                'caBundleFile' => $this->getConnectionData('caBundleFile', $store),
-                'clientId' => $this->getConnectionData('clientId', $store),
-                'cnName' => $this->getConnectionData('cnName', $store)
-            ))->build();
-        }
-        return $this->_merchantValues;
-    }
-
-    public function isActive($store = null) {
-        $active = Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_ACTIVE, $store) ? self::PAY_WITH_AMAZON_ACTIVE : 0;
-        $active |= Mage::getStoreConfigFlag(self::XML_PATH_LOGIN_ACTIVE, $store) ? self::LOGIN_WITH_AMAZON_ACTIVE : 0;
-        return $active;
-    }
-
-    public function isPayActive($store = null) {
+    /**
+     * Checks whether Amazon Pay is enabled
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isPayActive($store = null)
+    {
         return Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_ACTIVE, $store);
     }
 
-    public function isLoginActive($store = null) {
+    /**
+     * Checks whether Login with Amazon is enabled
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isLoginActive($store = null)
+    {
         return Mage::getStoreConfigFlag(self::XML_PATH_LOGIN_ACTIVE, $store);
     }
 
-    public function isIpnActive($store = null) {
+    /**
+     * Checks whether IPN is enabled
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isIpnActive($store = null)
+    {
         return Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_IPN_ACTIVE, $store);
     }
 
-    public function isLoggingActive($store = null) {
-        return Mage::getStoreConfigFlag(self::XML_PATH_DEVELOPER_LOG_ACTIVE, $store);
-    }
-
-    public function isSandbox($store = null) {
+    /**
+     * Checks whether extension runs in sandbox mode
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isSandboxActive($store = null)
+    {
         return Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX, $store);
     }
 
-    public function getMerchantId($store = null) {
+    /**
+     * Checks whether simulation toolbox shall be displayed in the checkout
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isSandboxToolboxActive($store = null)
+    {
+        return $this->isSandboxActive($store)
+            && Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX_TOOLBOX, $store);
+    }
+
+    /**
+     * Checks whether debug logging is enabled
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isLoggingActive($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_DEVELOPER_LOG_ACTIVE, $store);
+    }
+
+    /**
+     * Returns Merchant ID for the configured Amazon merchant account
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getMerchantId($store = null)
+    {
         return trim(strtoupper(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_MERCHANT_ID, $store)));
     }
 
-    public function getRegion($store = null) {
+    /**
+     * Returns Amazon app client ID
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getClientId($store = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_LOGIN_CLIENT_ID, $store);
+    }
+
+    /**
+     * Returns merchant's region
+     *
+     * @param mixed|null $store
+     * @return string|null
+     */
+    public function getRegion($store = null)
+    {
         switch (Mage::getStoreConfig(self::XML_PATH_ACCOUNT_REGION, $store)) {
             case 'EUR':
                 return 'de';
@@ -177,176 +186,327 @@ class Creativestyle_AmazonPayments_Model_Config {
         }
     }
 
-    public function getEnvironment($store = null) {
-        return $this->getConnectionData('environment', $store);
-    }
-
-    public function getClientId($store = null) {
-        return Mage::getStoreConfig(self::XML_PATH_LOGIN_CLIENT_ID, $store);
-    }
-
-    public function getAuthenticationExperience($store = null) {
-        return Mage::getStoreConfig(self::XML_PATH_LOGIN_AUTHENTICATION, $store);
-    }
-
-    public function isPopupAuthenticationExperience($store = null) {
-        return $this->getAuthenticationExperience($store) == Creativestyle_AmazonPayments_Model_Lookup_Authentication::POPUP_EXPERIENCE;
-    }
-
-    public function isAutoAuthenticationExperience($store = null) {
-        return $this->getAuthenticationExperience($store) == Creativestyle_AmazonPayments_Model_Lookup_Authentication::AUTO_EXPERIENCE;
-    }
-
-    public function isRedirectAuthenticationExperience($store = null) {
-        return $this->getAuthenticationExperience($store) == Creativestyle_AmazonPayments_Model_Lookup_Authentication::REDIRECT_EXPERIENCE;
-    }
-
-    public function getAuthorizationMode($store = null) {
-        return Mage::getStoreConfig(self::XML_PATH_GENERAL_AUTHORIZATION_MODE, $store);
-    }
-
-    public function isAuthorizationSynchronous($store = null) {
-        return $this->getAuthorizationMode($store) == Creativestyle_AmazonPayments_Model_Lookup_AuthorizationMode::SYNCHRONOUS;
-    }
-
-    public function getWidgetUrl($store = null) {
-        if ($this->isActive() & self::LOGIN_WITH_AMAZON_ACTIVE) {
-            return $this->getMerchantValues()->getWidgetUrl();
-        } else if ($this->isActive()) {
-            return str_replace('lpa/', '', $this->getMerchantValues()->getWidgetUrl());
+    /**
+     * Returns display language for Amazon widgets
+     *
+     * @param mixed|null $store
+     * @return string|null
+     */
+    public function getDisplayLanguage($store = null)
+    {
+        $displayLanguage = Mage::getStoreConfig(self::XML_PATH_LOGIN_LANGUAGE, $store);
+        if (!$displayLanguage) {
+            /** @var Creativestyle_AmazonPayments_Model_Lookup_Language $languageLookupModel */
+            $languageLookupModel = Mage::getSingleton('amazonpayments/lookup_language');
+            $displayLanguage = $languageLookupModel->getLanguageByLocale();
         }
-        return null;
+
+        return $displayLanguage;
     }
 
-    public function getButtonUrl($store = null) {
-        if (!($this->isActive() & self::LOGIN_WITH_AMAZON_ACTIVE)) {
-            $buttonUrls = $this->getGlobalDataValue('button_urls');
-            if (isset($buttonUrls[$this->getRegion($store)][$this->getEnvironment($store)])) {
-                return sprintf($buttonUrls[$this->getRegion($store)][$this->getEnvironment($store)] . '?sellerId=%s&amp;size=%s&amp;color=%s',
-                    $this->getMerchantId($store),
-                    $this->getButtonSize($store),
-                    $this->getButtonColor($store)
-                );
-            }
-        }
-        return null;
+    /**
+     * Checks whether authentication experience is set to automatic mode
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isAutoAuthenticationExperience($store = null)
+    {
+        return $this->_getAuthenticationExperience($store)
+            == Creativestyle_AmazonPayments_Model_Lookup_Authentication::AUTO_EXPERIENCE;
     }
 
-    public function getLoginApiUrl($store = null) {
-        $apiUrls = $this->getGlobalDataValue('login_api_urls');
-        if (isset($apiUrls[$this->getRegion($store)][$this->getEnvironment($store)])) {
-            return $apiUrls[$this->getRegion($store)][$this->getEnvironment($store)];
-        }
-        return '';
+    /**
+     * Checks whether authentication experience is set to popup
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isPopupAuthenticationExperience($store = null)
+    {
+        return $this->_getAuthenticationExperience($store)
+            == Creativestyle_AmazonPayments_Model_Lookup_Authentication::POPUP_EXPERIENCE;
     }
 
-    public function showSandboxToolbox($store = null) {
-        return $this->isSandbox($store) && Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX_TOOLBOX, $store);
+    /**
+     * Checks whether authentication experience is set to redirect
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isRedirectAuthenticationExperience($store = null)
+    {
+        return $this->_getAuthenticationExperience($store)
+            == Creativestyle_AmazonPayments_Model_Lookup_Authentication::REDIRECT_EXPERIENCE;
     }
 
-    public function getButtonType($store = null, $serviceType = null) {
-        switch (strtolower($serviceType)) {
-            case 'login':
-                return Mage::getStoreConfig(self::XML_PATH_DESIGN_LOGIN_BUTTON_TYPE, $store);
-            default:
-                return Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_TYPE, $store);
-        }
-    }
-
-    public function getButtonColor($store = null, $serviceType = null) {
-        if ($this->isActive() & self::LOGIN_WITH_AMAZON_ACTIVE) {
-            switch (strtolower($serviceType)) {
-                case 'login':
-                    return Mage::getStoreConfig(self::XML_PATH_DESIGN_LOGIN_BUTTON_COLOR, $store);
-                default:
-                    return Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_COLOR, $store);
-            }
-        }
-        return Mage::getStoreConfig(self::XML_PATH_DESIGN_BUTTON_COLOR, $store);
-    }
-
-    public function getButtonSize($store = null, $serviceType = null) {
-        if ($this->isActive() & self::LOGIN_WITH_AMAZON_ACTIVE) {
-            switch (strtolower($serviceType)) {
-                case 'login':
-                    return Mage::getStoreConfig(self::XML_PATH_DESIGN_LOGIN_BUTTON_SIZE, $store);
-                default:
-                    return Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_SIZE, $store);
-            }
-        }
-        return Mage::getStoreConfig(self::XML_PATH_DESIGN_BUTTON_SIZE, $store);
-    }
-
-    public function getAddressBookWidgetSize($store = null) {
-        return new Varien_Object(array(
-            'width' => Mage::getStoreConfig(self::XML_PATH_DESIGN_ADDRESS_WIDTH, $store) . 'px',
-            'height' => Mage::getStoreConfig(self::XML_PATH_DESIGN_ADDRESS_HEIGHT, $store) . 'px'
-        ));
-    }
-
-    public function getWalletWidgetSize($store = null) {
-        return new Varien_Object(array(
-            'width' => Mage::getStoreConfig(self::XML_PATH_DESIGN_PAYMENT_WIDTH, $store) . 'px',
-            'height' => Mage::getStoreConfig(self::XML_PATH_DESIGN_PAYMENT_HEIGHT, $store) . 'px'
-        ));
-    }
-
-    public function getPaymentAction($store = null) {
+    /**
+     * Returns configured payment action
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getPaymentAction($store = null)
+    {
         return Mage::getStoreConfig(self::XML_PATH_GENERAL_PAYMENT_ACTION, $store);
     }
 
-    public function authorizeImmediately($store = null) {
-        return in_array(Mage::getStoreConfig(self::XML_PATH_GENERAL_PAYMENT_ACTION, $store), array(
-            Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_AUTHORIZE,
-            Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_AUTHORIZE_CAPTURE
-        ));
+    /**
+     * Checks whether order amount shall be authorized immediately after the order is placed
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function authorizeImmediately($store = null)
+    {
+        return in_array(
+            $this->getPaymentAction($store),
+            array(
+                Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_AUTHORIZE,
+                Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_AUTHORIZE_CAPTURE
+            )
+        );
     }
 
-    public function captureImmediately($store = null) {
-        return Mage::getStoreConfig(self::XML_PATH_GENERAL_PAYMENT_ACTION, $store) == Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_AUTHORIZE_CAPTURE;
+    /**
+     * Checks whether order amount shall be captured immediately after the order is placed
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function captureImmediately($store = null)
+    {
+        return $this->getPaymentAction($store)
+            == Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_AUTHORIZE_CAPTURE;
     }
 
-    public function isManualAuthorizationAllowed($store = null) {
-        return Mage::getStoreConfig(self::XML_PATH_GENERAL_PAYMENT_ACTION, $store) == Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_MANUAL;
+    /**
+     * Checks whether manual authorization is allowed
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isManualAuthorizationAllowed($store = null)
+    {
+        return $this->getPaymentAction($store)
+            == Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_MANUAL;
     }
 
-    public function isPaymentProcessingAllowed($store = null) {
-        return Mage::getStoreConfig(self::XML_PATH_GENERAL_PAYMENT_ACTION, $store) != Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_ERP;
+    /**
+     * Checks whether shop is allowed to process the payment
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isPaymentProcessingAllowed($store = null)
+    {
+        return $this->getPaymentAction($store)
+            != Creativestyle_AmazonPayments_Model_Payment_Abstract::ACTION_ERP;
     }
 
-    public function getNewOrderStatus($store = null) {
+    /**
+     * Returns authorization request mode (sync, async)
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getAuthorizationMode($store = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_GENERAL_AUTHORIZATION_MODE, $store);
+    }
+
+    /**
+     * Checks if authorization should be requested synchronously
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isAuthorizationSynchronous($store = null)
+    {
+        return in_array(
+            $this->getAuthorizationMode($store),
+            array(
+                Creativestyle_AmazonPayments_Model_Lookup_AuthorizationMode::AUTO,
+                Creativestyle_AmazonPayments_Model_Lookup_AuthorizationMode::SYNCHRONOUS
+            )
+        );
+    }
+
+    /**
+     * Checks if authorization should be re-requested asynchronously,
+     * after synchronous authorization fails with TransactionTimedOut
+     * declined state
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isAuthorizationOmnichronous($store = null)
+    {
+        return in_array(
+            $this->getAuthorizationMode($store),
+            array(
+                Creativestyle_AmazonPayments_Model_Lookup_AuthorizationMode::AUTO
+            )
+        );
+    }
+
+    /**
+     * Checks whether checkout widgets are configured to be
+     * displayed in responsive mode
+
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isResponsive($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_DESIGN_RESPONSIVE, $store);
+    }
+
+    /**
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getPayButtonSize($store = null)
+    {
+        if ($this->isLoginActive()) {
+            return Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_SIZE, $store);
+        }
+
+        return Mage::getStoreConfig(self::XML_PATH_DESIGN_BUTTON_SIZE, $store);
+    }
+
+    /**
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getPayButtonColor($store = null)
+    {
+        if ($this->isLoginActive()) {
+            return Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_COLOR, $store);
+        }
+
+        return Mage::getStoreConfig(self::XML_PATH_DESIGN_BUTTON_COLOR, $store);
+    }
+
+    /**
+     * @param mixed|null $store
+     * @return string|null
+     */
+    public function getPayButtonUrl($store = null)
+    {
+        if (!$this->isLoginActive()) {
+            $buttonUrls = $this->getGlobalConfigData('button_urls');
+            $env = $this->isSandboxActive($store) ? 'sandbox' : 'live';
+            if (isset($buttonUrls[$this->getRegion($store)][$env])) {
+                return sprintf(
+                    '%s?sellerId=%s&amp;size=%s&amp;color=%s',
+                    $buttonUrls[$this->getRegion($store)][$env],
+                    $this->getMerchantId($store),
+                    $this->getPayButtonSize($store),
+                    $this->getPayButtonColor($store)
+                );
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns Amazon Pay button design params
+     *
+     * @param mixed|null $store
+     * @return array
+     */
+    public function getPayButtonDesign($store = null)
+    {
+        return array(
+            'type' => Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_TYPE, $store),
+            'size' => Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_SIZE, $store),
+            'color' => Mage::getStoreConfig(self::XML_PATH_DESIGN_PAY_BUTTON_COLOR, $store)
+        );
+    }
+
+    /**
+     * Returns Login with Amazon button design params
+     *
+     * @param mixed|null $store
+     * @return array
+     */
+    public function getLoginButtonDesign($store = null)
+    {
+        return array(
+            'type' => Mage::getStoreConfig(self::XML_PATH_DESIGN_LOGIN_BUTTON_TYPE, $store),
+            'size' => Mage::getStoreConfig(self::XML_PATH_DESIGN_LOGIN_BUTTON_SIZE, $store),
+            'color' => Mage::getStoreConfig(self::XML_PATH_DESIGN_LOGIN_BUTTON_COLOR, $store)
+        );
+    }
+
+    /**
+     * Returns status for newly created order
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getNewOrderStatus($store = null)
+    {
         return Mage::getStoreConfig(self::XML_PATH_GENERAL_NEW_ORDER_STATUS, $store);
     }
 
-    public function getAuthorizedOrderStatus($store = null) {
+    /**
+     * Returns status for order with confirmed authorization
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getAuthorizedOrderStatus($store = null)
+    {
         return Mage::getStoreConfig(self::XML_PATH_GENERAL_ORDER_STATUS, $store);
     }
 
-    public function getHoldedOrderStatus($store = null) {
-        return 'holded';
+    /**
+     * Returns status for the order on hold
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getHoldedOrderStatus($store = null)
+    {
+        return Mage::getModel('sales/order_status')
+            ->setStore($store)
+            ->loadDefaultByState(Mage_Sales_Model_Order::STATE_HOLDED)
+            ->getStatus();
     }
 
-    public function sendEmailConfirmation($store = null) {
-        return Mage::getStoreConfigFlag(self::XML_PATH_EMAIL_ORDER_CONFIRMATION, $store);
-    }
-
-    public function getAuthorizationDeclinedEmailTemplate($store = null) {
+    /**
+     * Returns e-mail template for declined authorization
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getAuthorizationDeclinedEmailTemplate($store = null)
+    {
         return Mage::getStoreConfig(self::XML_PATH_EMAIL_DECLINED_TEMPLATE, $store);
     }
 
-    public function getAuthorizationDeclinedEmailIdentity($store = null) {
+    /**
+     * Returns e-mail sender identity for declined authorization
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getAuthorizationDeclinedEmailIdentity($store = null)
+    {
         return Mage::getStoreConfig(self::XML_PATH_EMAIL_DECLINED_IDENTITY, $store);
     }
 
-    public function getLogDelimiter() {
-        return ';';
-    }
-
-    public function getLogEnclosure() {
-        return '"';
-    }
-
-    public function isCurrentIpAllowed($store = null) {
+    /**
+     * Checks whether current requester IP is allowed to display Amazon widgets
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isCurrentIpAllowed($store = null)
+    {
         $allowedIps = trim(Mage::getStoreConfig(self::XML_PATH_DEVELOPER_ALLOWED_IPS, $store), ' ,');
         if ($allowedIps) {
             $allowedIps = explode(',', str_replace(' ', '', $allowedIps));
@@ -355,22 +515,34 @@ class Creativestyle_AmazonPayments_Model_Config {
                 if (Mage::app()->getRequest()->getServer('HTTP_X_FORWARDED_FOR')) {
                     $currentIp = Mage::app()->getRequest()->getServer('HTTP_X_FORWARDED_FOR');
                 }
+
                 return in_array($currentIp, $allowedIps);
             }
         }
+
         return true;
     }
 
-    public function isCurrentLocaleAllowed($store = null) {
-        // no language restriction for enabled LwA
-        if (Mage::getStoreConfigFlag(self::XML_PATH_LOGIN_ACTIVE, $store)) {
+    /**
+     * Checks whether Amazon widgets are allowed to be shown
+     * in the current shop locale
+     *
+     * @param mixed|null $store
+     * @return bool
+     */
+    public function isCurrentLocaleAllowed($store = null)
+    {
+        // no locale restriction when Login is enabled
+        if ($this->isLoginActive($store)) {
             return true;
         }
+
         $currentLocale = Mage::app()->getLocale()->getLocaleCode();
         $language = strtolower($currentLocale);
-        if (strpos($language, '_')) {
+        if (strpos($language, '_') !== 0) {
             $language = substr($language, 0, strpos($language, '_'));
         }
+
         switch ($this->getRegion($store)) {
             case 'de':
                 return ($language == 'de');
@@ -382,38 +554,117 @@ class Creativestyle_AmazonPayments_Model_Config {
         }
     }
 
-    public function getRecentPolledTransaction() {
-        return Mage::getStoreConfig(self::XML_PATH_GENERAL_RECENT_POLLED_TXN);
-    }
-
-    public function setRecentPolledTransaction($txnId) {
-        Mage::getConfig()->saveConfig(self::XML_PATH_GENERAL_RECENT_POLLED_TXN, $txnId)->cleanCache();
-    }
-
-    public function isResponsive($store = null) {
-        return Mage::getStoreConfigFlag(self::XML_PATH_DESIGN_RESPONSIVE, $store);
-    }
-
-    public function getDisplayLanguage($store = null) {
-        $displayLanguage = Mage::getStoreConfig(self::XML_PATH_LOGIN_LANGUAGE, $store);
-        if (!$displayLanguage) {
-            $currentLocale = Mage::app()->getLocale()->getLocaleCode();
-            $displayLanguage = Mage::getSingleton('amazonpayments/lookup_language')->getLanguageByLocale($currentLocale);
+    /**
+     * Returns global config data
+     *
+     * @param string|null $key
+     * @return string|array
+     */
+    public function getGlobalConfigData($key = null)
+    {
+        if (null === $this->_globalConfigData) {
+            $this->_globalConfigData = Mage::getConfig()->getNode('global/creativestyle/amazonpayments')->asArray();
         }
-        return $displayLanguage;
+
+        if (null !== $key) {
+            if (array_key_exists($key, $this->_globalConfigData)) {
+                return $this->_globalConfigData[$key];
+            }
+
+            return null;
+        }
+
+        return $this->_globalConfigData;
     }
 
-    public function getCaBundleFile() {
-        $caBundlePath = $this->getGlobalDataValue('ca_bundle');
-        if ($caBundlePath && file_exists($caBundlePath)) return $caBundlePath;
+    /**
+     * Returns path to the custom CA bundle file
+     *
+     * @return string|null
+     */
+    public function getCaBundlePath()
+    {
+        return $this->getGlobalConfigData('ca_bundle');
+    }
+
+    /**
+     * Returns array of params needed for API connection
+     *
+     * @param mixed|null $store
+     * @return array
+     */
+    public function getApiConnectionParams($store = null)
+    {
+        return array(
+            'merchantId' => $this->getMerchantId($store),
+            'accessKey' => trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_ACCESS_KEY, $store)),
+            'secretKey' => trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_SECRET_KEY, $store)),
+            'applicationName' => 'Creativestyle Amazon Payments Advanced Magento Extension',
+            'applicationVersion' => Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version'),
+            'region' => $this->getRegion($store),
+            'environment' => $this->isSandboxActive($store) ? 'sandbox' : 'live',
+            'serviceUrl' => null,
+            'widgetUrl' => null,
+            'caBundleFile' => $this->getCaBundlePath(),
+            'clientId' => null,
+            'cnName' => 'sns.amazonaws.com'
+        );
+    }
+
+    /**
+     * Returns Amazon API Merchant Values object
+     *
+     * @param mixed|null $store
+     * @return OffAmazonPaymentsService_MerchantValues
+     */
+    public function getApiMerchantValues($store = null)
+    {
+        /** @var OffAmazonPaymentsService_MerchantValuesBuilder $apiMerchantValuesBuilder */
+        $apiMerchantValuesBuilder = OffAmazonPaymentsService_MerchantValuesBuilder::create(
+            $this->getApiConnectionParams($store)
+        );
+        return $apiMerchantValuesBuilder->build();
+    }
+
+    /**
+     * Returns Widgets JS library URL
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getWidgetJsUrl($store = null)
+    {
+        if ($this->isLoginActive($store)) {
+            return $this->getApiMerchantValues($store)->getWidgetUrl();
+        }
+
+        return str_replace('lpa/', '', $this->getApiMerchantValues($store)->getWidgetUrl());
+    }
+
+    /**
+     * Returns Login API URL
+     *
+     * @param mixed|null $store
+     * @return string
+     */
+    public function getLoginApiUrl($store = null)
+    {
+        $apiUrls = $this->getGlobalConfigData('login_api_urls');
+        if (isset($apiUrls[$this->getRegion($store)][$this->isSandboxActive($store) ? 'sandbox' : 'live'])) {
+            return $apiUrls[$this->getRegion($store)][$this->isSandboxActive($store) ? 'sandbox' : 'live'];
+        }
+
         return '';
     }
 
     /**
-     * @param null|string|bool|int|Mage_Core_Model_Store $store
+     * Returns configured store name
+     *
+     * @param mixed|null $store
      * @return string
      */
-    public function getStoreName($store = null) {
+    public function getStoreName($store = null)
+    {
         $storeName = Mage::getStoreConfig(self::XML_PATH_STORE_NAME, $store);
         $storeName = $storeName
             ? $storeName
@@ -424,4 +675,47 @@ class Creativestyle_AmazonPayments_Model_Config {
             );
         return $storeName;
     }
+
+    /**
+     * Returns entity ID of the recently polled payment transaction
+     *
+     * @return string|null
+     */
+    public function getRecentPolledTransaction()
+    {
+        return Mage::getStoreConfig(self::XML_PATH_GENERAL_RECENT_POLLED_TXN);
+    }
+
+    /**
+     * Sets recently polled payment transaction
+     *
+     * @param int $txnId
+     */
+    public function setRecentPolledTransaction($txnId)
+    {
+        Mage::getConfig()->saveConfig(self::XML_PATH_GENERAL_RECENT_POLLED_TXN, $txnId)->cleanCache();
+    }
+
+    /**
+     * Returns CSV log fields delimiter character
+     *
+     * @return string
+     */
+    public function getLogDelimiter()
+    {
+        return ';';
+    }
+
+    /**
+     * Returns CSV log fields enclosure character
+     * @return string
+     */
+    public function getLogEnclosure()
+    {
+        return '"';
+    }
+
+/*
+
+*/
 }

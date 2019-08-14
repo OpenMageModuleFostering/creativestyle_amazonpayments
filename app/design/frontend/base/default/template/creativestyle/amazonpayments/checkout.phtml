@@ -1,23 +1,30 @@
 <?php
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
 ?>
+<?php /** @var Creativestyle_AmazonPayments_Block_Checkout $this */ ?>
+<script type="text/javascript">
+    if (!window.Review)
+        var Review = function() {};
+</script>
 <div class="page-title">
     <h1><?php echo $this->__('Amazon Pay'); ?></h1>
 </div>
 <?php echo $this->getChildHtml('capture_notice'); ?>
-<ol class="apa<?php if ($this->isVirtual()): ?> apa-virtual-checkout<?php endif; ?>" id="checkoutSteps">
+<ol class="<?php echo $this->getContainerClass(); ?>" id="checkoutSteps">
     <?php if ($this->showSandboxToolbox()): ?>
         <li class="section store-widget">
             <div class="step-title">
@@ -26,7 +33,7 @@
             <div class="section-content"><?php echo $this->getChildHtml('sandbox_toolbox'); ?></div>
         </li>
     <?php endif; ?>
-    <?php if (!$this->isVirtual()): ?>
+    <?php if (!$this->isQuoteVirtual()): ?>
         <li id="apa-shipping" class="section amazon-widget">
             <div id="addressBookWidgetDiv"></div>
         </li>
@@ -34,7 +41,7 @@
     <li id="apa-payment" class="section amazon-widget">
         <div id="walletWidgetDiv"></div>
     </li>
-    <?php if (!$this->isVirtual()): ?>
+    <?php if (!$this->isQuoteVirtual()): ?>
         <form id="co-shipping-method-form" action="">
             <li id="apa-shipping_method" class="section narrow-section store-widget">
                 <div class="step-title">

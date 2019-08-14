@@ -128,7 +128,6 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <depends><active>1</active></depends>
                         </sandbox>
                         <sandbox_toolbox translate="label">
                             <label>Show Sandbox Toolbox</label>
@@ -226,6 +225,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <depends><login_active>1</login_active></depends>
                         </language>
                         <authentication>
                             <label>Authentication Experience</label>
@@ -235,71 +235,23 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <depends><active>1</active></depends>
+                            <depends><login_active>1</login_active></depends>
                         </authentication>
                     </fields>
                 </general>
-                <login translate="label">
-                    <label>Login with Amazon</label>
-                    <sort_order>250</sort_order>
-                    <show_in_default>0</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <fields>
-                        <active translate="label">
-                            <label>Enable Login with Amazon</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </active>
-                        <client_id translate="label comment">
-                            <label>Client ID</label>
-                            <comment><![CDATA[Account information can be found <a target="_blank" href="https://sellercentral-europe.amazon.com/hz/me/integration/details">here</a>]]></comment>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends><active>1</active></depends>
-                        </client_id>
-                        <language>
-                            <label>Display Language</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>amazonpayments/lookup_language</source_model>
-                            <sort_order>25</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends><active>1</active></depends>
-                        </language>
-                        <authentication>
-                            <label>Authentication Experience</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>amazonpayments/lookup_authentication</source_model>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends><active>1</active></depends>
-                        </authentication>
-                    </fields>
-                </login>
                 <store translate="label">
                     <label>Store Options</label>
                     <sort_order>250</sort_order>
-                    <show_in_default>0</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
                         <name translate="label">
                             <label>Store name</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>10</sort_order>
-                            <show_in_default>0</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </name>
                     </fields>
@@ -311,16 +263,6 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <order_confirmation translate="label">
-                            <label>Send order confirmation</label>
-                            <comment>Select whether an email confirmation for newly placed orders shall be sent by the shop</comment>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </order_confirmation>
                         <authorization_declined_template translate="label">
                             <label>Declined Payment Email Template</label>
                             <frontend_type>select</frontend_type>

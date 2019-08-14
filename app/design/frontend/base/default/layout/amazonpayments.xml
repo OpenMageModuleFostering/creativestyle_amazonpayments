@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2017 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
 -->
 <layout version="1.2.0">
@@ -19,8 +21,6 @@
         <reference name="head">
             <action method="addCss"><stylesheet helper="amazonpayments/getHeadCss"/></action>
             <action method="addCss"><stylesheet helper="amazonpayments/getWidgetsCss"/></action>
-            <action method="addJs"><script helper="amazonpayments/getHeadTooltipJs"/></action>
-            <action method="addJs"><script helper="amazonpayments/getHeadJs"/></action>
         </reference>
         <reference name="cart_sidebar.extra_actions">
             <block type="amazonpayments/pay_button" name="top_cart.amazonpayments.pay_button" before="-">
@@ -29,16 +29,13 @@
             </block>
         </reference>
         <reference name="before_body_end">
-            <block type="amazonpayments/js" name="amazonpayments.js" template="creativestyle/amazonpayments/js.phtml">
-                <block type="amazonpayments/login_js" name="amazonpayments.js.login" as="amazonpayments_login_js" template="creativestyle/amazonpayments/login/js.phtml"/>
-                <block type="amazonpayments/button_js" name="amazonpayments.js.button" template="creativestyle/amazonpayments/button/js.phtml"/>
-            </block>
+            <block type="amazonpayments/js" name="amazonpayments.js"/>
         </reference>
     </default>
     <checkout_cart_index>
         <reference name="checkout.cart.methods">
             <block type="amazonpayments/pay_button" name="checkout.cart.methods.amazonpayments_pay.bottom" before="-">
-                <action method="setIdSuffix"><value>div</value></action>
+                <action method="setIdSuffix"><value>bottom</value></action>
                 <action method="setEnableOr"><value>1</value></action>
             </block>
         </reference>
@@ -52,17 +49,14 @@
     <checkout_onepage_index>
         <reference name="checkout.onepage.login.before">
             <block type="amazonpayments/onepage_button" name="onepage.amazonpayments.button">
-                <block type="amazonpayments/pay_button" name="onepage.amazonpayments.button.pay" template="creativestyle/amazonpayments/onepage/button.phtml">
-                    <action method="setIdSuffix"><value>onepage</value></action>
-                </block>
-                <block type="amazonpayments/login_button" name="onepage.amazonpayments.button.login" template="creativestyle/amazonpayments/onepage/button.phtml">
+                <block type="amazonpayments/pay_button" name="onepage.amazonpayments.button.pay" as="amazonpayments_button_pay" before="-">
                     <action method="setIdSuffix"><value>onepage</value></action>
                 </block>
             </block>
         </reference>
     </checkout_onepage_index>
-    <amazonpayments_advanced_checkout_index>
-        <label>AmazonPayments Advanced Checkout</label>
+    <amazonpayments_checkout_index>
+        <label>Amazon Pay checkout</label>
         <remove name="left"/>
         <remove name="right"/>
         <reference name="root">
@@ -74,7 +68,7 @@
                 <block type="checkout/onepage_shipping_method" name="amazonpayments.checkout.shipping_method" as="shipping_method" template="creativestyle/amazonpayments/checkout/shipping_method.phtml"/>
                 <block type="checkout/onepage_shipping_method_additional" name="amazonpayments.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
                 <block type="amazonpayments/checkout_sandboxToolbox" name="amazonpayments.checkout.sandbox_toolbox" as="sandbox_toolbox" template="creativestyle/amazonpayments/checkout/sandbox_toolbox.phtml"/>
-                <block type="checkout/onepage_review_info" name="amazonpayments_advanced.checkout.review" as="review" template="checkout/onepage/review/info.phtml">
+                <block type="checkout/onepage_review_info" name="amazonpayments.checkout.review" as="review" template="checkout/onepage/review/info.phtml">
                     <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
                     <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/item.phtml</template></action>
                     <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/onepage/review/item.phtml</template></action>
@@ -84,6 +78,7 @@
                     </block>
                     <block type="core/text_list" name="checkout.onepage.review.info.items.after" as="items_after" translate="label">
                         <label>Items After</label>
+                        <block type="checkout/cart_coupon" name="checkout.onepage.review.coupon" as="coupon" template="creativestyle/amazonpayments/checkout/review/coupon.phtml"/>
                     </block>
                     <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
                     <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/checkout/review/button.phtml"/>
@@ -91,15 +86,15 @@
             </block>
         </reference>
         <reference name="amazonpayments.js">
-            <block type="amazonpayments/checkout_js" name="amazonpayments.js.checkout" template="creativestyle/amazonpayments/checkout/js.phtml"/>
+            <action method="setIsCheckout"><value>1</value></action>
         </reference>
-    </amazonpayments_advanced_checkout_index>
-    <amazonpayments_advanced_shippingmethod>
+    </amazonpayments_checkout_index>
+    <amazonpayments_checkout_shippingmethod>
         <remove name="right"/>
         <remove name="left"/>
         <block type="checkout/onepage_shipping_method_available" name="root" output="toHtml" template="checkout/onepage/shipping_method/available.phtml"/>
-    </amazonpayments_advanced_shippingmethod>
-    <amazonpayments_advanced_review>
+    </amazonpayments_checkout_shippingmethod>
+    <amazonpayments_checkout_review>
         <remove name="right"/>
         <remove name="left"/>
         <block type="checkout/onepage_review_info" name="root" output="toHtml" template="checkout/onepage/review/info.phtml">
@@ -117,7 +112,7 @@
             <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
             <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/checkout/review/button.phtml"/>
         </block>
-    </amazonpayments_advanced_review>
+    </amazonpayments_checkout_review>
     <customer_account_login>
         <reference name="content">
             <block type="amazonpayments/login_button" name="amazonpayments_login" template="creativestyle/amazonpayments/login/button/account_login.phtml">
@@ -136,7 +131,7 @@
     </customer_account_create>
     <customer_account_logoutsuccess translate="label">
         <reference name="amazonpayments.js">
-            <block type="amazonpayments/login_js" name="amazonpayments.js.logout" as="amazonpayments_logout_js" template="creativestyle/amazonpayments/login/logout.phtml"/>
+            <action method="setIsLogout"><value>1</value></action>
         </reference>
     </customer_account_logoutsuccess>
     <amazonpayments_advanced_login_index>

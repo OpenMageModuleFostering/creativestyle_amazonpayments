@@ -1,39 +1,60 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2015 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2015 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2015 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Login_Redirect extends Creativestyle_AmazonPayments_Block_Login_Abstract {
-
-    public function getAccessTokenParamName() {
+class Creativestyle_AmazonPayments_Block_Login_Redirect extends Creativestyle_AmazonPayments_Block_Login_Abstract
+{
+    /**
+     * Returns access token param name
+     *
+     * @return string
+     */
+    public function getAccessTokenParamName() 
+    {
         if ($this->hasData('access_token_param_name')) {
             return $this->getData('access_token_param_name');
         }
+
         return 'access_token';
     }
 
-    public function getRedirectUrl() {
+    /**
+     * Returns redirect URL
+     *
+     * @return string
+     */
+    public function getRedirectUrl() 
+    {
         if ($this->hasData('redirect_url')) {
             return $this->getData('redirect_url');
         }
+
         return $this->getFailureUrl();
     }
 
-    public function getFailureUrl() {
+    /**
+     * Returns failure URL
+     *
+     * @return string
+     */
+    public function getFailureUrl() 
+    {
         if ($this->hasData('failure_url')) {
             return $this->getData('failure_url');
         }
+
         return $this->getUrl('customer/account/login');
     }
-
 }

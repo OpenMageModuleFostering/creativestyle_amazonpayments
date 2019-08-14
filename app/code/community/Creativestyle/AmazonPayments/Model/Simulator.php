@@ -1,30 +1,37 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Simulator {
-
+class Creativestyle_AmazonPayments_Model_Simulator
+{
+    /**
+     * @var array|null
+     */
     protected static $_availableSimulations = null;
 
-    protected static function _getConfig() {
+    protected static function _getConfig() 
+    {
         return Mage::getSingleton('amazonpayments/config');
     }
 
-    public static function getAvailableSimulations() {
+    // @codingStandardsIgnoreStart
+    public static function getAvailableSimulations() 
+    {
         if (null === self::$_availableSimulations) {
             self::$_availableSimulations = array();
-            $objects = self::_getConfig()->getGlobalDataValue('objects');
+            $objects = self::_getConfig()->getGlobalConfigData('objects');
             if (is_array($objects) && !empty($objects)) {
                 foreach ($objects as $objectKey => &$object) {
                     if (isset($object['states']) && is_array($object['states']) && !empty($object['states'])) {
@@ -37,6 +44,7 @@ class Creativestyle_AmazonPayments_Model_Simulator {
                                         unset($state['reasons'][$reasonKey]);
                                     }
                                 }
+
                                 if (empty($state['reasons'])) {
                                     unset($object['states'][$stateKey]);
                                 }
@@ -48,13 +56,17 @@ class Creativestyle_AmazonPayments_Model_Simulator {
                         }
                     }
                 }
+
                 self::$_availableSimulations = $objects;
             }
         }
+
         return self::$_availableSimulations;
     }
+    // @codingStandardsIgnoreEnd
 
-    public static function getSimulationOptions($object, $state, $reason = null) {
+    public static function getSimulationOptions($object, $state, $reason = null) 
+    {
         $availableSimulations = self::getAvailableSimulations();
         if (isset($availableSimulations[$object])) {
             if (isset($availableSimulations[$object]['states'][$state])) {
@@ -63,15 +75,20 @@ class Creativestyle_AmazonPayments_Model_Simulator {
                         return $availableSimulations[$object]['states'][$state]['simulation_options'];
                     }
                 } else {
-                    if (isset($availableSimulations[$object]['states'][$state]['reasons'][$reason]['simulation_options'])) {
-                        return $availableSimulations[$object]['states'][$state]['reasons'][$reason]['simulation_options'];
+                    if (isset(
+                        $availableSimulations[$object]['states'][$state]['reasons'][$reason]['simulation_options']
+                    )) {
+                        return
+                            $availableSimulations[$object]['states'][$state]['reasons'][$reason]['simulation_options'];
                     }
                 }
             }
         }
+
         return null;
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Get simulation string for use in API calls
      *
@@ -79,16 +96,18 @@ class Creativestyle_AmazonPayments_Model_Simulator {
      * @param string $transactionType
      * @return string
      */
-    public static function simulate(Varien_Object $payment, $transactionType = null) {
+    public static function simulate(Varien_Object $payment, $transactionType = null) 
+    {
         // object state simulations are available only in the sandbox mode
-        if (null !== $transactionType && self::_getConfig()->isSandbox()) {
+        if (null !== $transactionType && self::_getConfig()->isSandboxActive()) {
             $availableSimulations = self::getAvailableSimulations();
             // check if the requested transaction type is on the list of allowed simulations
             if (array_key_exists($transactionType, $availableSimulations)) {
                 try {
                     $simulationData = $payment->getAdditionalInformation('_simulation_data');
                     // check if payment contains any simulation and for which transaction type
-                    if (!empty($simulationData) && array_key_exists('object', $simulationData) && $simulationData['object'] == $transactionType) {
+                    if (!empty($simulationData) && array_key_exists('object', $simulationData)
+                        && $simulationData['object'] == $transactionType) {
                         $simulation = array(
                             'SandboxSimulation' => array(
                                 'State' => $simulationData['state']
@@ -97,6 +116,7 @@ class Creativestyle_AmazonPayments_Model_Simulator {
                         if (array_key_exists('reason_code', $simulationData)) {
                             $simulation['SandboxSimulation']['ReasonCode'] = $simulationData['reason_code'];
                         }
+
                         if (array_key_exists('options', $simulationData) && is_array($simulationData['options'])) {
                             foreach ($simulationData['options'] as $option => $value) {
                                 if (is_array($value) && isset($value['@']['type']) && isset($value[0])) {
@@ -113,11 +133,14 @@ class Creativestyle_AmazonPayments_Model_Simulator {
                                 }
                             }
                         }
+
                         $simulationString = Mage::helper('core')->jsonEncode($simulation);
                         if ($transactionType == 'OrderReference' && $simulationData['state'] == 'Closed') {
                             $amazonOrderReferenceId = $payment->getAdditionalInformation('amazon_order_reference_id');
-                            Mage::getSingleton('amazonpayments/api_advanced')->closeOrderReference($amazonOrderReferenceId, $simulationString);
+                            Mage::getSingleton('amazonpayments/api_advanced')
+                                ->closeOrderReference($amazonOrderReferenceId, $simulationString);
                         }
+
                         $payment->setAdditionalInformation('_simulation_data', null);
                         return $simulationString;
                     }
@@ -126,7 +149,8 @@ class Creativestyle_AmazonPayments_Model_Simulator {
                 }
             }
         }
+
         return null;
     }
-
+    // @codingStandardsIgnoreEnd
 }

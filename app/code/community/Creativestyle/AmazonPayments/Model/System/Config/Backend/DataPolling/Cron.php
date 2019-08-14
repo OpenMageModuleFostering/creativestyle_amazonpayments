@@ -1,22 +1,26 @@
 <?php
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_System_Config_Backend_DataPolling_Cron extends Mage_Core_Model_Config_Data {
+class Creativestyle_AmazonPayments_Model_System_Config_Backend_DataPolling_Cron extends Mage_Core_Model_Config_Data
+{
 
     const XML_PATH_DATA_POLLING_CRON_EXPR = 'crontab/jobs/amazonpayments_advanced_data_poll/schedule/cron_expr';
 
-    protected function _afterSave() {
+    protected function _afterSave() 
+    {
         $cronExprModel = Mage::getModel('core/config_data')->load(self::XML_PATH_DATA_POLLING_CRON_EXPR, 'path');
         if (!$this->getData('groups/general/fields/ipn_active/value')) {
             $frequency = $this->getData('groups/general/fields/polling_frequency/value');
@@ -36,20 +40,20 @@ class Creativestyle_AmazonPayments_Model_System_Config_Backend_DataPolling_Cron 
             } else if ($minutes) {
                 $cronExpr = sprintf('*/%s * * * *', $minutes);
             }
+
             try {
                 $cronExprModel->setValue($cronExpr)
                     ->setPath(self::XML_PATH_DATA_POLLING_CRON_EXPR)
                     ->save();
             } catch (Exception $e) {
-                throw new Exception(Mage::helper('cron')->__('Unable to save cron expression.'));
+                Mage::throwException('Unable to save cron expression.');
             }
         } elseif ($cronExprModel->getId()) {
             try {
                 $cronExprModel->delete();
             } catch (Exception $e) {
-                throw new Exception(Mage::helper('cron')->__('Unable to delete cron expression.'));
+                Mage::throwException('Unable to delete cron expression.');
             }
         }
     }
-
 }

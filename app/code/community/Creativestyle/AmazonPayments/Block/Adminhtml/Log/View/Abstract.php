@@ -1,34 +1,62 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Adminhtml_Log_View_Abstract extends Mage_Adminhtml_Block_Widget_Container {
-
+abstract class Creativestyle_AmazonPayments_Block_Adminhtml_Log_View_Abstract extends
+ Mage_Adminhtml_Block_Widget_Container
+{
     /**
-     * Instance of the log model
+     * Log model instance
      *
-     * @var Varien_Object $_model
+     * @var Varien_Object|null
      */
     protected $_model = null;
 
-    public function __construct() {
+    /**
+     * @inheritdoc
+     */
+    public function __construct()
+    {
         parent::__construct();
-        $this->_addButton('back', array(
-            'label'     => Mage::helper('adminhtml')->__('Back'),
-            'onclick'   => 'window.location.href=\'' . $this->getUrl('*/*/') . '\'',
-            'class'     => 'back',
-        ));
+        $this->_controller = 'adminhtml_log_' . $this->getLogType();
+        $this->setTemplate('creativestyle/amazonpayments/advanced/log/' . $this->getLogType() . '/view.phtml');
+        $this->_addButton(
+            'back',
+            array(
+                'label'     => Mage::helper('adminhtml')->__('Back'),
+                'onclick'   => 'window.location.href=\'' . $this->getUrl('*/*/') . '\'',
+                'class'     => 'back',
+            )
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function _beforeToHtml()
+    {
+        $this->_headerText = $this->_generateHeaderText();
+        return parent::_beforeToHtml();
+    }
+
+    /**
+     * @return string
+     */
+    protected function _generateHeaderText()
+    {
+        return $this->__($this->getTitle());
     }
 
     /**
@@ -36,43 +64,75 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_View_Abstract extends Mag
      *
      * @return Varien_Object
      */
-    protected function _getLog() {
+    protected function _getLog()
+    {
         return $this->_model;
     }
 
     /**
-     * Converts field names for geters
-     *
-     * @param string $name
-     * @return string
+     * @inheritdoc
      */
-    protected function _underscore($name) {
-        return strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name));
-    }
-
-    public function __call($method, $args) {
-        if (null !== $this->_getLog()) {
-            if (substr($method, 0, 3) == 'get') {
-                $key = $this->_underscore(substr($method,3));
-                return $this->_getLog()->getData($key);
-            }
+    public function __call($method, $args)
+    {
+        switch (substr($method, 0, 3)) {
+            case 'get':
+                $key = $this->_underscore(substr($method, 3));
+                if ($this->_getLog() && $this->_getLog()->hasData($key)) {
+                    return $this->_getLog()->getData($key);
+                }
+                return parent::__call($method, $args);
+            default:
+                return parent::__call($method, $args);
         }
     }
 
-    public function getTimestamp() {
+    /**
+     * @return null|Zend_Date
+     */
+    public function getTimestamp()
+    {
         if (null !== $this->_getLog()) {
+            // @codingStandardsIgnoreStart
             return Mage::app()->getLocale()->date($this->_getLog()->getTimestamp());
+            // @codingStandardsIgnoreEnd
         }
+
         return null;
     }
 
-    public function setLog($model) {
+    /**
+     * Sets log model for the view block
+     *
+     * @param Varien_Object $model
+     * @return $this
+     */
+    public function setLog($model)
+    {
         $this->_model = $model;
         return $this;
     }
 
-    public function getHeaderCssClass() {
+    /**
+     * Returns CSS header class
+     *
+     * @return string
+     */
+    public function getHeaderCssClass()
+    {
         return 'icon-head head-amazonpayments-log ' . parent::getHeaderCssClass();
     }
 
+    /**
+     * Returns the type of handled log
+     *
+     * @return string
+     */
+    abstract public function getLogType();
+
+    /**
+     * Returns page title for the log listing page
+     *
+     * @return string
+     */
+    abstract public function getTitle();
 }

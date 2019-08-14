@@ -1,31 +1,48 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_OrderController extends Mage_Adminhtml_Controller_Action {
+class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_OrderController extends Mage_Adminhtml_Controller_Action
+{
+    /**
+     * Returns Amazon Pay helper
+     *
+     * @return Creativestyle_AmazonPayments_Helper_Data
+     */
+    protected function _getHelper()
+    {
+        return Mage::helper('amazonpayments');
+    }
 
-    public function authorizeAction() {
+    /**
+     * Order manual authorization action
+     */
+    public function authorizeAction()
+    {
         $orderId = $this->getRequest()->getParam('order_id', null);
         if (null !== $orderId) {
             try {
+                /** @var Mage_Sales_Model_Order $order */
                 $order = Mage::getModel('sales/order')->load($orderId);
                 if ($order->getId()) {
-                    if (in_array($order->getPayment()->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
-                        $order->getPayment()
-                            ->setAmountAuthorized($order->getTotalDue())
+                    /** @var Mage_Sales_Model_Order_Payment $payment */
+                    $payment = $order->getPayment();
+                    if (in_array($payment->getMethod(), $this->_getHelper()->getAvailablePaymentMethods())) {
+                        $payment->setAmountAuthorized($order->getTotalDue())
                             ->setBaseAmountAuthorized($order->getBaseTotalDue())
-                            ->getMethodInstance()->authorize($order->getPayment(), $order->getBaseTotalDue());
+                            ->getMethodInstance()->authorize($payment, $order->getBaseTotalDue());
                         $order->save();
                     }
                 }
@@ -36,13 +53,20 @@ class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_OrderController exte
                 $this->_getSession()->addError($this->__('Failed to authorize the payment.'));
                 Mage::logException($e);
             }
+
             $this->_redirect('adminhtml/sales_order/view', array('order_id' => $orderId));
             return;
         }
+
         $this->_redirect('adminhtml/sales_order');
     }
 
-    protected function _isAllowed() {
-        return Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/amazonpayments_authorize');
+    /**
+     * @inheritdoc
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')
+            ->isAllowed('sales/order/actions/amazonpayments_authorize');
     }
 }

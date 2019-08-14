@@ -1,206 +1,224 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2015 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2015 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2015 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Model_Processor_Payment {
+class Creativestyle_AmazonPayments_Model_Processor_Payment
+{
 
     /**
-     * TODO: Payment info instance
+     * Payment info instance
      *
-     * @var null
+     * @var Mage_Sales_Model_Order_Payment|null
      */
     protected $_payment = null;
 
     /**
-     * TODO: [$_store description]
+     * Payment store ID
      *
-     * @var null
+     * @var int|null
      */
-    protected $_store = null;
+    protected $_storeId = null;
 
     /**
-     * TODO: [setPaymentObject description]
+     * Returns API adapter instance
      *
-     * @param Mage_Sales_Model_Order_Payment $payment
-     *
-     * @return Creativestyle_AmazonPayments_Model_Processor_Payment
+     * @return Creativestyle_AmazonPayments_Model_Api_Advanced
      */
-    public function setPaymentObject($payment) {
-        $this->_payment = $payment;
-        $this->_store = $payment->getOrder()->getStoreId();
-        return $this;
+    protected function _getApi()
+    {
+        return Mage::getSingleton('amazonpayments/api_advanced')->setStore($this->getStoreId());
     }
 
     /**
-     * TODO: [getPayment description]
+     * Process transaction simulation request
+     *
+     * @param string $transactionType
+     * @return string
+     */
+    protected function _processTransactionStateSimulation($transactionType)
+    {
+        return Creativestyle_AmazonPayments_Model_Simulator::simulate($this->getPayment(), $transactionType);
+    }
+
+    /**
+     * Returns payment info instance
+     *
      * @return Mage_Sales_Model_Order_Payment
      * @throws Creativestyle_AmazonPayments_Exception
      */
-    public function getPayment() {
+    public function getPayment()
+    {
         if (null === $this->_payment) {
-            throw new Creativestyle_AmazonPayments_Exception('Payment object is not set');
+            throw new Creativestyle_AmazonPayments_Exception('Payment info object is not set');
         }
+
         return $this->_payment;
     }
 
     /**
-     * TODO: [_getApi description]
+     * Sets payment info instance for the processing
      *
-     * @return [type] [description]
+     * @param Mage_Sales_Model_Order_Payment $payment
+     * @return $this
      */
-    protected function _getApi() {
-        return Mage::getSingleton('amazonpayments/api_advanced')->setStore($this->_store);
+    public function setPayment(Mage_Sales_Model_Order_Payment $payment)
+    {
+        $this->_payment = $payment;
+        return $this;
     }
 
     /**
-     * Return Amazon Payments config model instance
+     * Returns order's store ID
      *
-     * @return Creativestyle_AmazonPayments_Model_Config
+     * @return int|null
      */
-    protected function _getConfig() {
-        return Mage::getSingleton('amazonpayments/config');
+    public function getStoreId()
+    {
+        return $this->_storeId;
     }
 
     /**
-     * Import transaction details to the Magento order and its related objects
+     * Sets store ID for processing payment
      *
-     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
-     * @param OffAmazonPaymentsService_Model|OffAmazonPayments_Model $transactionDetails
-     *
-     * @return Varien_Object
+     * @param int $storeId
+     * @return $this
      */
-    protected function _importTransactionDetails($transaction, $transactionDetails = null) {
-        $transactionAdapter = Mage::getModel('amazonpayments/processor_transactionAdapter');
-        $transactionAdapter->setStore($this->_store)
-            ->setTransaction($transaction)
-            ->setTransactionDetails($transactionDetails);
-        return $transactionAdapter;
+    public function setStoreId($storeId)
+    {
+        $this->_storeId = $storeId;
+        return $this;
     }
 
     /**
-     * Transfer order to Amazon Payments gateway
-     *
-     * @param  float $amount
-     * @param  string $transactionSequenceId
+     * @param float $amount
+     * @param string $currency
+     * @param string $transactionReferenceId
+     * @param string $orderId
+     * @param string|null $storeName
+     * @return OffAmazonPaymentsService_Model_OrderReferenceDetails
      */
-    public function order($amount, $transactionSequenceId) {
-        if (!$this->getPayment()->getSkipOrderReferenceProcessing()) {
-            $this->_getApi()->setOrderReferenceDetails(
-                $transactionSequenceId,
-                $amount,
-                $this->getPayment()->getOrder()->getBaseCurrencyCode(),
-                $this->getPayment()->getOrder()->getIncrementId(),
-                $this->_getConfig()->getStoreName()
-            );
-        }
-        $this->_getApi()->confirmOrderReference($transactionSequenceId);
-        Creativestyle_AmazonPayments_Model_Simulator::simulate($this->getPayment(), 'OrderReference');
+    public function setOrderDetails($amount, $currency, $transactionReferenceId, $orderId, $storeName = null)
+    {
+        $transactionDetails = $this->_getApi()->setOrderReferenceDetails(
+            $amount,
+            $currency,
+            $transactionReferenceId,
+            $orderId,
+            $storeName
+        );
+        return $transactionDetails;
+    }
+
+    /**
+     * @param string $transactionReferenceId
+     */
+    public function order($transactionReferenceId)
+    {
+        $this->_getApi()->confirmOrderReference($transactionReferenceId);
+        $this->_processTransactionStateSimulation('OrderReference');
+    }
+
+    /**
+     * @param string $transactionId
+     * @param string|null $closureReason
+     */
+    public function closeOrderReference($transactionId, $closureReason = null)
+    {
+        $this->_getApi()->closeOrderReference($transactionId, $closureReason);
     }
 
     /**
      * Authorize order amount on Amazon Payments gateway
      *
-     * @param  float $amount
-     * @param  string $transactionSequenceId
-     * @param  string $parentTransactionId
-     * @param  bool $captureNow
-     * @param  bool $synchronous
-     *
+     * @param float $amount
+     * @param string $currency
+     * @param string $transactionReferenceId
+     * @param string $parentTransactionId
+     * @param bool $isSync
+     * @param bool $captureNow
      * @return OffAmazonPaymentsService_Model_AuthorizationDetails
      */
-    public function authorize($amount, $transactionSequenceId, $parentTransactionId, $captureNow = false, $synchronous = false) {
+    public function authorize(
+        $amount,
+        $currency,
+        $transactionReferenceId,
+        $parentTransactionId,
+        $isSync = true,
+        $captureNow = false
+    ) {
         return $this->_getApi()->authorize(
-            $parentTransactionId,
-            $transactionSequenceId,
             $amount,
-            $this->getPayment()->getOrder()->getBaseCurrencyCode(),
-            Creativestyle_AmazonPayments_Model_Simulator::simulate($this->getPayment(), 'Authorization'),
+            $currency,
+            $transactionReferenceId,
+            $parentTransactionId,
+            $isSync ? 0 : null,
             $captureNow,
-            $synchronous ? 0 : null
+            $this->_processTransactionStateSimulation('Authorization')
         );
     }
 
     /**
      * Capture order amount on Amazon Payments gateway
      *
-     * @param  float $amount
-     * @param  string $transactionSequenceId
-     * @param  string $parentTransactionId
-     *
-     * @return OffAmazonPaymentsService_Model_AuthorizationDetails
+     * @param float $amount
+     * @param string $currency
+     * @param string $transactionReferenceId
+     * @param string $parentTransactionId
+     * @return OffAmazonPaymentsService_Model_CaptureDetails
      */
-    public function capture($amount, $transactionSequenceId, $parentTransactionId) {
+    public function capture($amount, $currency, $transactionReferenceId, $parentTransactionId)
+    {
         return $this->_getApi()->capture(
-            $parentTransactionId,
-            $transactionSequenceId,
             $amount,
-            $this->getPayment()->getOrder()->getBaseCurrencyCode(),
-            Creativestyle_AmazonPayments_Model_Simulator::simulate($this->getPayment(), 'Capture')
+            $currency,
+            $transactionReferenceId,
+            $parentTransactionId,
+            $this->_processTransactionStateSimulation('Capture')
         );
     }
 
     /**
      * Refund amount on Amazon Payments gateway
      *
-     * @param  float $amount
-     * @param  string $transactionSequenceId
-     * @param  string $parentTransactionId
-     *
-     * @return OffAmazonPaymentsService_Model_AuthorizationDetails
+     * @param float $amount
+     * @param string $currency
+     * @param string $transactionReferenceId
+     * @param string $parentTransactionId
+     * @return OffAmazonPaymentsService_Model_RefundDetails
      */
-    public function refund($amount, $transactionSequenceId, $parentTransactionId) {
+    public function refund($amount, $currency, $transactionReferenceId, $parentTransactionId)
+    {
         return $this->_getApi()->refund(
-            $parentTransactionId,
-            $transactionSequenceId,
             $amount,
-            $this->getPayment()->getOrder()->getBaseCurrencyCode(),
-            Creativestyle_AmazonPayments_Model_Simulator::simulate($this->getPayment(), 'Refund')
+            $currency,
+            $transactionReferenceId,
+            $parentTransactionId,
+            $this->_processTransactionStateSimulation('Refund')
         );
-    }
-
-    /**
-     * Public wrapper for _importTransactionDetails() method
-     *
-     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
-     * @param OffAmazonPaymentsService_Model|OffAmazonPayments_Model $transactionDetails
-     *
-     * @return Varien_Object
-     */
-    public function importTransactionDetails($transaction, $transactionDetails = null) {
-        return $this->_importTransactionDetails($transaction, $transactionDetails);
     }
 
     /**
      * Cancel order reference on Amazon Payments gateway
      */
-    public function cancelOrderReference() {
-        $orderTransaction = $this->getPayment()->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER);
+    public function cancelOrderReference()
+    {
+        $orderTransaction = $this->getPayment()
+            ->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER);
         if ($orderTransaction && !$orderTransaction->getIsClosed()) {
             $this->_getApi()->cancelOrderReference($orderTransaction->getTxnId());
             $orderTransaction->setIsClosed(true)->save();
         }
     }
-
-    /**
-     * [closeOrderReference description]
-     */
-    public function closeOrderReference() {
-        $orderTransaction = $this->getPayment()->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER);
-        if ($orderTransaction && !$orderTransaction->getIsClosed()) {
-            $this->_getApi()->closeOrderReference($orderTransaction->getTxnId());
-            $orderTransaction->setIsClosed(true)->save();
-        }
-    }
-
 }

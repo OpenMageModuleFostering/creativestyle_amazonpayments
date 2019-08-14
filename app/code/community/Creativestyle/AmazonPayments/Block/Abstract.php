@@ -1,20 +1,28 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Block_Template {
 
+/**
+ * Amazon Payments abstract block
+ *
+ * @method $this setIdSuffix(string $value)
+ * @method string getIdSuffix()
+ */
+abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Block_Template
+{
     /**
      * Instance of the current quote
      *
@@ -22,125 +30,151 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
      */
     protected $_quote = null;
 
-    protected $_widgetHtmlIdPrefix = null;
+    /**
+     * ID attribute of the top level block container
+     *
+     * @var string
+     */
+    protected $_containerId = null;
 
-    protected $_widgetHtmlId = null;
+    /**
+     * Prefix for automatically generated container ID
+     *
+     * @var string
+     */
+    protected $_containerIdPrefix = '';
 
-    protected function _isActive() {
-        return $this->_getConfig()->isActive();
-    }
+    /**
+     * CSS class of the top level block container
+     *
+     * @var string
+     */
+    protected $_containerClass = '';
 
-    protected function _isConnectionSecure() {
-        if ($this->_getConfig()->isActive() & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE) {
-            return Mage::app()->getStore()->isCurrentlySecure();
-        }
-        return true;
-    }
-
-    protected function _isOnepageCheckout() {
-        $module = strtolower($this->getRequest()->getModuleName());
-        $controller = strtolower($this->getRequest()->getControllerName());
-        $action = strtolower($this->getRequest()->getActionName());
-        if ($module == 'checkout' && $controller == 'onepage' && $action == 'index') {
-            return true;
-        }
-        return false;
-    }
-
-    protected function _getConfig() {
+    /**
+     * Returns instance of Amazon Payments config object
+     *
+     * @return Creativestyle_AmazonPayments_Model_Config
+     */
+    protected function _getConfig()
+    {
         return Mage::getSingleton('amazonpayments/config');
     }
 
-    protected function _getCheckoutSession() {
+    /**
+     * Returns instance of the checkout session
+     *
+     * @return Mage_Checkout_Model_Session
+     */
+    protected function _getCheckoutSession()
+    {
         return Mage::getSingleton('checkout/session');
     }
 
-    protected function _getCustomerSession() {
+    /**
+     * Returns instance of the customer session
+     *
+     * @return Mage_Customer_Model_Session
+     */
+    protected function _getCustomerSession()
+    {
         return Mage::getSingleton('customer/session');
     }
 
-    protected function _getQuote() {
+    /**
+     * Returns Amazon Pay helper
+     *
+     * @return Creativestyle_AmazonPayments_Helper_Data
+     */
+    protected function _getHelper()
+    {
+        return $this->helper('amazonpayments');
+    }
+
+    /**
+     * Returns Magento core helper
+     *
+     * @return Mage_Core_Helper_Data
+     */
+    protected function _getCoreHelper()
+    {
+        return $this->helper('core');
+    }
+
+    /**
+     * Returns instance of the current quote
+     *
+     * @return Mage_Sales_Model_Quote
+     */
+    protected function _getQuote()
+    {
         if (null === $this->_quote) {
             $this->_quote = $this->_getCheckoutSession()->getQuote();
         }
+
         return $this->_quote;
     }
 
-    public function _quoteHasVirtualItems() {
-        if ($this->_getQuote()->isVirtual()) return true;
+    /**
+     * Checks whether current request is secure
+     *
+     * @return bool
+     */
+    protected function _isConnectionSecure()
+    {
+        return Mage::app()->getStore()->isCurrentlySecure();
+    }
+
+    /**
+     * Checks whether current requester IP is allowed to display Amazon widgets
+     *
+     * @return bool
+     */
+    protected function _isCurrentIpAllowed()
+    {
+        return $this->_getConfig()->isCurrentIpAllowed();
+    }
+
+    /**
+     * Checks whether Amazon widgets are allowed to be shown
+     * in the current shop locale
+     *
+     * @return bool
+     */
+    protected function _isCurrentLocaleAllowed()
+    {
+        return $this->_getConfig()->isCurrentLocaleAllowed();
+    }
+
+    /**
+     * Checks whether current quote has at least one virtual item
+     *
+     * @return bool
+     */
+    protected function _quoteHasVirtualItems()
+    {
+        if ($this->isQuoteVirtual()) {
+            return true;
+        }
+
         foreach ($this->_getQuote()->getAllVisibleItems() as $item) {
             if ($item->getIsVirtual()) {
                 return true;
             }
         }
+
         return false;
     }
 
-    public function getCheckoutUrl() {
-        return Mage::getUrl('amazonpayments/advanced_checkout');
-    }
-
-    public function getLoginRedirectUrl() {
-        if ($this->_isOnepageCheckout()) {
-            return $this->getPayRedirectUrl();
-        }
-        if ($this->isPopup()) {
-            return Mage::getUrl('amazonpayments/advanced_login');
-        }
-        return Mage::getUrl('amazonpayments/advanced_login/redirect');
-    }
-
-    public function getPayRedirectUrl() {
-        if ($this->isPopup()) {
-            return Mage::getUrl('amazonpayments/advanced_login', array('target' => 'checkout'));
-        }
-        return Mage::getUrl('amazonpayments/advanced_login/redirect', array('target' => 'checkout'));
-    }
-
-    public function getMerchantId() {
-        return $this->_getConfig()->getMerchantId();
-    }
-
-    public function getRegion() {
-        return $this->_getConfig()->getRegion();
-    }
-
     /**
-     * @deprecated deprecated since 1.3.4
+     * Returns whether block shall be rendered or not
+     *
+     * @return bool
      */
-    public function getEnvironment() {
-        return $this->_getConfig()->getEnvironment();
-    }
-
-    public function getWidgetHtmlId() {
-        if (null === $this->_widgetHtmlId) {
-            if ($this->getIdSuffix()) {
-                $this->_widgetHtmlId = $this->_widgetHtmlIdPrefix . ucfirst($this->getIdSuffix());
-            } else {
-                $this->_widgetHtmlId = uniqid($this->_widgetHtmlIdPrefix);
-            }
-        }
-        return $this->_widgetHtmlId;
-    }
-
-    public function getWidgetClass() {
-        return $this->_widgetHtmlIdPrefix;
-    }
-
-    public function isLoginActive() {
-        return $this->_getConfig()->isLoginActive();
-    }
-
-    public function isPayActive() {
-        return $this->_getConfig()->isPayActive();
-    }
-
-    public function isLive() {
-        return !$this->_getConfig()->isSandbox();
-    }
-
-    public function isVirtual() {
-        return $this->_getQuote()->isVirtual();
+    protected function _isActive()
+    {
+        return ($this->isLoginActive() || $this->isPayActive())
+            && $this->_isCurrentIpAllowed();
     }
 
     /**
@@ -148,7 +182,8 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
      *
      * @return string
      */
-    protected function _toHtml() {
+    protected function _toHtml()
+    {
         try {
             if ($this->_isActive()) {
                 return parent::_toHtml();
@@ -156,13 +191,142 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
         } catch (Exception $e) {
             Creativestyle_AmazonPayments_Model_Logger::logException($e);
         }
+
         return '';
     }
 
-    public function isPopup() {
-        if (Mage::helper('amazonpayments')->isMobileDevice()) return false;
-        return $this->_getConfig()->isAutoAuthenticationExperience() && $this->_isConnectionSecure()
-            || $this->_getConfig()->isPopupAuthenticationExperience();
+    /**
+     * Encode provided $valueToEncode into the JSON format
+     *
+     * @param mixed $valueToEncode
+     * @return string
+     */
+    protected function _jsonEncode($valueToEncode)
+    {
+        return $this->_getCoreHelper()->jsonEncode($valueToEncode);
     }
 
+    /**
+     * Checks whether Amazon Pay is enabled
+     *
+     * @return bool
+     */
+    public function isPayActive()
+    {
+        return $this->_getConfig()->isPayActive();
+    }
+
+    /**
+     * Checks whether Login with Amazon is enabled
+     *
+     * @return bool
+     */
+    public function isLoginActive()
+    {
+        return $this->_getConfig()->isLoginActive();
+    }
+
+    /**
+     * Returns Merchant ID for the configured Amazon merchant account
+     *
+     * @return string
+     */
+    public function getMerchantId()
+    {
+        return $this->_getConfig()->getMerchantId();
+    }
+
+    /**
+     * Returns Amazon app client ID
+     *
+     * @return string
+     */
+    public function getClientId()
+    {
+        return $this->_getConfig()->getClientId();
+    }
+
+    /**
+     * Returns order reference ID saved in session data
+     *
+     * @return string|null
+     */
+    public function getOrderReferenceId()
+    {
+        return $this->_getCheckoutSession()->getAmazonOrderReferenceId();
+    }
+
+    /**
+     * Returns display language
+     *
+     * @return null|string
+     */
+    public function getDisplayLanguage()
+    {
+        return $this->_getConfig()->getDisplayLanguage();
+    }
+
+    /**
+     * Checks whether extension runs in sandbox mode
+     *
+     * @return bool
+     */
+    public function isSandboxActive()
+    {
+        return $this->_getConfig()->isSandboxActive();
+    }
+
+    /**
+     * Checks whether popup authentication experience shall be used
+     *
+     * @return bool
+     */
+    public function isPopupAuthenticationExperience()
+    {
+        if ($this->_getHelper()->isMobileDevice()) {
+            return false;
+        }
+
+        return $this->_getConfig()->isPopupAuthenticationExperience()
+            || $this->_getConfig()->isAutoAuthenticationExperience()
+            && ($this->_isConnectionSecure() || !$this->isLoginActive());
+    }
+
+    /**
+     * Checks whether current quote contains only virtual products
+     *
+     * @return bool
+     */
+    public function isQuoteVirtual()
+    {
+        return $this->_getQuote()->isVirtual();
+    }
+
+    /**
+     * Returns ID of block's HTML container
+     *
+     * @return string
+     */
+    public function getContainerId()
+    {
+        if (null === $this->_containerId) {
+            if ($containerIdSuffix = $this->getIdSuffix()) {
+                $this->_containerId = $this->_containerIdPrefix . ucfirst($containerIdSuffix);
+            } else {
+                $this->_containerId = uniqid($this->_containerIdPrefix);
+            }
+        }
+
+        return $this->_containerId;
+    }
+
+    /**
+     * Returns class name of block's HTML container
+     *
+     * @return string
+     */
+    public function getContainerClass()
+    {
+        return $this->_containerClass;
+    }
 }

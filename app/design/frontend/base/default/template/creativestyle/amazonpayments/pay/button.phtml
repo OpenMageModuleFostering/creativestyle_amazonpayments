@@ -1,37 +1,46 @@
 <?php
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
 ?>
-<div id="<?php echo $this->getWidgetHtmlId(); ?>" class="<?php echo $this->getWidgetClass(); ?> with-tooltip">
-    <?php if ($buttonImgUrl = $this->getButtonWidgetUrl()): ?>
-        <img src="<?php echo $buttonImgUrl; ?>"/>
+<?php /** @var Creativestyle_AmazonPayments_Block_Pay_Button $this */ ?>
+<?php if ($this->isLoginActive()) : ?>
+    <div id="<?php echo $this->getContainerId(); ?>"
+         class="<?php echo $this->getContainerClass(); ?> with-tooltip">
+    </div>
+    <?php if ($this->isCustomDesignSet()) : ?>
+        <script type="text/javascript">
+            var buttonDiv = $('<?php echo $this->getContainerId(); ?>');
+            <?php if ($buttonType = $this->getButtonType()) : ?>
+                buttonDiv.buttonType = '<?php echo $buttonType; ?>';
+            <?php endif; ?>
+            <?php if ($buttonSize = $this->getButtonSize()) : ?>
+                buttonDiv.buttonSize = '<?php echo $buttonSize; ?>';
+            <?php endif; ?>
+            <?php if ($buttonColor = $this->getButtonColor()) : ?>
+                buttonDiv.buttonColor = '<?php echo $buttonColor; ?>';
+            <?php endif; ?>
+        </script>
     <?php endif; ?>
-</div>
-<?php if ($this->getEnableOr()): ?>
-    <span class="amazonpayments-or"><?php echo $this->__('-OR-'); ?></span>
+<?php else : ?>
+    <div id="<?php echo $this->getContainerId(); ?>" class="<?php echo $this->getContainerClass(); ?> with-tooltip">
+        <?php if ($buttonImgUrl = $this->getButtonWidgetUrl()) : ?>
+            <img src="<?php echo $buttonImgUrl; ?>"/>
+        <?php endif; ?>
+    </div>
 <?php endif; ?>
-<?php if ($this->isCustomDesignSet()): ?>
-    <script type="text/javascript">//<![CDATA[
-        var buttonDiv = $('<?php echo $this->getWidgetHtmlId(); ?>');
-        <?php if ($buttonType = $this->getButtonType()): ?>
-            buttonDiv.buttonType = '<?php echo $buttonType; ?>';
-        <?php endif; ?>
-        <?php if ($buttonSize = $this->getButtonSize()): ?>
-            buttonDiv.buttonSize = '<?php echo $buttonSize; ?>';
-        <?php endif; ?>
-        <?php if ($buttonColor = $this->getButtonColor()): ?>
-            buttonDiv.buttonColor = '<?php echo $buttonColor; ?>';
-        <?php endif; ?>
-    //]]></script>
+<?php if ($this->getEnableOr()) : ?>
+    <span class="amazonpayments-or"><?php echo $this->__('-OR-'); ?></span>
 <?php endif; ?>

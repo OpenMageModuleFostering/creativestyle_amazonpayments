@@ -1,20 +1,21 @@
 <?php
-
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2016 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2016 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2016 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Adminhtml_Notifications extends Mage_Adminhtml_Block_Template {
-
+class Creativestyle_AmazonPayments_Block_Adminhtml_Notifications extends Mage_Adminhtml_Block_Template
+{
     /**
      * Store views collection
      */
@@ -25,27 +26,36 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Notifications extends Mage_Ad
      *
      * @return Mage_Core_Model_Resource_Store_Collection
      */
-    protected function _getStoreCollection() {
+    protected function _getStoreCollection()
+    {
         if (null === $this->_storeCollection) {
             $this->_storeCollection = Mage::getModel('core/store')->getCollection()->load();
         }
+
         return $this->_storeCollection;
     }
 
-    protected function _getConfig() {
+    /**
+     * Returns Amazon Pay config model instance
+     *
+     * @return Creativestyle_AmazonPayments_Model_Config
+     */
+    protected function _getConfig()
+    {
         return Mage::getSingleton('amazonpayments/config');
     }
 
-    public function isLegacyAccount() {
+    public function isLegacyAccount()
+    {
         foreach ($this->_getStoreCollection() as $store) {
-            $active = $this->_getConfig()->isActive($store);
+            $active = $this->_getConfig()->isPayActive($store);
             $merchantId = $this->_getConfig()->getMerchantId($store);
             $clientId = $this->_getConfig()->getClientId($store);
             if ($active && $merchantId && !$clientId) {
                 return true;
             }
         }
+
         return false;
     }
-
 }

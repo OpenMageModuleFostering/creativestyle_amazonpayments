@@ -1,21 +1,51 @@
 <?php
 /**
- * This file is part of the official Amazon Payments Advanced extension
- * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
- * All rights reserved
+ * This file is part of the official Amazon Pay and Login with Amazon extension
+ * for Magento 1.x
  *
- * Reuse or modification of this source code is not allowed
- * without written permission from creativestyle GmbH
+ * (c) 2014 - 2017 creativestyle GmbH. All Rights reserved
+ *
+ * Distribution of the derivatives reusing, transforming or being built upon
+ * this software, is not allowed without explicit written permission granted
+ * by creativestyle GmbH
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
- * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ * @copyright  2014 - 2017 creativestyle GmbH
+ * @author     Marek Zabrowarny <ticket@creativestyle.de>
  */
 ?>
-<?php if ($jsScripts = $this->getJsScripts()): ?>
-    <script type="text/javascript">//<![CDATA[
-        <?php echo $jsScripts; ?>
-    //]]></script>
+<?php /** @var Creativestyle_AmazonPayments_Block_Js $this */ ?>
+<script type="text/javascript" src="<?php echo $this->getJsUrl('creativestyle/amazonpayments.min.js'); ?>"></script>
+<script type="text/javascript">
+    AmazonPayments.setup(<?php echo $this->getJsConfig(); ?>);
+
+    window.onAmazonPaymentsReady = function() {
+        AmazonPayments
+            .renderButtons()
+<?php if ($this->getIsCheckout()) : ?>
+<?php $orderReferenceId = $this->getOrderReferenceId(); ?>
+<?php if ($orderReferenceId) : ?>
+            .setOrderReferenceId('<?php echo $orderReferenceId; ?>')
 <?php endif; ?>
-<script async type="text/javascript" src="<?php echo $this->getWidgetUrl(); ?>"></script>
+            .initCheckout({
+                responsive: true,
+                urls: <?php echo $this->getCheckoutUrls(); ?>
+
+            })
+<?php endif; ?>
+        ;
+    };
+
+<?php if ($this->isLoginActive()) : ?>
+    window.onAmazonLoginReady = function() {
+        AmazonPayments
+            .initLogin()
+<?php if ($this->getIsLogout()) : ?>
+            .logout()
+<?php endif; ?>
+        ;
+    };
+<?php endif; ?>
+</script>
+<script async type="text/javascript" src="<?php echo $this->getWidgetJsUrl(); ?>"></script>
