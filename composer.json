@@ -3,7 +3,7 @@
     "type": "magento-module",
     "license": "Creative-Commons-Attribution-NoDerivatives-4.0-International",
     "homepage": "",
-    "description": "Integration of your Magento shop with Pay with Amazon service",
+    "description": "Integration of your Magento shop with Login and Pay with Amazon service",
     "authors": [
     {
         "name": "creativestyle GmbH",

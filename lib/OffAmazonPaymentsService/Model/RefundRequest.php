@@ -69,6 +69,7 @@ class OffAmazonPaymentsService_Model_RefundRequest extends OffAmazonPaymentsServ
 
         'SellerRefundNote' => array('FieldValue' => null, 'FieldType' => 'string'),
         'SoftDescriptor' => array('FieldValue' => null, 'FieldType' => 'string'),
+        'ProviderCreditReversalList' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_ProviderCreditReversalList'),
         );
         parent::__construct($data);
     }
@@ -346,6 +347,51 @@ class OffAmazonPaymentsService_Model_RefundRequest extends OffAmazonPaymentsServ
 
 
 
+    /**
+     * Gets the value of the ProviderCreditReversalList.
+     *
+     * @return ProviderCreditReversalList ProviderCreditReversalList
+     */
+    public function getProviderCreditReversalList()
+    {
+    	return $this->_fields['ProviderCreditReversalList']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditReversalList.
+     *
+     * @param ProviderCreditReversalList ProviderCreditReversalList
+     * @return void
+     */
+    public function setProviderCreditReversalList($value)
+    {
+    	$this->_fields['ProviderCreditReversalList']['FieldValue'] = $value;
+    	return;
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditReversalList  and returns this instance
+     *
+     * @param ProviderCreditReversalList $value ProviderCreditReversalList
+     * @return OffAmazonPaymentsService_Model_RefundRequest instance
+     */
+    public function withProviderCreditReversalList($value)
+    {
+    	$this->setProviderCreditReversalList($value);
+    	return $this;
+    }
+    
+    
+    /**
+     * Checks if ProviderCreditReversalList  is set
+     *
+     * @return bool true if ProviderCreditReversalList property is set
+     */
+    public function isSetProviderCreditReversalList()
+    {
+    	return !is_null($this->_fields['ProviderCreditReversalList']['FieldValue']);
+    
+    }
 
 }
 ?>

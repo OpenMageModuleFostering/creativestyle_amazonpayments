@@ -14,41 +14,52 @@
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
-<layout version="1.0.0">
+<layout version="1.2.0">
     <default>
         <reference name="head">
-            <action method="addCss" ifconfig="amazonpayments/general/active"><stylesheet>creativestyle/css/amazonpayments.css</stylesheet></action>
-            <action method="addJs" ifconfig="amazonpayments/general/active"><script>creativestyle/apa_checkout.min.js</script></action>
-            <action method="addJs" ifconfig="amazonpayments/general/active"><script>prototype/tooltip.js</script></action>
-            <block type="amazonpayments/advanced_head" name="amazonpayments_advanced.head" template="creativestyle/amazonpayments/advanced/head.phtml"/>
+            <action method="addCss"><stylesheet helper="amazonpayments/getHeadCss"/></action>
+            <action method="addJs"><script helper="amazonpayments/getHeadJs"/></action>
+            <action method="addJs"><script helper="amazonpayments/getHeadTooltipJs"/></action>
+            <block type="amazonpayments/head" name="amazonpayments.head" template="creativestyle/amazonpayments/head.phtml">
+                <block type="amazonpayments/login_head" name="amazonpayments.head.login" as="amazonpayments_login_head" template="creativestyle/amazonpayments/login/head.phtml"/>
+            </block>
         </reference>
         <reference name="cart_sidebar.extra_actions">
-            <block type="amazonpayments/advanced_button" name="top_cart.amazonpayments_advanced.shorcut" template="creativestyle/amazonpayments/advanced/button.phtml" before="-">
+            <block type="amazonpayments/pay_button" name="top_cart.amazonpayments.pay_button" before="-">
                 <action method="setIdSuffix"><value>sidebar</value></action>
             </block>
         </reference>
         <reference name="before_body_end">
-            <block type="amazonpayments/advanced_js" name="amazonpayments_advanced.button_js" template="creativestyle/amazonpayments/advanced/button/js.phtml">
-                <block type="core/template" name="amazonpayments_advanced.button_js.tooltip" as="amazonpayments_button_tooltip" template="creativestyle/amazonpayments/advanced/button/tooltip.phtml"/>
+            <block type="amazonpayments/button_js" name="amazonpayments.button.js" template="creativestyle/amazonpayments/button/js.phtml">
+                <block type="core/template" name="amazonpayments.button.tooltip" as="amazonpayments_button_tooltip" template="creativestyle/amazonpayments/button/tooltip.phtml"/>
             </block>
         </reference>
     </default>
     <checkout_cart_index>
         <reference name="checkout.cart.methods">
-            <block type="amazonpayments/advanced_button" name="checkout.cart.methods.amazonpayments_advanced.bottom" template="creativestyle/amazonpayments/advanced/button.phtml" before="-">
+            <block type="amazonpayments/pay_button" name="checkout.cart.methods.amazonpayments_pay.bottom" before="-">
                 <action method="setIdSuffix"><value>div</value></action>
+                <action method="setEnableOr"><value>1</value></action>
             </block>
         </reference>
         <reference name="checkout.cart.top_methods">
-            <block type="amazonpayments/advanced_button" name="checkout.cart.methods.amazonpayments_advanced.top" template="creativestyle/amazonpayments/advanced/button.phtml" before="checkout.cart.methods.onepage">
+            <block type="amazonpayments/pay_button" name="checkout.cart.methods.amazonpayments_pay.top" before="-">
                 <action method="setIdSuffix"><value>top</value></action>
+                <action method="setEnableOr"><value>1</value></action>
             </block>
         </reference>
     </checkout_cart_index>
     <checkout_onepage_index>
         <reference name="checkout.onepage.login.before">
-            <block type="amazonpayments/advanced_button" name="amazonpayments_advanced.onepage_button" template="creativestyle/amazonpayments/advanced/button/onepage.phtml">
-                <block type="core/template" name="amazonpayments_advanced.onepage_button.tooltip" as="amazonpayments_onepage_button_tooltip" template="creativestyle/amazonpayments/advanced/button/tooltip.phtml"/>
+            <block type="amazonpayments/onepage_button" name="onepage.amazonpayments.button">
+                <block type="amazonpayments/pay_button" name="onepage.amazonpayments.button.pay" template="creativestyle/amazonpayments/onepage/button.phtml">
+                    <action method="setIdSuffix"><value>onepage</value></action>
+                    <block type="core/template" name="onepage.amazonpayments.button.tooltip" as="amazonpayments_button_tooltip" template="creativestyle/amazonpayments/button/tooltip.phtml"/>
+                </block>
+                <block type="amazonpayments/login_button" name="onepage.amazonpayments.button.login" template="creativestyle/amazonpayments/onepage/button.phtml">
+                    <action method="setIdSuffix"><value>onepage</value></action>
+                    <block type="core/template" name="onepage.amazonpayments.button.tooltip" as="amazonpayments_button_tooltip" template="creativestyle/amazonpayments/button/tooltip.phtml"/>
+                </block>
             </block>
         </reference>
     </checkout_onepage_index>
@@ -60,12 +71,12 @@
             <action method="setTemplate"><template>page/1column.phtml</template></action>
         </reference>
         <reference name="content">
-            <block type="amazonpayments/advanced_checkout" name="amazonpayments_advanced.checkout" as="checkout" template="creativestyle/amazonpayments/advanced/checkout.phtml">
-                <block type="amazonpayments/advanced_checkout_notice" name="amazonpayments_advanced.checkout.capture_notice" as="capture_notice" template="creativestyle/amazonpayments/advanced/checkout/capture_notice.phtml"/>
-                <block type="checkout/onepage_shipping_method" name="amazonpayments_advanced.checkout.shipping_method" as="shipping_method" template="creativestyle/amazonpayments/advanced/checkout/shipping_method.phtml">
-                    <block type="checkout/onepage_shipping_method_additional" name="amazonpayments_advanced.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
+            <block type="amazonpayments/checkout" name="amazonpayments.checkout" as="checkout" template="creativestyle/amazonpayments/checkout.phtml">
+                <block type="amazonpayments/checkout_notice" name="amazonpayments.checkout.capture_notice" as="capture_notice" template="creativestyle/amazonpayments/checkout/capture_notice.phtml"/>
+                <block type="checkout/onepage_shipping_method" name="amazonpayments.checkout.shipping_method" as="shipping_method" template="creativestyle/amazonpayments/checkout/shipping_method.phtml">
+                    <block type="checkout/onepage_shipping_method_additional" name="amazonpayments.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
                 </block>
-                <block type="amazonpayments/advanced_checkout_sandboxToolbox" name="amazonpayments_advanced.checkout.sandbox_toolbox" as="sandbox_toolbox" template="creativestyle/amazonpayments/advanced/checkout/sandbox_toolbox.phtml"/>
+                <block type="amazonpayments/checkout_sandboxToolbox" name="amazonpayments.checkout.sandbox_toolbox" as="sandbox_toolbox" template="creativestyle/amazonpayments/checkout/sandbox_toolbox.phtml"/>
                 <block type="checkout/onepage_review_info" name="amazonpayments_advanced.checkout.review" as="review" template="checkout/onepage/review/info.phtml">
                     <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
                     <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/item.phtml</template></action>
@@ -78,12 +89,12 @@
                         <label>Items After</label>
                     </block>
                     <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
-                    <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/advanced/checkout/review/button.phtml"/>
+                    <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/checkout/review/button.phtml"/>
                 </block>
             </block>
         </reference>
         <reference name="before_body_end">
-            <block type="amazonpayments/advanced_js" name="amazonpayments_advanced.checkout_js" template="creativestyle/amazonpayments/advanced/checkout/js.phtml"/>
+            <block type="amazonpayments/checkout_js" name="amazonpayments.checkout.js" template="creativestyle/amazonpayments/checkout/js.phtml"/>
         </reference>
     </amazonpayments_advanced_checkout_index>
     <amazonpayments_advanced_shippingmethod>
@@ -106,7 +117,37 @@
                 <label>Items After</label>
             </block>
             <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
-            <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/advanced/checkout/review/button.phtml"/>
+            <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/checkout/review/button.phtml"/>
         </block>
     </amazonpayments_advanced_review>
+    <customer_account_login>
+        <reference name="content">
+            <block type="amazonpayments/login_button" name="amazonpayments_login" template="creativestyle/amazonpayments/login/button/account_login.phtml">
+                <action method="setIdSuffix"><value>div</value></action>
+                <action method="setMoveBefore"><value>login-form</value></action>
+            </block>
+        </reference>
+    </customer_account_login>
+    <customer_account_logoutsuccess translate="label">
+        <reference name="before_body_end">
+            <block type="amazonpayments/login_logout" name="amazonpayments_login_logout" template="creativestyle/amazonpayments/login/logout.phtml"/>
+        </reference>
+    </customer_account_logoutsuccess>
+    <amazonpayments_advanced_login_index>
+        <remove name="right"/>
+        <remove name="left"/>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+    </amazonpayments_advanced_login_index>
+    <amazonpayments_account_confirm>
+        <reference name="content">
+            <block type="amazonpayments/login_account_confirm" name="amazonpayments_login_account_confirm" template="creativestyle/amazonpayments/login/form/account_confirm.phtml" />
+        </reference>
+    </amazonpayments_account_confirm>
+    <amazonpayments_account_update>
+        <reference name="content">
+            <block type="amazonpayments/login_account_update" name="amazonpayments_login_account_update" template="creativestyle/amazonpayments/login/form/account_update.phtml" />
+        </reference>
+    </amazonpayments_account_update>
 </layout>

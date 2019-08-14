@@ -21,7 +21,7 @@
             <sort_order>99</sort_order>
             <children>
                 <amazonpayments translate="title" module="amazonpayments">
-                    <title>Pay with Amazon</title>
+                    <title>Login and Pay with Amazon</title>
                     <sort_order>1</sort_order>
                     <children>
                         <!--
@@ -51,12 +51,12 @@
                                     <action>admin_amazonpayments/adminhtml_log_exception</action>
                                 </exception>
                                 <api translate="title">
-                                    <title>API calls</title>
+                                    <title>API Calls</title>
                                     <sort_order>100</sort_order>
                                     <action>admin_amazonpayments/adminhtml_log_api</action>
                                 </api>
                                 <ipn translate="title">
-                                    <title>Notifications</title>
+                                    <title>IPN Notifications</title>
                                     <sort_order>200</sort_order>
                                     <action>admin_amazonpayments/adminhtml_log_ipn</action>
                                 </ipn>
@@ -83,7 +83,7 @@
                     <creativestyle>
                         <children>
                             <amazonpayments translate="title" module="amazonpayments">
-                                <title>Pay with Amazon</title>
+                                <title>Login and Pay with Amazon</title>
                                 <children>
                                     <!--
                                     <orders translate="title">
@@ -100,10 +100,10 @@
                                                 <title>Exceptions</title>
                                             </exception>
                                             <api translate="title">
-                                                <title>API calls</title>
+                                                <title>API Calls</title>
                                             </api>
                                             <ipn translate="title">
-                                                <title>Notifications</title>
+                                                <title>IPN Notifications</title>
                                             </ipn>
                                         </children>
                                     </log>
@@ -116,7 +116,7 @@
                             <config>
                                 <children>
                                     <amazonpayments translate="title" module="amazonpayments">
-                                        <title>Pay with Amazon settings</title>
+                                        <title>Login and Pay with Amazon settings</title>
                                     </amazonpayments>
                                 </children>
                             </config>

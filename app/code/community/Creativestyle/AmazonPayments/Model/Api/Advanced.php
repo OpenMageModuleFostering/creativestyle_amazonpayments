@@ -17,7 +17,7 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
 
     protected function _getApi() {
         if (null === $this->_api) {
-            $this->_api = new OffAmazonPaymentsService_Client($this->_getConnectionData());
+            $this->_api = new OffAmazonPaymentsService_Client($this->_getConfig()->getConnectionData(null, $this->_store));
         }
         return $this->_api;
     }

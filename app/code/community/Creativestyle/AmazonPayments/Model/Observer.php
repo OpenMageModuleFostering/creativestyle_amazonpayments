@@ -15,12 +15,94 @@
  */
 class Creativestyle_AmazonPayments_Model_Observer {
 
+    const DATA_POLL_TRANSACTION_LIMIT  = 36;
+    const DATA_POLL_SLEEP_BETWEEN_TIME = 300000;
+
+
 
     // **********************************************************************
     // Object instances geters
 
     protected function _getConfig() {
         return Mage::getSingleton('amazonpayments/config');
+    }
+
+
+
+    // **********************************************************************
+    // Transactions details fetching routines
+
+    /**
+     * Fetch details for the provided transaction
+     *
+     * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
+     */
+    protected function _fetchTransactionInfo($transaction) {
+        $transaction->getOrderPaymentObject()
+            ->setOrder($transaction->getOrder())
+            ->importTransactionInfo($transaction);
+        $transaction->save();
+        return $transaction->getId();
+    }
+
+    protected function _pollTransactionData() {
+        $collection = Mage::getModel('sales/order_payment_transaction')->getCollection()
+            ->addPaymentInformation(array('method'))
+            ->addFieldToFilter('method', array('in' => Mage::helper('amazonpayments')->getAvailablePaymentMethods()))
+            ->addFieldToFilter('is_closed', 0)
+            ->setOrder('transaction_id', 'asc');
+
+        $recentPolledTransaction = $this->_getConfig()->getRecentPolledTransaction();
+        if ($recentPolledTransaction) {
+            $collection->addFieldToFilter('transaction_id', array('gt' => (int)$recentPolledTransaction));
+        }
+
+        $collection->load();
+
+        $recentTransactionId = null;
+        $count = 0;
+        $dateModel = Mage::getModel('core/date');
+
+        foreach ($collection as $transaction) {
+            try {
+                $txnType = $transaction->getTxnType();
+                switch (strtolower(Mage::helper('amazonpayments')->getTransactionStatus($transaction))) {
+                    case 'pending':
+                        $recentTransactionId = $this->_fetchTransactionInfo($transaction);
+                        $count++;
+                        usleep(self::DATA_POLL_SLEEP_BETWEEN_TIME);
+                        break;
+                    case 'suspended':
+                        if ($txnType == Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER) {
+                            $recentTransactionId = $this->_fetchTransactionInfo($transaction);
+                            $count++;
+                            usleep(self::DATA_POLL_SLEEP_BETWEEN_TIME);
+                        }
+                        break;
+                    case 'open':
+                        $txnAge = floor(($dateModel->timestamp() - $dateModel->timestamp($transaction->getCreatedAt())) / (60 * 60 * 24));
+                        if (($txnType == Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER && $txnAge > 180) ||
+                            ($txnType == Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH && $txnAge > 30)) {
+                            $recentTransactionId = $this->_fetchTransactionInfo($transaction);
+                            $count++;
+                            usleep(self::DATA_POLL_SLEEP_BETWEEN_TIME);
+                        }
+                        break;
+                }
+                if ($count >= self::DATA_POLL_TRANSACTION_LIMIT) {
+                    break;
+                }
+            } catch (Exception $e) {
+                Creativestyle_AmazonPayments_Model_Logger::logException($e);
+            }
+        }
+
+        if ($count < self::DATA_POLL_TRANSACTION_LIMIT) {
+            $recentTransactionId = null;
+        }
+
+        $this->_getConfig()->setRecentPolledTransaction($recentTransactionId);
+
     }
 
 
@@ -94,6 +176,56 @@ class Creativestyle_AmazonPayments_Model_Observer {
     }
 
 
+    public function closeTransaction($observer) {
+        try {
+            $transaction = $observer->getEvent()->getOrderPaymentTransaction();
+            if ($transaction->getId() && in_array($transaction->getOrderPaymentObject()->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
+                $closeFor = array('canceled', 'closed', 'declined', 'completed');
+                if (in_array(strtolower(Mage::helper('amazonpayments')->getTransactionStatus($transaction)), $closeFor)) {
+                    $transaction->setIsClosed(true);
+                } else {
+                    $transaction->setIsClosed(false);
+                }
+            }
+        } catch (Exception $e) {
+            Creativestyle_AmazonPayments_Model_Logger::logException($e);
+        }
+        return $this;
+    }
+
+    public function updateParentTransaction($observer) {
+        try {
+            $transaction = $observer->getEvent()->getOrderPaymentTransaction();
+            if ($transaction->getId() && in_array($transaction->getOrderPaymentObject()->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
+                $updateFor = array();
+                switch ($transaction->getTxnType()) {
+                    case Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH:
+                        $updateFor = array('closed', 'declined');
+                        break;
+                    case Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE:
+                        $updateFor = array('completed', 'closed', 'declined');
+                        break;
+                    case Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND:
+                        $updateFor = array('completed', 'declined');
+                        break;
+                }
+                if (!empty($updateFor)) {
+                    $parentTransaction = $transaction->getParentTransaction();
+                    if (in_array(strtolower(Mage::helper('amazonpayments')->getTransactionStatus($transaction)), $updateFor) && $parentTransaction && !$parentTransaction->getIsClosed()) {
+                        $parentTransaction->getOrderPaymentObject()
+                            ->setOrder($parentTransaction->getOrder())
+                            ->importTransactionInfo($parentTransaction);
+                        $parentTransaction->save();
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            Creativestyle_AmazonPayments_Model_Logger::logException($e);
+        }
+        return $this;
+    }
+
+
 
     // **********************************************************************
     // Cronjobs
@@ -106,6 +238,23 @@ class Creativestyle_AmazonPayments_Model_Observer {
     public function rotateLogfiles() {
         try {
             Creativestyle_AmazonPayments_Model_Logger::rotateLogfiles();
+        } catch (Exception $e) {
+            Creativestyle_AmazonPayments_Model_Logger::logException($e);
+            throw $e;
+        }
+        return $this;
+    }
+
+    /**
+     * Invokes data polling from Amazon Payments gateway
+     *
+     * @return Creativestyle_AmazonPayments_Model_Observer
+     */
+    public function pollObjectsData() {
+        try {
+            if (!$this->_getConfig()->isIpnActive()) {
+                $this->_pollTransactionData();
+            }
         } catch (Exception $e) {
             Creativestyle_AmazonPayments_Model_Logger::logException($e);
             throw $e;

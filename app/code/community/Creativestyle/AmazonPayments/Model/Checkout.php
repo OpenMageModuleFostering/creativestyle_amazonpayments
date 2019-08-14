@@ -20,7 +20,7 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
     }
 
     protected function _getPaymentMethod() {
-        if ($this->_getConfig()->getConnectionData('environment') == 'sandbox') {
+        if ($this->_getConfig()->getEnvironment() == 'sandbox') {
             return array('method' => 'amazonpayments_advanced_sandbox');
         }
         return array('method' => 'amazonpayments_advanced');
@@ -154,7 +154,8 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
 
             // add order information to the session
             $this->_checkoutSession->setLastOrderId($order->getId())
-                ->setLastRealOrderId($order->getIncrementId());
+                ->setLastRealOrderId($order->getIncrementId())
+                ->setOrderReferenceId(null);
 
         }
 

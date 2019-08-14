@@ -16,7 +16,7 @@
 abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract extends Creativestyle_AmazonPayments_Model_Payment_Abstract {
 
     protected $_code                    = 'amazonpayments_advanced_abstract';
-    protected $_infoBlockType           = 'amazonpayments/advanced_payment_info';
+    protected $_infoBlockType           = 'amazonpayments/payment_info';
 
     /**
      * Pay with Amazon method features
@@ -57,7 +57,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
     protected function _authorize(Varien_Object $payment, $amount) {
         $order = $payment->getOrder();
 
-        $authorizationDetails = $this->_getApi()->authorize(
+        $authorizationDetails = $this->_getApi()->setStore($order->getStoreId())->authorize(
             $order->getExtOrderId(),
             $order->getExtOrderId() . '-' . $this->_increaseSequenceNumber($payment),
             $amount,
@@ -70,11 +70,17 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         $payment->setIsTransactionClosed(false);
 
         $message = Mage::helper('amazonpayments')->__('An authorize request for %s has been submitted to Amazon Payments.', $order->getStore()->convertPrice($amount, true, false));
-        $this->_getManager()->importAuthorizationDetails(
+        $transaction = $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH, null, false, $message);
+        $transactionStatus = $this->_getManager()->importAuthorizationDetails(
             $authorizationDetails,
             $payment,
-            $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH, null, false, $message)
+            $transaction
         );
+
+        if (null !== $transactionStatus) {
+            $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+            $transaction->save();
+        }
 
         return $this;
     }
@@ -85,7 +91,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         $authTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH);
         $authTransactionId = $authTransaction->getTxnId();
 
-        $captureDetails = $this->_getApi()->capture(
+        $captureDetails = $this->_getApi()->setStore($order->getStoreId())->capture(
             $authTransactionId,
             $order->getExtOrderId() . '-' . $this->_increaseSequenceNumber($payment),
             $amount,
@@ -98,11 +104,17 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         $payment->setIsTransactionClosed(false);
 
         $message = Mage::helper('amazonpayments')->__('A capture request for %s has been submitted to Amazon Payments.', $order->getStore()->convertPrice($amount, true, false));
-        $this->_getManager()->importCaptureDetails(
+        $transaction = $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE, null, false, $message);
+        $transactionStatus = $this->_getManager()->importCaptureDetails(
             $captureDetails,
             $payment,
-            $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE, null, false, $message)
+            $transaction
         );
+
+        if (null !== $transactionStatus) {
+            $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+            $transaction->save();
+        }
 
         return $this;
     }
@@ -113,7 +125,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         $captureTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
         $captureTransactionId = $captureTransaction->getTxnId();
 
-        $refundDetails = $this->_getApi()->refund(
+        $refundDetails = $this->_getApi()->setStore($order->getStoreId())->refund(
             $captureTransactionId,
             $order->getExtOrderId() . '-' . $this->_increaseSequenceNumber($payment),
             $amount,
@@ -126,22 +138,30 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         $payment->setIsTransactionClosed(false);
 
         $message = Mage::helper('amazonpayments')->__('A refund request for %s has been submitted to Amazon Payments.', $order->getStore()->convertPrice($amount, true, false));
-        $this->_getManager()->importRefundDetails(
+        $transaction = $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND, null, false, $message);
+        $transactionStatus = $this->_getManager()->importRefundDetails(
             $refundDetails,
             $payment,
-            $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND, null, false, $message)
+            $transaction
         );
+
+        if (null !== $transactionStatus) {
+            $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+            $transaction->save();
+        }
 
         return $this;
     }
 
     protected function _void(Varien_Object $payment) {
+        $order = $payment->getOrder();
+
         $orderTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER);
-        if ($orderTransaction) {
-            $orderTransactionId = $orderTransaction->getTxnId();
-            $this->_getApi()->cancelOrderReference($orderTransactionId);
-            $orderTransaction->close(true);
-        }
+        $orderTransactionId = $orderTransaction->getTxnId();
+
+        $cancelDetails = $this->_getApi()->setStore($order->getStoreId())->cancelOrderReference($orderTransactionId);
+        $orderTransaction->close(true);
+
         return $this;
     }
 
@@ -272,11 +292,17 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         $payment->setSkipOrderProcessing(true);
 
         $message = Mage::helper('amazonpayments')->__('An order of %s has been sent to Amazon Payments.', $order->getStore()->convertPrice($amount, true, false));
-        $this->_getManager()->importOrderReferenceDetails(
+        $transaction = $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER, null, false, $message);
+        $transactionStatus = $this->_getManager()->importOrderReferenceDetails(
             $this->_getApi()->getOrderReferenceDetails($order->getExtOrderId()),
             $payment,
-            $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER, null, false, $message)
+            $transaction
         );
+
+        if (null !== $transactionStatus) {
+            $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+            $transaction->save();
+        }
 
         Creativestyle_AmazonPayments_Model_Simulator::simulate($payment, 'OrderReference');
 

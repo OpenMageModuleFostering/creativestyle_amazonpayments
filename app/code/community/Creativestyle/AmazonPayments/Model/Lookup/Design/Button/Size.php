@@ -22,9 +22,9 @@ class Creativestyle_AmazonPayments_Model_Lookup_Design_Button_Size extends Creat
     public function toOptionArray() {
         if (null === $this->_options) {
             $this->_options = array(
-                array('value' => self::SIZE_MEDIUM, 'label' => Mage::helper('amazonpayments')->__('Medium (126 x 24 pixels)')),
-                array('value' => self::SIZE_LARGE, 'label' => Mage::helper('amazonpayments')->__('Large (151 x 27 pixels)')),
-                array('value' => self::SIZE_XLARGE, 'label' => Mage::helper('amazonpayments')->__('X-Large (173 x 27 pixels)'))
+                array('value' => self::SIZE_MEDIUM, 'label' => Mage::helper('amazonpayments')->__('Medium')),
+                array('value' => self::SIZE_LARGE, 'label' => Mage::helper('amazonpayments')->__('Large')),
+                array('value' => self::SIZE_XLARGE, 'label' => Mage::helper('amazonpayments')->__('X-Large'))
             );
         }
         return $this->_options;

@@ -84,4 +84,69 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
         return preg_match('/iPhone|iPod|BlackBerry|Palm|Googlebot-Mobile|Mobile|mobile|mobi|Windows Mobile|Safari Mobile|Android|Opera Mini/', $userAgent);
     }
 
+    public function getTransactionStatus($transaction) {
+        $statusArray = $transaction->getAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS);
+        if (is_array($statusArray) && array_key_exists('State', $statusArray)) {
+            return $statusArray['State'];
+        }
+        return null;
+    }
+
+    public function getTransactionReasonCode($transaction) {
+        $statusArray = $transaction->getAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS);
+        if (is_array($statusArray) && array_key_exists('ReasonCode', $statusArray)) {
+            return $statusArray['ReasonCode'];
+        }
+        return null;
+    }
+
+    public function explodeCustomerName($customerName) {
+        $explodedName = explode(' ', trim($customerName));
+        $result = array();
+        if (count($explodedName) > 1) {
+            $result['firstname'] = reset($explodedName);
+            $result['lastname'] = trim(str_replace($result['firstname'], "", $customerName));
+        } else {
+            $result['firstname'] = Mage::helper('amazonpayments')->__('n/a');
+            $result['lastname'] = reset($explodedName);
+        }
+        return new Varien_Object($result);
+    }
+
+    public function getHeadCss() {
+        if ($this->_getConfig()->isActive()) {
+            return 'creativestyle/css/amazonpayments.css';
+        }
+    }
+
+    public function getHeadJs() {
+        if ($this->_getConfig()->isActive()) {
+            return 'creativestyle/apa_checkout.min.js';
+        }
+    }
+
+    public function getHeadTooltipJs() {
+        if ($this->_getConfig()->isActive()) {
+            return 'prototype/tooltip.js';
+        }
+    }
+
+    public function getPayWithAmazonButton($buttonType = null, $buttonSize = null, $buttonColor = null, $idSuffix = null) {
+        return Mage::getSingleton('core/layout')->createBlock('amazonpayments/pay_button')
+            ->setData('button_type', $buttonType)
+            ->setData('button_size', $buttonSize)
+            ->setData('button_color', $buttonColor)
+            ->setData('id_suffix', $idSuffix)
+            ->toHtml();
+    }
+
+    public function getLoginWithAmazonButton($buttonType = null, $buttonSize = null, $buttonColor = null, $idSuffix = null) {
+        return Mage::getSingleton('core/layout')->createBlock('amazonpayments/login_button')
+            ->setData('button_type', $buttonType)
+            ->setData('button_size', $buttonSize)
+            ->setData('button_color', $buttonColor)
+            ->setData('id_suffix', $idSuffix)
+            ->toHtml();
+    }
+
 }

@@ -1,0 +1,64 @@
+<?php
+/**
+ * This file is part of the official Amazon Payments Advanced extension
+ * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
+ * All rights reserved
+ *
+ * Reuse or modification of this source code is not allowed
+ * without written permission from creativestyle GmbH
+ *
+ * @category   Creativestyle
+ * @package    Creativestyle_AmazonPayments
+ * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ */
+?>
+<?php $orderReferenceId = $this->getOrderReferenceId(); ?>
+<script type="text/javascript">//<![CDATA[
+
+    var quoteBaseGrandTotal = <?php echo (float)$this->getQuoteBaseGrandTotal(); ?>;
+    var checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
+    var lastPrice;
+
+    if (typeof Translator != 'undefined') {
+        Translator.add('There was an error processing your order. Please contact us or try again later.', '<?php echo $this->__('There was an error processing your order. Please contact us or try again later.'); ?>');
+    }
+
+    APA.initialize('<?php echo $this->getMerchantId(); ?>', <?php echo $orderReferenceId ? '\'' . $orderReferenceId . '\'' : 'null'; ?>,
+        <?php echo ($this->isLive() ? 'true' : 'false'); ?>, <?php echo ($this->isVirtual() ? 'true' : 'false'); ?>, {
+            saveShipping: '<?php echo $this->getUrl('amazonpayments/advanced_checkout/saveShipping'); ?>',
+            saveShippingMethod: '<?php echo $this->getUrl('amazonpayments/advanced_checkout/saveShippingMethod'); ?>',
+            saveOrder: '<?php echo $this->getUrl('amazonpayments/advanced_checkout/saveOrder'); ?>',
+            success: '<?php echo $this->getUrl('checkout/onepage/success'); ?>',
+            failure: '<?php echo $this->getUrl('checkout/cart') ?>'
+        }, {
+            addressBook: 'addressBookWidgetDiv',
+            wallet: 'walletWidgetDiv',
+            shippingMethod: 'shippingMethodWidgetDiv',
+            review: 'reviewWidgetDiv'
+        }, {
+        <?php if (Mage::helper('amazonpayments')->isMobileDevice()): ?>
+            addressBook: {
+                designMode: 'smartphoneCollapsible'
+            },
+            wallet: {
+                designMode: 'smartphoneCollapsible'
+            }
+        <?php else: ?>
+            addressBook: {
+                size: {
+                    width: '<?php echo $this->getAddressBookWidgetSize()->getWidth(); ?>',
+                    height: '<?php echo $this->getAddressBookWidgetSize()->getHeight(); ?>'
+                }
+            },
+            wallet: {
+                size: {
+                    width: '<?php echo $this->getWalletWidgetSize()->getWidth(); ?>',
+                    height: '<?php echo $this->getWalletWidgetSize()->getHeight(); ?>'
+                }
+            }
+        <?php endif; ?>
+        }
+    ).initCheckout();
+
+//]]></script>

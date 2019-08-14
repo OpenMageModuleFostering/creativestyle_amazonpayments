@@ -64,7 +64,7 @@ final class Creativestyle_AmazonPayments_Model_Logger {
      * @param array $callData
      */
     public static function logApiCall($callData) {
-        if (self::_getConfig()->isLogEnabled()) {
+        if (self::_getConfig()->isLoggingActive()) {
             array_unshift($callData, Mage::getModel('core/date')->gmtTimestamp());
             if (($fileHandle = fopen(self::getAbsoluteLogFilePath('api'), 'a')) !== false) {
                 fputcsv($fileHandle, $callData, self::_getConfig()->getLogDelimiter(), self::_getConfig()->getLogEnclosure());
@@ -81,7 +81,7 @@ final class Creativestyle_AmazonPayments_Model_Logger {
      * @param array $callData
      */
     public static function logIpnCall($callData) {
-        if (self::_getConfig()->isLogEnabled()) {
+        if (self::_getConfig()->isLoggingActive()) {
             array_unshift($callData, Mage::getModel('core/date')->gmtTimestamp());
             $callData['message_xml'] = '';
             if (isset($callData['request_body']) && $callData['request_body']) {
@@ -114,7 +114,7 @@ final class Creativestyle_AmazonPayments_Model_Logger {
      * @param Exception $e
      */
     public static function logException(Exception $e) {
-        if (self::_getConfig()->isLogEnabled()) {
+        if (self::_getConfig()->isLoggingActive()) {
             if (($fileHandle = fopen(self::getAbsoluteLogFilePath('exception'), 'a')) !== false) {
                 $exceptionData = array(
                     'timestamp' => Mage::getModel('core/date')->gmtTimestamp(),

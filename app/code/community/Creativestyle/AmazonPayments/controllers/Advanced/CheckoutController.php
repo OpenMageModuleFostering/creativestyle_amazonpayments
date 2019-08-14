@@ -17,6 +17,8 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
 
     protected $_orderReferenceId = null;
 
+    protected $_accessToken = null;
+
     protected function _getCheckout() {
         return Mage::getSingleton('amazonpayments/checkout');
     }
@@ -27,6 +29,10 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
 
     protected function _getOrderReferenceId() {
         return $this->_orderReferenceId;
+    }
+
+    protected function _getAccessToken() {
+        return $this->_accessToken;
     }
 
     protected function _getApi() {
@@ -60,8 +66,8 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
     protected function _isSubmitAllowed() {
         if (!$this->_getQuote()->isVirtual()) {
             $address = $this->_getQuote()->getShippingAddress();
-            $method= $address->getShippingMethod();
-            $rate  = $address->getShippingRateByCode($method);
+            $method = $address->getShippingMethod();
+            $rate = $address->getShippingRateByCode($method);
             if (!$this->_getQuote()->isVirtual() && (!$method || !$rate)) {
                 return false;
             }
@@ -70,6 +76,14 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
             return false;
         }
         return true;
+    }
+
+    protected function _saveOrderReferenceInSessionData() {
+        if (null !== $this->_getOrderReferenceId() && !$this->_getCheckoutSession()->getOrderReferenceId()) {
+            $this->_getApi()->setOrderReferenceDetails($this->_getOrderReferenceId(), $this->_getQuote()->getBaseGrandTotal(), $this->_getQuote()->getBaseCurrencyCode());
+            $this->_getCheckoutSession()->setOrderReferenceId($this->_getOrderReferenceId());
+            $this->_getCheckoutSession()->setCartWasUpdated(false);
+        }
     }
 
     /**
@@ -115,6 +129,9 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
         if (null === $this->_orderReferenceId) {
             $this->_orderReferenceId = $this->_getCheckoutSession()->getOrderReferenceId();
         }
+        if (null === $this->_accessToken) {
+            $this->_accessToken = $this->getRequest()->getParam('accessToken', null);
+        }
     }
 
     public function indexAction() {
@@ -133,14 +150,15 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 return;
             }
 
-            if (null === $this->_getOrderReferenceId()) {
+            if (null === $this->_getOrderReferenceId() && null === $this->_getAccessToken()) {
                 $this->_redirect('checkout/cart');
                 return;
             }
 
-            $this->_getApi()->setOrderReferenceDetails($this->_getOrderReferenceId(), $this->_getQuote()->getBaseGrandTotal(), $this->_getQuote()->getBaseCurrencyCode());
-            $this->_getCheckoutSession()->setOrderReferenceId($this->_getOrderReferenceId());
+            $this->_getCheckout()->savePayment(null);
             $this->_getCheckoutSession()->setCartWasUpdated(false);
+
+            $this->_saveOrderReferenceInSessionData();
 
             $this->loadLayout();
             $this->getLayout()->getBlock('head')->setTitle($this->__('Pay with Amazon'));
@@ -159,6 +177,8 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 if ($this->_expireAjax()) {
                     return;
                 }
+
+                $this->_saveOrderReferenceInSessionData();
 
                 $orderReference = $this->_getApi()->getOrderReferenceDetails($this->_getOrderReferenceId());
                 // save billing data in the checkout model
@@ -198,6 +218,8 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                     return;
                 }
 
+                $this->_saveOrderReferenceInSessionData();
+
                 $data = $this->getRequest()->getPost('shipping_method', '');
                 $result = $this->_getCheckout()->saveShippingMethod($data);
 
@@ -223,34 +245,6 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                     'render_widget' => array(
                         'review' => $this->_getReviewHtml()
                     ),
-                    'allow_submit' => $this->_isSubmitAllowed()
-                );
-            }
-        } else {
-            $this->_forward('noRoute');
-        }
-
-        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-    }
-
-    public function savePaymentAction() {
-        if ($this->getRequest()->isPost()) {
-            try {
-                if ($this->_expireAjax()) {
-                    return;
-                }
-
-                $result = $this->_getCheckout()->savePayment(null);
-            } catch (Exception $e) {
-                Creativestyle_AmazonPayments_Model_Logger::logException($e);
-                $result = array(
-                    'error' => -1,
-                    'error_messages' => $e->getMessage()
-                );
-            }
-            if (!isset($result['error'])) {
-                $result = array(
-                    'success' => 1,
                     'allow_submit' => $this->_isSubmitAllowed()
                 );
             }

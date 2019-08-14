@@ -17,6 +17,7 @@
 
 require_once 'OffAmazonPaymentsNotifications/Impl/VerifySignature.php';
 require_once 'OffAmazonPaymentsNotifications/InvalidMessageException.php';
+require_once 'OffAmazonPaymentsNotifications/Impl/Certificate.php';
 
 /**
  * OpenSSL Implemntation of the verify signature algorithm
@@ -34,7 +35,7 @@ class OpenSslVerifySignature implements VerifySignature
     {
 
     }
-    
+
     /**
      * Verify that the signature is correct for the given data and
      * public key
@@ -52,13 +53,44 @@ class OpenSslVerifySignature implements VerifySignature
     public function verifySignatureIsCorrect($data, $signature, $certificatePath)
     {
         $cert = $this->_getCertificateFromCertifcatePath($certificatePath);
+        $certificate = new Certificate($cert);
 
-        $certKey = openssl_get_publickey($cert);
+        return $this->verifySignatureIsCorrectFromCertificate($data, $signature, $certificate);
+    }
+    
+    /**
+     * Verify that the signature is correct for the given data and
+     * public key
+     * 
+     * @param string $data            data to validate
+     * @param string $signature       decoded signature to compare against
+     * @param string $certificate     certificate object defined in Certificate.php
+     * 
+     * @throws OffAmazonPaymentsNotifications_InvalidMessageException if there 
+     *                                                                is an error 
+     *                                                                with the call
+     * 
+     * @return bool true if valid
+     */
+    public function verifySignatureIsCorrectFromCertificate($data, $signature, $certificate)
+    {
+        $certKey = openssl_get_publickey($certificate->getCertificate());
 
         if ($certKey === False) {
             throw new OffAmazonPaymentsNotifications_InvalidMessageException(
                 "Unable to extract public key from cert " . $cert);
         }
+
+        try {
+            $certSubject = $certificate->getSubject();
+        } catch (Exception $ex) {
+            throw new OffAmazonPaymentsNotifications_InvalidMessageException(
+                "Unable to verify certificate - error with the certificate subject",
+                null, $ex
+            );
+        }
+
+        $this->_verifyCertificateSubject($certSubject);
 
         $result = -1;
         try {
@@ -71,6 +103,28 @@ class OpenSslVerifySignature implements VerifySignature
         } 
        
         return ($result > 0);
+    }
+
+    /**
+     * Verify that certificate is issued by Amazon
+     * 
+     * @param array $certificateSubject certificate subject array
+     * 
+     * @throws OffAmazonPaymentsNotifications_InvalidMessageException
+     * 
+     * @return void
+     */
+    private function _verifyCertificateSubject($certificateSubject)
+    {
+        if ( (strcmp($certificateSubject["CN"], "sns.amazonaws.com") !== 0) ||
+            ((strcmp($certificateSubject["O"], "Amazon.com Inc.") !== 0) && (strcmp($certificateSubject["O"], "Amazon.com, Inc.") !== 0)) ||
+             (strcmp($certificateSubject["L"], "Seattle") !== 0) ||
+             (strcmp($certificateSubject["ST"], "Washington") !== 0) ||
+             (strcmp($certificateSubject["C"], "US") !== 0) ) {
+            throw new OffAmazonPaymentsNotifications_InvalidMessageException(
+                "Unable to verify certificate issued by Amazon - error with certificate subject"
+            );
+        }
     }
     
     /**

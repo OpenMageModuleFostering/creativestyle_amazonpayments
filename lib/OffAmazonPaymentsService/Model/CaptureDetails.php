@@ -89,6 +89,9 @@ class OffAmazonPaymentsService_Model_CaptureDetails extends OffAmazonPaymentsSer
         'CaptureStatus' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Status'),
 
         'SoftDescriptor' => array('FieldValue' => null, 'FieldType' => 'string'),
+        
+        'ProviderCreditSummaryList' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_ProviderCreditSummaryList'),
+        		
         );
         parent::__construct($data);
     }
@@ -546,6 +549,52 @@ class OffAmazonPaymentsService_Model_CaptureDetails extends OffAmazonPaymentsSer
     public function isSetSoftDescriptor()
     {
         return !is_null($this->_fields['SoftDescriptor']['FieldValue']);
+    }
+    
+    /**
+     * Gets the value of the ProviderCreditSummaryList.
+     *
+     * @return ProviderCreditSummaryList ProviderCreditSummaryList
+     */
+    public function getProviderCreditSummaryList()
+    {
+    	return $this->_fields['ProviderCreditSummaryList']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditSummaryList.
+     *
+     * @param ProviderCreditSummaryList ProviderCreditSummaryList
+     * @return void
+     */
+    public function setProviderCreditSummaryList($value)
+    {
+    	$this->_fields['ProviderCreditSummaryList']['FieldValue'] = $value;
+    	return;
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditSummaryList  and returns this instance
+     *
+     * @param ProviderCreditSummaryList $value ProviderCreditSummaryList
+     * @return OffAmazonPaymentsService_Model_CaptureDetails instance
+     */
+    public function withProviderCreditSummaryList($value)
+    {
+    	$this->setProviderCreditSummaryList($value);
+    	return $this;
+    }
+    
+    
+    /**
+     * Checks if ProviderCreditSummaryList  is set
+     *
+     * @return bool true if ProviderCreditSummaryList property is set
+     */
+    public function isSetProviderCreditSummaryList()
+    {
+    	return !is_null($this->_fields['ProviderCreditSummaryList']['FieldValue']);
+    
     }
 
 }

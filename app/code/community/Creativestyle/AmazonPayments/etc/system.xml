@@ -81,6 +81,13 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </region>
+                        <validator translate="label">
+                            <frontend_model>amazonpayments/adminhtml_credentialsValidator</frontend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </validator>
                     </fields>
                 </account>
                 <general translate="label">
@@ -140,8 +147,8 @@
                             <source_model>amazonpayments/lookup_ipnActive</source_model>
                             <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <depends><active>1</active></depends>
                         </ipn_active>
                         <ipn_url>
@@ -161,15 +168,24 @@
                             <label>Data polling frequency</label>
                             <frontend_type>select</frontend_type>
                             <source_model>amazonpayments/lookup_frequency</source_model>
+                            <backend_model>amazonpayments/system_config_backend_dataPolling_cron</backend_model>
                             <sort_order>70</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <depends>
                                 <active>1</active>
                                 <ipn_active>0</ipn_active>
                             </depends>
                         </polling_frequency>
+                        <recent_polled_transaction>
+                            <label>ID of recent polled transaction</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>990</sort_order>
+                            <show_in_default>0</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </recent_polled_transaction>
                         <authorized_order_status translate="label">
                             <label>Order status on authorization</label>
                             <frontend_type>select</frontend_type>
@@ -182,6 +198,33 @@
                         </authorized_order_status>
                     </fields>
                 </general>
+                <login translate="label">
+                    <label>Login with Amazon</label>
+                    <sort_order>250</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enable Login with Amazon</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <client_id translate="label">
+                            <label>Client ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><active>1</active></depends>
+                        </client_id>
+                    </fields>
+                </login>
                 <email translate="label">
                     <label>Email Options</label>
                     <frontend_type>text</frontend_type>
@@ -221,8 +264,120 @@
                     </fields>
                 </email>
                 <design>
-                    <label>Appearance Settings</label>
+                    <label>Common Appearance Settings</label>
                     <sort_order>400</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <address_width translate="label comment">
+                            <label>Address widget width</label>
+                            <comment>Enter a value between 200 and 600 pixels. For one-column widget please enter width less than 400.</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-digits-range digits-range-200-600</validate>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </address_width>
+                        <address_height translate="label comment">
+                            <label>Address widget height</label>
+                            <comment>Enter a value between 228 and 400 pixels</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-digits-range digits-range-228-400</validate>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </address_height>
+                        <payment_width translate="label comment">
+                            <label>Wallet widget width</label>
+                            <comment>Enter a value between 200 and 600 pixels. For one-column widget please enter width less than 400.</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-digits-range digits-range-200-600</validate>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payment_width>
+                        <payment_height translate="label comment">
+                            <label>Wallet widget height</label>
+                            <comment>Enter a value between 228 and 400 pixels</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-digits-range digits-range-228-400</validate>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payment_height>
+                    </fields>
+                </design>
+                <design_login>
+                    <label>Appearance Settings for Login and Pay with Amazon</label>
+                    <sort_order>420</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <login_button_type translate="label">
+                            <label>"Login with Amazon" button type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_design_button_type_login</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </login_button_type>
+                        <login_button_size translate="label">
+                            <label>"Login with Amazon" button size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_design_button_size_loginPay</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </login_button_size>
+                        <login_button_color translate="label">
+                            <label>"Login with Amazon" button color</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_design_button_color_loginPay</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </login_button_color>
+                        <pay_button_type translate="label">
+                            <label>"Pay with Amazon" button type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_design_button_type_pay</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </pay_button_type>
+                        <pay_button_size translate="label">
+                            <label>"Pay with Amazon" button size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_design_button_size_loginPay</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </pay_button_size>
+                        <pay_button_color translate="label">
+                            <label>"Pay with Amazon" button color</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_design_button_color_loginPay</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </pay_button_color>
+                    </fields>
+                </design_login>
+                <design_pay>
+                    <label>Appearance Settings for standalone Pay with Amazon</label>
+                    <sort_order>440</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
@@ -245,48 +400,8 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </button_color>
-                        <address_width translate="label comment">
-                            <label>Address widget width</label>
-                            <comment>Enter a value between 200 and 600 pixels. For one-column widget please enter width less than 400.</comment>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-digits-range digits-range-200-600</validate>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </address_width>
-                        <address_height translate="label comment">
-                            <label>Address widget height</label>
-                            <comment>Enter a value between 228 and 400 pixels</comment>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-digits-range digits-range-228-400</validate>
-                            <sort_order>40</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </address_height>
-                        <payment_width translate="label comment">
-                            <label>Payment widget width</label>
-                            <comment>Enter a value between 200 and 600 pixels. For one-column widget please enter width less than 400.</comment>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-digits-range digits-range-200-600</validate>
-                            <sort_order>50</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </payment_width>
-                        <payment_height translate="label comment">
-                            <label>Payment widget height</label>
-                            <comment>Enter a value between 228 and 400 pixels</comment>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-digits-range digits-range-228-400</validate>
-                            <sort_order>60</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </payment_height>
                     </fields>
-                </design>
+                </design_pay>
                 <developer translate="label">
                     <label>Developer Options</label>
                     <sort_order>900</sort_order>

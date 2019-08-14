@@ -59,6 +59,12 @@ require_once 'OffAmazonPaymentsService/Model/SetBillingAgreementDetailsRequest.p
 require_once 'OffAmazonPaymentsService/Model/SetBillingAgreementDetailsResponse.php';
 require_once 'OffAmazonPaymentsService/Model/ValidateBillingAgreementRequest.php';
 require_once 'OffAmazonPaymentsService/Model/ValidateBillingAgreementResponse.php';
+require_once 'OffAmazonPaymentsService/Model/GetProviderCreditReversalDetailsRequest.php';
+require_once 'OffAmazonPaymentsService/Model/GetProviderCreditReversalDetailsResponse.php';
+require_once 'OffAmazonPaymentsService/Model/GetProviderCreditDetailsRequest.php';
+require_once 'OffAmazonPaymentsService/Model/GetProviderCreditDetailsResponse.php';
+require_once 'OffAmazonPaymentsService/Model/ReverseProviderCreditRequest.php';
+require_once 'OffAmazonPaymentsService/Model/ReverseProviderCreditResponse.php';
 
 /**
  * Implementation of the OffAmazonPaymentsService interface
@@ -72,7 +78,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
 
     const SERVICE_VERSION = '2013-01-01';
     const MWS_CLIENT_VERSION = '2013-01-01';
-    const APPLICATION_LIBRARY_VERSION = '1.0.6';
+    const APPLICATION_LIBRARY_VERSION = '1.0.11';
 
     private  $_merchantValues = null;
 
@@ -285,7 +291,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Capture 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_CaptureRequest request
      * or OffAmazonPaymentsService_Model_CaptureRequest object itself
      * @see OffAmazonPaymentsService_Model_Capture
@@ -308,7 +314,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Refund 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_RefundRequest request
      * or OffAmazonPaymentsService_Model_RefundRequest object itself
      * @see OffAmazonPaymentsService_Model_Refund
@@ -332,7 +338,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Close Authorization 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_CloseAuthorizationRequest request
      * or OffAmazonPaymentsService_Model_CloseAuthorizationRequest object itself
      * @see OffAmazonPaymentsService_Model_CloseAuthorization
@@ -355,7 +361,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Get Refund Details 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_GetRefundDetailsRequest request
      * or OffAmazonPaymentsService_Model_GetRefundDetailsRequest object itself
      * @see OffAmazonPaymentsService_Model_GetRefundDetails
@@ -378,7 +384,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Get Capture Details 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_GetCaptureDetailsRequest request
      * or OffAmazonPaymentsService_Model_GetCaptureDetailsRequest object itself
      * @see OffAmazonPaymentsService_Model_GetCaptureDetails
@@ -401,7 +407,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Close Order Reference 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_CloseOrderReferenceRequest request
      * or OffAmazonPaymentsService_Model_CloseOrderReferenceRequest object itself
      * @see OffAmazonPaymentsService_Model_CloseOrderReference
@@ -424,7 +430,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Confirm Order Reference 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_ConfirmOrderReferenceRequest request
      * or OffAmazonPaymentsService_Model_ConfirmOrderReferenceRequest object itself
      * @see OffAmazonPaymentsService_Model_ConfirmOrderReference
@@ -447,7 +453,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Get Order Reference Details 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest request
      * or OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest object itself
      * @see OffAmazonPaymentsService_Model_GetOrderReferenceDetails
@@ -470,7 +476,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Authorize 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_AuthorizeRequest request
      * or OffAmazonPaymentsService_Model_AuthorizeRequest object itself
      * @see OffAmazonPaymentsService_Model_Authorize
@@ -493,7 +499,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Set Order Reference Details 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_SetOrderReferenceDetailsRequest request
      * or OffAmazonPaymentsService_Model_SetOrderReferenceDetailsRequest object itself
      * @see OffAmazonPaymentsService_Model_SetOrderReferenceDetails
@@ -516,7 +522,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Get Authorization Details 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_GetAuthorizationDetailsRequest request
      * or OffAmazonPaymentsService_Model_GetAuthorizationDetailsRequest object itself
      * @see OffAmazonPaymentsService_Model_GetAuthorizationDetails
@@ -539,7 +545,7 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         
     /**
      * Cancel Order Reference 
-
+     *
      * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_CancelOrderReferenceRequest request
      * or OffAmazonPaymentsService_Model_CancelOrderReferenceRequest object itself
      * @see OffAmazonPaymentsService_Model_CancelOrderReference
@@ -715,6 +721,75 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
     	}
     	$httpResponse = $this->_invoke($this->_convertCloseBillingAgreement($request));
     	$response = OffAmazonPaymentsService_Model_CloseBillingAgreementResponse::fromXML($httpResponse['ResponseBody']);
+    	$response->setResponseHeaderMetadata($httpResponse['ResponseHeaderMetadata']);
+    	return $response;
+    }
+    
+    /**
+     * Get Provider Credit Details
+     * A query API for ProviderCredits.  Both Provider and Seller sellerIds are authorized to call this API.
+     *
+     * @see http://docs.amazonwebservices.com/${docPath}GetProviderCreditDetails.html
+     * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_GetProviderCreditDetailsRequest request
+     * or OffAmazonPaymentsService_Model_GetProviderCreditDetailsRequest object itself
+     * @see OffAmazonPaymentsService_Model_GetProviderCreditDetails
+     * @return OffAmazonPaymentsService_Model_GetProviderCreditDetailsResponse OffAmazonPaymentsService_Model_GetProviderCreditDetailsResponse
+     *
+     * @throws OffAmazonPaymentsService_Exception
+     */
+    public function getProviderCreditDetails($request)
+    {
+    	if (!$request instanceof OffAmazonPaymentsService_Model_GetProviderCreditDetailsRequest) {
+    		$request = new OffAmazonPaymentsService_Model_GetProviderCreditDetailsRequest($request);
+    	}
+    	$httpResponse = $this->_invoke($this->_convertGetProviderCreditDetails($request));
+    	$response = OffAmazonPaymentsService_Model_GetProviderCreditDetailsResponse::fromXML($httpResponse['ResponseBody']);
+    	$response->setResponseHeaderMetadata($httpResponse['ResponseHeaderMetadata']);
+    	return $response;
+    }
+    
+    /**
+     * Get Provider Credit Reversal Details
+     * Activity to query the funds reversed against a given Provider Credit reversal.
+     *
+     * @see http://docs.amazonwebservices.com/${docPath}GetProviderCreditReversalDetails.html
+     * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_GetProviderCreditReversalDetailsRequest request
+     * or OffAmazonPaymentsService_Model_GetProviderCreditReversalDetailsRequest object itself
+     * @see OffAmazonPaymentsService_Model_GetProviderCreditReversalDetails
+     * @return OffAmazonPaymentsService_Model_GetProviderCreditReversalDetailsResponse OffAmazonPaymentsService_Model_GetProviderCreditReversalDetailsResponse
+     *
+     * @throws OffAmazonPaymentsService_Exception
+     */
+    public function getProviderCreditReversalDetails($request)
+    {
+    	if (!$request instanceof OffAmazonPaymentsService_Model_GetProviderCreditReversalDetailsRequest) {
+    		$request = new OffAmazonPaymentsService_Model_GetProviderCreditReversalDetailsRequest($request);
+    	}
+    	$httpResponse = $this->_invoke($this->_convertGetProviderCreditReversalDetails($request));
+    	$response = OffAmazonPaymentsService_Model_GetProviderCreditReversalDetailsResponse::fromXML($httpResponse['ResponseBody']);
+    	$response->setResponseHeaderMetadata($httpResponse['ResponseHeaderMetadata']);
+    	return $response;
+    }
+    
+    /**
+     * Reverse Provider Credit
+     * Activity to enable the Caller/Provider to reverse the funds credited to Provider.
+     *
+     * @see http://docs.amazonwebservices.com/${docPath}ReverseProviderCredit.html
+     * @param mixed $request array of parameters for OffAmazonPaymentsService_Model_ReverseProviderCreditRequest request
+     * or OffAmazonPaymentsService_Model_ReverseProviderCreditRequest object itself
+     * @see OffAmazonPaymentsService_Model_ReverseProviderCredit
+     * @return OffAmazonPaymentsService_Model_ReverseProviderCreditResponse OffAmazonPaymentsService_Model_ReverseProviderCreditResponse
+     *
+     * @throws OffAmazonPaymentsService_Exception
+     */
+    public function reverseProviderCredit($request)
+    {
+    	if (!$request instanceof OffAmazonPaymentsService_Model_ReverseProviderCreditRequest) {
+    		$request = new OffAmazonPaymentsService_Model_ReverseProviderCreditRequest($request);
+    	}
+    	$httpResponse = $this->_invoke($this->_convertReverseProviderCredit($request));
+    	$response = OffAmazonPaymentsService_Model_ReverseProviderCreditResponse::fromXML($httpResponse['ResponseBody']);
     	$response->setResponseHeaderMetadata($httpResponse['ResponseHeaderMetadata']);
     	return $response;
     }
@@ -895,21 +970,21 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
 
         $response = '';
         if (!$response = curl_exec($ch)) {
-            $error_msg = "Unable to post request, underlying exception of " . curl_error($ch);
-            curl_close($ch);
-            Mage::dispatchEvent('amazonpayments_advanced_api_post_call', array(
-                'call_data' => array(
-                    'call_url' => $scheme . $url['host'] . $uri,
-                    'call_action' => $parameters['Action'],
-                    'query' => $query,
-                    'response_code' => null,
-                    'response_error' => $error_msg,
-                    'response_headers' => null,
-                    'response_body' => null
-                )
-            ));
-            require_once 'OffAmazonPaymentsService/Exception.php';
-            throw new OffAmazonPaymentsService_Exception(array('Message' => $error_msg));
+           $error_msg = "Unable to post request, underlying exception of " . curl_error($ch);
+           curl_close($ch);
+           Mage::dispatchEvent('amazonpayments_advanced_api_post_call', array(
+               'call_data' => array(
+                   'call_url' => $scheme . $url['host'] . $uri,
+                   'call_action' => $parameters['Action'],
+                   'query' => $query,
+                   'response_code' => null,
+                   'response_error' => $error_msg,
+                   'response_headers' => null,
+                   'response_body' => null
+               )
+           ));
+           require_once 'OffAmazonPaymentsService/Exception.php';
+           throw new OffAmazonPaymentsService_Exception(array('Message' => $error_msg));    
         }
 
         curl_close($ch);
@@ -1143,7 +1218,25 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         if ($request->isSetSoftDescriptor()) {
             $parameters['SoftDescriptor'] =  $request->getSoftDescriptor();
         }
-
+        if ($request->isSetProviderCreditList()) {
+        	$providerCreditListcaptureRequest = $request->getProviderCreditList();
+        	foreach ($providerCreditListcaptureRequest->getmember() as $memberproviderCreditListIndex => $memberproviderCreditList) {
+        		if ($memberproviderCreditList->isSetProviderId()) {
+        			$parameters['ProviderCreditList' . '.' . 'member' . '.'  . ($memberproviderCreditListIndex + 1) . '.' . 'ProviderId'] =  $memberproviderCreditList->getProviderId();
+        		}
+        		if ($memberproviderCreditList->isSetCreditAmount()) {
+        			$creditAmountmember = $memberproviderCreditList->getCreditAmount();
+        			if ($creditAmountmember->isSetAmount()) {
+        				$parameters['ProviderCreditList' . '.' . 'member' . '.'  . ($memberproviderCreditListIndex + 1) . '.' . 'CreditAmount' . '.' . 'Amount'] =  $creditAmountmember->getAmount();
+        			}
+        			if ($creditAmountmember->isSetCurrencyCode()) {
+        				$parameters['ProviderCreditList' . '.' . 'member' . '.'  . ($memberproviderCreditListIndex + 1) . '.' . 'CreditAmount' . '.' . 'CurrencyCode'] =  $creditAmountmember->getCurrencyCode();
+        			}
+        		}
+        
+        	}
+        }
+        
         return $parameters;
     }
         
@@ -1178,6 +1271,24 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         }
         if ($request->isSetSoftDescriptor()) {
             $parameters['SoftDescriptor'] =  $request->getSoftDescriptor();
+        }
+        if ($request->isSetProviderCreditReversalList()) {
+        	$providerCreditReversalListrefundRequest = $request->getProviderCreditReversalList();
+        	foreach ($providerCreditReversalListrefundRequest->getmember() as $memberproviderCreditReversalListIndex => $memberproviderCreditReversalList) {
+        		if ($memberproviderCreditReversalList->isSetProviderId()) {
+        			$parameters['ProviderCreditReversalList' . '.' . 'member' . '.'  . ($memberproviderCreditReversalListIndex + 1) . '.' . 'ProviderId'] =  $memberproviderCreditReversalList->getProviderId();
+        		}
+        		if ($memberproviderCreditReversalList->isSetCreditReversalAmount()) {
+        			$creditReversalAmountmember = $memberproviderCreditReversalList->getCreditReversalAmount();
+        			if ($creditReversalAmountmember->isSetAmount()) {
+        				$parameters['ProviderCreditReversalList' . '.' . 'member' . '.'  . ($memberproviderCreditReversalListIndex + 1) . '.' . 'CreditReversalAmount' . '.' . 'Amount'] =  $creditReversalAmountmember->getAmount();
+        			}
+        			if ($creditReversalAmountmember->isSetCurrencyCode()) {
+        				$parameters['ProviderCreditReversalList' . '.' . 'member' . '.'  . ($memberproviderCreditReversalListIndex + 1) . '.' . 'CreditReversalAmount' . '.' . 'CurrencyCode'] =  $creditReversalAmountmember->getCurrencyCode();
+        			}
+        		}
+        
+        	}
         }
 
         return $parameters;
@@ -1343,6 +1454,23 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
         }
         if ($request->isSetSoftDescriptor()) {
             $parameters['SoftDescriptor'] =  $request->getSoftDescriptor();
+        }
+        if ($request->isSetProviderCreditList()) {
+        	$providerCreditListauthorizeRequest = $request->getProviderCreditList();
+        	foreach ($providerCreditListauthorizeRequest->getProviderCredit() as $memberproviderCreditListIndex => $memberproviderCreditList) {
+        		if ($memberproviderCreditList->isSetProviderId()) {
+        			$parameters['ProviderCreditList' . '.' . 'member' . '.'  . ($memberproviderCreditListIndex + 1) . '.' . 'ProviderId'] =  $memberproviderCreditList->getProviderId();
+        		}
+        		if ($memberproviderCreditList->isSetCreditAmount()) {
+        			$creditAmountmember = $memberproviderCreditList->getCreditAmount();
+        			if ($creditAmountmember->isSetAmount()) {
+        				$parameters['ProviderCreditList' . '.' . 'member' . '.'  . ($memberproviderCreditListIndex + 1) . '.' . 'CreditAmount' . '.' . 'Amount'] =  $creditAmountmember->getAmount();
+        			}
+        			if ($creditAmountmember->isSetCurrencyCode()) {
+        				$parameters['ProviderCreditList' . '.' . 'member' . '.'  . ($memberproviderCreditListIndex + 1) . '.' . 'CreditAmount' . '.' . 'CurrencyCode'] =  $creditAmountmember->getCurrencyCode();
+        			}
+        		}
+        	}
         }
 
         return $parameters;
@@ -1692,7 +1820,72 @@ class OffAmazonPaymentsService_Client implements OffAmazonPaymentsService_Interf
     
     	return $parameters;
     }
-        
+    
+    /**
+     * Convert GetProviderCreditDetailsRequest to name value pairs
+     */
+    private function _convertGetProviderCreditDetails($request) {
+    
+    	$parameters = array();
+    	$parameters['Action'] = 'GetProviderCreditDetails';
+    	if ($request->isSetSellerId()) {
+    		$parameters['SellerId'] =  $request->getSellerId();
+    	}
+    	if ($request->isSetAmazonProviderCreditId()) {
+    		$parameters['AmazonProviderCreditId'] =  $request->getAmazonProviderCreditId();
+    	}
+    
+    	return $parameters;
+    }
+    
+    /**
+     * Convert GetProviderCreditReversalDetailsRequest to name value pairs
+     */
+    private function _convertGetProviderCreditReversalDetails($request) {
+    
+    	$parameters = array();
+    	$parameters['Action'] = 'GetProviderCreditReversalDetails';
+    	if ($request->isSetSellerId()) {
+    		$parameters['SellerId'] =  $request->getSellerId();
+    	}
+    	if ($request->isSetAmazonProviderCreditReversalId()) {
+    		$parameters['AmazonProviderCreditReversalId'] =  $request->getAmazonProviderCreditReversalId();
+    	}
+    
+    	return $parameters;
+    }
+
+    /**
+     * Convert ReverseProviderCreditRequest to name value pairs
+     */
+    private function _convertReverseProviderCredit($request) {
+    
+    	$parameters = array();
+    	$parameters['Action'] = 'ReverseProviderCredit';
+    	if ($request->isSetSellerId()) {
+    		$parameters['SellerId'] =  $request->getSellerId();
+    	}
+    	if ($request->isSetAmazonProviderCreditId()) {
+    		$parameters['AmazonProviderCreditId'] =  $request->getAmazonProviderCreditId();
+    	}
+    	if ($request->isSetCreditReversalReferenceId()) {
+    		$parameters['CreditReversalReferenceId'] =  $request->getCreditReversalReferenceId();
+    	}
+    	if ($request->isSetCreditReversalAmount()) {
+    		$creditReversalAmountreverseProviderCreditRequest = $request->getCreditReversalAmount();
+    		if ($creditReversalAmountreverseProviderCreditRequest->isSetAmount()) {
+    			$parameters['CreditReversalAmount' . '.' . 'Amount'] =  $creditReversalAmountreverseProviderCreditRequest->getAmount();
+    		}
+    		if ($creditReversalAmountreverseProviderCreditRequest->isSetCurrencyCode()) {
+    			$parameters['CreditReversalAmount' . '.' . 'CurrencyCode'] =  $creditReversalAmountreverseProviderCreditRequest->getCurrencyCode();
+    		}
+    	}
+    	if ($request->isSetCreditReversalNote()) {
+    		$parameters['CreditReversalNote'] =  $request->getCreditReversalNote();
+    	}
+    
+    	return $parameters;
+    }
                                                                                                                                                                                                                                         
 }
 ?>

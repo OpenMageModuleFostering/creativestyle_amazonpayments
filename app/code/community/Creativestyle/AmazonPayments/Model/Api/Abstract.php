@@ -15,20 +15,20 @@
  */
 abstract class Creativestyle_AmazonPayments_Model_Api_Abstract {
 
-    protected
-        $_api = null;
+    protected $_api = null;
+    protected $_store = null;
 
     protected function _getConfig() {
         return Mage::getSingleton('amazonpayments/config');
     }
 
-    protected function _getConnectionData() {
-        return $this->_getConfig()->getConnectionData();
-    }
-
     public function getMerchantId() {
-        return $this->_getConfig()->getMerchantValues()->getMerchantId();
+        return $this->_getConfig()->getMerchantId($this->_store);
     }
 
-    abstract protected function _getApi();
+    public function setStore($store = null) {
+        $this->_store = $store;
+        return $this;
+    }
+
 }

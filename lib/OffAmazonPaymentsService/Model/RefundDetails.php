@@ -82,6 +82,8 @@ class OffAmazonPaymentsService_Model_RefundDetails extends OffAmazonPaymentsServ
         'RefundStatus' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Status'),
 
         'SoftDescriptor' => array('FieldValue' => null, 'FieldType' => 'string'),
+        
+        'ProviderCreditReversalSummaryList' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_ProviderCreditReversalSummaryList'),		
         );
         parent::__construct($data);
     }
@@ -494,8 +496,51 @@ class OffAmazonPaymentsService_Model_RefundDetails extends OffAmazonPaymentsServ
         return !is_null($this->_fields['SoftDescriptor']['FieldValue']);
     }
 
-
-
+    /**
+     * Gets the value of the ProviderCreditReversalSummaryList.
+     *
+     * @return ProviderCreditReversalSummaryList ProviderCreditReversalSummaryList
+     */
+    public function getProviderCreditReversalSummaryList()
+    {
+    	return $this->_fields['ProviderCreditReversalSummaryList']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditReversalSummaryList.
+     *
+     * @param ProviderCreditReversalSummaryList ProviderCreditReversalSummaryList
+     * @return void
+     */
+    public function setProviderCreditReversalSummaryList($value)
+    {
+    	$this->_fields['ProviderCreditReversalSummaryList']['FieldValue'] = $value;
+    	return;
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditReversalSummaryList  and returns this instance
+     *
+     * @param ProviderCreditReversalSummaryList $value ProviderCreditReversalSummaryList
+     * @return OffAmazonPaymentsService_Model_RefundDetails instance
+     */
+    public function withProviderCreditReversalSummaryList($value)
+    {
+    	$this->setProviderCreditReversalSummaryList($value);
+    	return $this;
+    }
+    
+    
+    /**
+     * Checks if ProviderCreditReversalSummaryList  is set
+     *
+     * @return bool true if ProviderCreditReversalSummaryList property is set
+     */
+    public function isSetProviderCreditReversalSummaryList()
+    {
+    	return !is_null($this->_fields['ProviderCreditReversalSummaryList']['FieldValue']);
+    
+    }
 
 }
 ?>

@@ -24,7 +24,6 @@ class Creativestyle_AmazonPayments_Model_Lookup_Design_Button_Color extends Crea
                 array('value' => self::COLOR_ORANGE, 'label' => Mage::helper('amazonpayments')->__('Orange (recommended)')),
                 array('value' => self::COLOR_TAN, 'label' => Mage::helper('amazonpayments')->__('Tan')),
             );
-            
         }
         return $this->_options;
     }

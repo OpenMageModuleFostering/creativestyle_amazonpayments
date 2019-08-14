@@ -170,14 +170,9 @@ class Creativestyle_AmazonPayments_Model_Manager {
     protected function _convertAmazonAddressToArray($amazonAddress) {
         $address = array('street' => array());
         if ($amazonAddress->isSetName()) {
-            $recipientName = explode(' ', trim($amazonAddress->getName()));
-            if (count($recipientName) > 1) {
-                $address['firstname'] = reset($recipientName);
-                $address['lastname'] = trim(str_replace($address['firstname'], "", $amazonAddress->getName()));
-            } else {
-                $address['firstname'] = Mage::helper('amazonpayments')->__('n/a');
-                $address['lastname'] = reset($recipientName);
-            }
+            $customerName = Mage::helper('amazonpayments')->explodeCustomerName($amazonAddress->getName());
+            $address['firstname'] = $customerName->getFirstname();
+            $address['lastname'] = $customerName->getLastname();
         }
         if ($amazonAddress->isSetAddressLine1()) {
             $address['street'][] = $amazonAddress->getAddressLine1();
@@ -217,6 +212,23 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _updateTransactionStatus($transaction, $transactionStatus) {
         if ($transactionStatus->isSetState()) {
+            if (Mage::helper('amazonpayments')->getTransactionStatus($transaction) != $transactionStatus->getState()) {
+                $statusArray = array('State' => $transactionStatus->getState());
+                if ($transactionStatus->isSetReasonCode()) {
+                    $statusArray['ReasonCode'] = $transactionStatus->getReasonCode();
+                }
+                if ($transactionStatus->isSetReasonDescription()) {
+                    $statusArray['ReasonDescription'] = $transactionStatus->getReasonDescription();
+                }
+                return $statusArray;
+            }
+        }
+        return null;
+    }
+
+/*
+    protected function _updateTransactionStatus($transaction, $transactionStatus) {
+        if ($transactionStatus->isSetState()) {
             $statusArray = array('State' => $transactionStatus->getState());
             if ($transactionStatus->isSetReasonCode()) {
                 $statusArray['ReasonCode'] = $transactionStatus->getReasonCode();
@@ -229,6 +241,7 @@ class Creativestyle_AmazonPayments_Model_Manager {
         }
         return $transaction;
     }
+*/
 
     /**
      * 
@@ -275,62 +288,61 @@ class Creativestyle_AmazonPayments_Model_Manager {
      * @param OffAmazonPaymentsService_Model_OrderReferenceDetails|OffAmazonPaymentsNotifications_Model_OrderReference $orderReferenceDetails
      */
     protected function _handleOpenOrderReference($payment, $transaction, $orderReferenceDetails) {
-
-        $order = $payment->getOrder();
-        $orderUpdated = false;
-
-        // lookup for the transaction if not provided explicitly
-        if (null === $transaction) {
-            $transaction = $payment->lookupTransaction(
-                $orderReferenceDetails->getAmazonOrderReferenceId(), Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER
-            );
-        }
-
         if ($transaction && $orderReferenceDetails->isSetOrderReferenceStatus()) {
-            $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus());
-        }
+            $newStatus = $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus());
+            if (null !== $newStatus) {
+                $order = $payment->getOrder();
+                $orderUpdated = false;
 
-        // depending on the data source, some fields may be not available, process below section
-        // only for responses to GetOrderReferenceDetails calls, skip for OrderReference notifications
-        if ($orderReferenceDetails instanceof OffAmazonPaymentsService_Model_OrderReferenceDetails) {
-            if ($orderReferenceDetails->isSetBuyer()) {
-                if ($orderReferenceDetails->getBuyer()->isSetEmail()) {
-                    $orderUpdated = $this->_updateCustomerEmail($order, $orderReferenceDetails->getBuyer()->getEmail()) || $orderUpdated;
-                }
-            }
-
-            if ($orderReferenceDetails->isSetDestination()) {
-                if ($orderReferenceDetails->getDestination()->isSetPhysicalDestination()) {
-                    $shippingAddress = $this->_convertAmazonAddressToArray($orderReferenceDetails->getDestination()->getPhysicalDestination());
-                    if (isset($shippingAddress['firstname']) && isset($shippingAddress['lastname'])) {
-                        $customerName = array(
-                            'firstname' => $shippingAddress['firstname'],
-                            'lastname' => $shippingAddress['lastname']
-                        );
-                        $orderUpdated = $this->_updateCustomerName($order, $customerName) || $orderUpdated;
+                // depending on the data source, some fields may be not available, process below section
+                // only for responses to GetOrderReferenceDetails calls, skip for OrderReference notifications
+                if ($orderReferenceDetails instanceof OffAmazonPaymentsService_Model_OrderReferenceDetails) {
+                    if ($orderReferenceDetails->isSetBuyer()) {
+                       if ($orderReferenceDetails->getBuyer()->isSetEmail()) {
+                            $orderUpdated = $this->_updateCustomerEmail($order, $orderReferenceDetails->getBuyer()->getEmail()) || $orderUpdated;
+                        }
                     }
-                    $orderUpdated = $this->_updateOrderAddress($order->getBillingAddress(), $shippingAddress) || $orderUpdated;
-                    $orderUpdated = $this->_updateOrderAddress($order->getShippingAddress(), $shippingAddress) || $orderUpdated;
+
+                    if ($orderReferenceDetails->isSetDestination()) {
+                        if ($orderReferenceDetails->getDestination()->isSetPhysicalDestination()) {
+                            $shippingAddress = $this->_convertAmazonAddressToArray($orderReferenceDetails->getDestination()->getPhysicalDestination());
+                            if (isset($shippingAddress['firstname']) && isset($shippingAddress['lastname'])) {
+                                $customerName = array(
+                                    'firstname' => $shippingAddress['firstname'],
+                                    'lastname' => $shippingAddress['lastname']
+                                );
+                                $orderUpdated = $this->_updateCustomerName($order, $customerName) || $orderUpdated;
+                            }
+                            $orderUpdated = $this->_updateOrderAddress($order->getBillingAddress(), $shippingAddress) || $orderUpdated;
+                            $orderUpdated = $this->_updateOrderAddress($order->getShippingAddress(), $shippingAddress) || $orderUpdated;
+                        }
+                    }
                 }
+
+                $this->_addHistoryComment($order, $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState());
+
+                $transactionSave = Mage::getModel('core/resource_transaction');
+                if ($orderUpdated) {
+                    $transactionSave->addObject($order);
+                    $transactionSave->addCommitCallback(array($order, 'save'));
+                }
+
+                // check if authorization should be re-submitted
+                $authTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH);
+                if ($authTransaction && $authTransaction->getIsClosed() && ($order->getBaseTotalDue() > 0)) {
+                    $payment->authorize(true, $order->getBaseTotalDue());
+                    $transactionSave->addObject($payment);
+                    $orderUpdated = true;
+                }
+
+                if ($orderUpdated) {
+                    $transactionSave->save();
+                }
+
             }
+            return $newStatus;
         }
-
-        $this->_addHistoryComment($order, $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState());
-
-/*
-        $transactionSave = Mage::getModel('core/resource_transaction');
-        $transactionSave->addObject($transaction);
-        $transactionSave->addObject($order);
-        $transactionSave->addCommitCallback(array($order, 'save'));
-*/
-        // check if authorization should be re-submitted
-        $authTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH);
-        if ($authTransaction && $authTransaction->getIsClosed() && ($order->getBaseTotalDue() > 0)) {
-            $payment->authorize(true, $order->getBaseTotalDue())->save();
-//            $transactionSave->addObject($payment);
-        }
-
-        $order->save();
+        return null;
     }
 
     /**
@@ -342,10 +354,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleSuspendedOrderReference($payment, $transaction, $orderReferenceDetails) {
         if ($orderReferenceDetails->isSetOrderReferenceStatus()) {
-            $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus())->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState())->save();
+        return null;
     }
 
     /**
@@ -357,10 +372,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleCanceledOrderReference($payment, $transaction, $orderReferenceDetails) {
         if ($orderReferenceDetails->isSetOrderReferenceStatus()) {
-            $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState())->save();
+        return null;
     }
 
     /**
@@ -372,10 +390,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleClosedOrderReference($payment, $transaction, $orderReferenceDetails) {
         if ($orderReferenceDetails->isSetOrderReferenceStatus()) {
-            $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $orderReferenceDetails->getOrderReferenceStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $orderReferenceDetails->getOrderTotal()->getAmount(), $orderReferenceDetails->getOrderReferenceStatus()->getState())->save();
+        return null;
     }
 
 
@@ -392,8 +413,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handlePendingAuthorization($payment, $transaction, $authorizationDetails) {
         if ($authorizationDetails->isSetAuthorizationStatus()) {
-            $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus())->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $authorizationDetails->getAuthorizationAmount()->getAmount(), $authorizationDetails->getAuthorizationStatus()->getState())->save();
+            }
+            return $newStatus;
         }
+        return null;
     }
 
     /**
@@ -404,62 +430,66 @@ class Creativestyle_AmazonPayments_Model_Manager {
      * @param OffAmazonPaymentsService_Model_AuthorizationDetails|OffAmazonPaymentsNotifications_Model_AuthorizationDetails $authorizationDetails
      */
     protected function _handleOpenAuthorization($payment, $transaction, $authorizationDetails) {
-
-        $order = $payment->getOrder();
-        $orderUpdated = false;
-
         if ($authorizationDetails->isSetAuthorizationStatus()) {
-            $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus());
-        }
+            $newStatus = $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus());
+            if (null !== $newStatus) {
+                $order = $payment->getOrder();
+                $orderUpdated = false;
 
-        if ($authorizationDetails->isSetAuthorizationBillingAddress()) {
-            $billingAddress = $this->_convertAmazonAddressToArray($authorizationDetails->getAuthorizationBillingAddress());
-            if (isset($billingAddress['firstname']) && isset($billingAddress['lastname'])) {
-                $customerName = array(
-                    'firstname' => $billingAddress['firstname'],
-                    'lastname' => $billingAddress['lastname']
-                );
-                $orderUpdated = $this->_updateCustomerName($order, $customerName) || $orderUpdated;
+                if ($authorizationDetails->isSetAuthorizationBillingAddress()) {
+                    $billingAddress = $this->_convertAmazonAddressToArray($authorizationDetails->getAuthorizationBillingAddress());
+                    if (isset($billingAddress['firstname']) && isset($billingAddress['lastname'])) {
+                        $customerName = array(
+                            'firstname' => $billingAddress['firstname'],
+                            'lastname' => $billingAddress['lastname']
+                        );
+                        $orderUpdated = $this->_updateCustomerName($order, $customerName) || $orderUpdated;
+                    }
+                    $orderUpdated = $this->_updateCustomerName($order, $customerName) || $orderUpdated;
+                    $orderUpdated = $this->_updateOrderAddress($order->getBillingAddress(), $billingAddress) || $orderUpdated;
+                }
+
+                if ($order->getStatus() != $this->_getConfig()->getAuthorizedOrderStatus()) {
+                    $order->setState(
+                        Mage_Sales_Model_Order::STATE_PROCESSING,
+                        $this->_getConfig()->getAuthorizedOrderStatus(),
+                        Mage::helper('amazonpayments')->__('An authorization of %s has been processed by Amazon Payments (%s). The new status is %s.',
+                            $order->getStore()->convertPrice($authorizationDetails->getAuthorizationAmount()->getAmount(), true, false),
+                            $authorizationDetails->getAmazonAuthorizationId(),
+                            strtoupper($authorizationDetails->getAuthorizationStatus()->getState())
+                        ),
+                        Mage_Sales_Model_Order_Status_History::CUSTOMER_NOTIFICATION_NOT_APPLICABLE
+                    );
+                    $orderUpdated = true;
+                }
+
+                $transactionSave = Mage::getModel('core/resource_transaction');
+                if ($orderUpdated) {
+                    $transactionSave->addObject($order);
+                    $transactionSave->addCommitCallback(array($order, 'save'));
+                }
+
+                if ($this->_getConfig()->captureImmediately() && $order->canInvoice()) {
+                    $invoice = $order->prepareInvoice()
+                        ->register()
+                        ->capture();
+                    $invoice->setTransactionId($authorizationDetails->getAmazonAuthorizationId());
+                    $transactionSave->addObject($invoice);
+                    $orderUpdated = true;
+                }
+
+                if ($orderUpdated) {
+                    $transactionSave->save();
+                }
+
+                if (!$order->getEmailSent() && $this->_getConfig()->sendEmailConfirmation()) {
+                    $order->sendNewOrderEmail();
+                }
+
             }
-
-            $orderUpdated = $this->_updateCustomerName($order, $customerName) || $orderUpdated;
-            $orderUpdated = $this->_updateOrderAddress($order->getBillingAddress(), $billingAddress) || $orderUpdated;
+            return $newStatus;
         }
-
-        if ($order->getStatus() != $this->_getConfig()->getAuthorizedOrderStatus()) {
-            $order->setState(
-                Mage_Sales_Model_Order::STATE_PROCESSING,
-                $this->_getConfig()->getAuthorizedOrderStatus(),
-                Mage::helper('amazonpayments')->__('An authorization of %s has been processed by Amazon Payments (%s). The new status is %s.',
-                    $order->getStore()->convertPrice($authorizationDetails->getAuthorizationAmount()->getAmount(), true, false),
-                    $authorizationDetails->getAmazonAuthorizationId(),
-                    strtoupper($authorizationDetails->getAuthorizationStatus()->getState())
-                ), Mage_Sales_Model_Order_Status_History::CUSTOMER_NOTIFICATION_NOT_APPLICABLE
-            );
-            $orderUpdated = true;
-        }
-
-        $transactionSave = Mage::getModel('core/resource_transaction');
-        $transactionSave->addObject($transaction);
-        if ($orderUpdated) {
-            $transactionSave->addObject($order);
-            $transactionSave->addCommitCallback(array($order, 'save'));
-        }
-
-        if ($this->_getConfig()->captureImmediately() && $order->canInvoice()) {
-            $invoice = $order->prepareInvoice()
-                ->register()
-                ->capture();
-            $invoice->setTransactionId($authorizationDetails->getAmazonAuthorizationId());
-            $transactionSave->addObject($invoice);
-        }
-
-        $transactionSave->save();
-
-        if (!$order->getEmailSent() && $this->_getConfig()->sendEmailConfirmation()) {
-            $order->sendNewOrderEmail();
-        }
-
+        return null;
     }
 
     /**
@@ -471,12 +501,16 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleDeclinedAuthorization($payment, $transaction, $authorizationDetails) {
         if ($authorizationDetails->isSetAuthorizationStatus()) {
-            $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus())->setIsClosed(true)->save();
-            if ($authorizationDetails->getAuthorizationStatus()->getReasonCode() == 'InvalidPaymentMethod') {
-                Mage::helper('amazonpayments')->sendAuthorizationDeclinedEmail($payment, $authorizationDetails);
+            $newStatus = $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus());
+            if (null !== $newStatus) {
+                if ($authorizationDetails->getAuthorizationStatus()->getReasonCode() == 'InvalidPaymentMethod') {
+                    Mage::helper('amazonpayments')->sendAuthorizationDeclinedEmail($payment, $authorizationDetails);
+                }
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $authorizationDetails->getAuthorizationAmount()->getAmount(), $authorizationDetails->getAuthorizationStatus()->getState())->setIsCustomerNotified(true)->save();
             }
+            return $newStatus;
         }
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $authorizationDetails->getAuthorizationAmount()->getAmount(), $authorizationDetails->getAuthorizationStatus()->getState())->setIsCustomerNotified(true)->save();
+        return null;
     }
 
     /**
@@ -488,10 +522,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleClosedAuthorization($payment, $transaction, $authorizationDetails) {
         if ($authorizationDetails->isSetAuthorizationStatus()) {
-            $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $authorizationDetails->getAuthorizationStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $authorizationDetails->getAuthorizationAmount()->getAmount(), $authorizationDetails->getAuthorizationStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $authorizationDetails->getAuthorizationAmount()->getAmount(), $authorizationDetails->getAuthorizationStatus()->getState())->save();
+        return null;
     }
 
 
@@ -508,8 +545,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handlePendingCapture($payment, $transaction, $captureDetails) {
         if ($captureDetails->isSetCaptureStatus()) {
-            $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus())->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $captureDetails->getCaptureAmount()->getAmount(), $captureDetails->getCaptureStatus()->getState())->save();
+            }
+            return $newStatus;
         }
+        return null;
     }
 
     /**
@@ -521,9 +563,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleDeclinedCapture($payment, $transaction, $captureDetails) {
         if ($captureDetails->isSetCaptureStatus()) {
-            $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $captureDetails->getCaptureAmount()->getAmount(), $captureDetails->getCaptureStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $captureDetails->getCaptureAmount()->getAmount(), $captureDetails->getCaptureStatus()->getState())->save();
+        return null;
     }
 
     /**
@@ -535,9 +581,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleCompletedCapture($payment, $transaction, $captureDetails) {
         if ($captureDetails->isSetCaptureStatus()) {
-            $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $captureDetails->getCaptureAmount()->getAmount(), $captureDetails->getCaptureStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $captureDetails->getCaptureAmount()->getAmount(), $captureDetails->getCaptureStatus()->getState())->save();
+        return null;
     }
 
     /**
@@ -549,9 +599,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleClosedCapture($payment, $transaction, $captureDetails) {
         if ($captureDetails->isSetCaptureStatus()) {
-            $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $captureDetails->getCaptureStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $captureDetails->getCaptureAmount()->getAmount(), $captureDetails->getCaptureStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $captureDetails->getCaptureAmount()->getAmount(), $captureDetails->getCaptureStatus()->getState())->save();
+        return null;
     }
 
 
@@ -568,8 +622,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handlePendingRefund($payment, $transaction, $refundDetails) {
         if ($refundDetails->isSetRefundStatus()) {
-            $this->_updateTransactionStatus($transaction, $refundDetails->getRefundStatus())->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $refundDetails->getRefundStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $refundDetails->getRefundAmount()->getAmount(), $refundDetails->getRefundStatus()->getState())->save();
+            }
+            return $newStatus;
         }
+        return null;
     }
 
     /**
@@ -581,9 +640,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleDeclinedRefund($payment, $transaction, $refundDetails) {
         if ($refundDetails->isSetRefundStatus()) {
-            $this->_updateTransactionStatus($transaction, $refundDetails->getRefundStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $refundDetails->getRefundStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $refundDetails->getRefundAmount()->getAmount(), $refundDetails->getRefundStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $refundDetails->getRefundAmount()->getAmount(), $refundDetails->getRefundStatus()->getState())->save();
+        return null;
     }
 
     /**
@@ -595,9 +658,13 @@ class Creativestyle_AmazonPayments_Model_Manager {
      */
     protected function _handleCompletedRefund($payment, $transaction, $refundDetails) {
         if ($refundDetails->isSetRefundStatus()) {
-            $this->_updateTransactionStatus($transaction, $refundDetails->getRefundStatus())->setIsClosed(true)->save();
+            $newStatus = $this->_updateTransactionStatus($transaction, $refundDetails->getRefundStatus());
+            if (null !== $newStatus) {
+                $this->_addHistoryComment($payment->getOrder(), $transaction, $refundDetails->getRefundAmount()->getAmount(), $refundDetails->getRefundStatus()->getState())->save();
+            }
+            return $newStatus;
         }
-        $this->_addHistoryComment($payment->getOrder(), $transaction, $refundDetails->getRefundAmount()->getAmount(), $refundDetails->getRefundStatus()->getState())->save();
+        return null;
     }
 
 
@@ -615,34 +682,30 @@ class Creativestyle_AmazonPayments_Model_Manager {
     public function importTransactionDetails($payment, $transaction) {
         switch ($transaction->getTxnType()) {
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER:
-                $this->importOrderReferenceDetails(
-                    $this->_getApi()->getOrderReferenceDetails($transaction->getTxnId()),
+                return $this->importOrderReferenceDetails(
+                    $this->_getApi()->setStore($payment->getOrder()->getStoreId())->getOrderReferenceDetails($transaction->getTxnId()),
                     $payment,
                     $transaction
                 );
-                break;
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH:
-                $this->importAuthorizationDetails(
-                    $this->_getApi()->getAuthorizationDetails($transaction->getTxnId()),
+                return $this->importAuthorizationDetails(
+                    $this->_getApi()->setStore($payment->getOrder()->getStoreId())->getAuthorizationDetails($transaction->getTxnId()),
                     $payment,
                     $transaction,
                     false
                 );
-                break;
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE:
-                $this->importCaptureDetails(
-                    $this->_getApi()->getCaptureDetails($transaction->getTxnId()),
+                return $this->importCaptureDetails(
+                    $this->_getApi()->setStore($payment->getOrder()->getStoreId())->getCaptureDetails($transaction->getTxnId()),
                     $payment,
                     $transaction
                 );
-                break;
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND:
-                $this->importRefundDetails(
-                    $this->_getApi()->getRefundDetails($transaction->getTxnId()),
+                return $this->importRefundDetails(
+                    $this->_getApi()->setStore($payment->getOrder()->getStoreId())->getRefundDetails($transaction->getTxnId()),
                     $payment,
                     $transaction
                 );
-                break;
         }
         return null;
     }
@@ -673,21 +736,18 @@ class Creativestyle_AmazonPayments_Model_Manager {
                 if ($orderReferenceStatus->isSetState()) {
                     switch (strtolower($orderReferenceStatus->getState())) {
                         case 'open':
-                            $this->_handleOpenOrderReference($payment, $transaction, $orderReferenceDetails);
-                            break;
+                            return $this->_handleOpenOrderReference($payment, $transaction, $orderReferenceDetails);
                         case 'suspended':
-                            $this->_handleSuspendedOrderReference($payment, $transaction, $orderReferenceDetails);
-                            break;
+                            return $this->_handleSuspendedOrderReference($payment, $transaction, $orderReferenceDetails);
                         case 'canceled':
-                            $this->_handleCanceledOrderReference($payment, $transaction, $orderReferenceDetails);
-                            break;
+                            return $this->_handleCanceledOrderReference($payment, $transaction, $orderReferenceDetails);
                         case 'closed':
-                            $this->_handleClosedOrderReference($payment, $transaction, $orderReferenceDetails);
-                            break;
+                            return $this->_handleClosedOrderReference($payment, $transaction, $orderReferenceDetails);
                     }
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -718,24 +778,21 @@ class Creativestyle_AmazonPayments_Model_Manager {
                 if ($authorizationStatus->isSetState()) {
                     switch (strtolower($authorizationStatus->getState())) {
                         case 'pending':
-                            $this->_handlePendingAuthorization($payment, $transaction, $authorizationDetails);
-                            break;
+                            return $this->_handlePendingAuthorization($payment, $transaction, $authorizationDetails);
                         case 'open':
                             if ($refetchDetails) {
                                 $authorizationDetails = $this->_getApi()->getAuthorizationDetails($authorizationDetails->getAmazonAuthorizationId());
                             }
-                            $this->_handleOpenAuthorization($payment, $transaction, $authorizationDetails);
-                            break;
+                            return $this->_handleOpenAuthorization($payment, $transaction, $authorizationDetails);
                         case 'declined':
-                            $this->_handleDeclinedAuthorization($payment, $transaction, $authorizationDetails);
-                            break;
+                            return $this->_handleDeclinedAuthorization($payment, $transaction, $authorizationDetails);
                         case 'closed':
-                            $this->_handleClosedAuthorization($payment, $transaction, $authorizationDetails);
-                            break;
+                            return $this->_handleClosedAuthorization($payment, $transaction, $authorizationDetails);
                     }
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -765,21 +822,18 @@ class Creativestyle_AmazonPayments_Model_Manager {
                 if ($captureStatus->isSetState()) {
                     switch (strtolower($captureStatus->getState())) {
                         case 'pending':
-                            $this->_handlePendingCapture($payment, $transaction, $captureDetails);
-                            break;
+                            return $this->_handlePendingCapture($payment, $transaction, $captureDetails);
                         case 'declined':
-                            $this->_handleDeclinedCapture($payment, $transaction, $captureDetails);
-                            break;
+                            return $this->_handleDeclinedCapture($payment, $transaction, $captureDetails);
                         case 'completed':
-                            $this->_handleCompletedCapture($payment, $transaction, $captureDetails);
-                            break;
+                            return $this->_handleCompletedCapture($payment, $transaction, $captureDetails);
                         case 'closed':
-                            $this->_handleClosedCapture($payment, $transaction, $captureDetails);
-                            break;
+                            return $this->_handleClosedCapture($payment, $transaction, $captureDetails);
                     }
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -809,18 +863,16 @@ class Creativestyle_AmazonPayments_Model_Manager {
                 if ($refundStatus->isSetState()) {
                     switch (strtolower($refundStatus->getState())) {
                         case 'pending':
-                            $this->_handlePendingRefund($payment, $transaction, $refundDetails);
-                            break;
+                            return $this->_handlePendingRefund($payment, $transaction, $refundDetails);
                         case 'declined':
-                            $this->_handleDeclinedRefund($payment, $transaction, $refundDetails);
-                            break;
+                            return $this->_handleDeclinedRefund($payment, $transaction, $refundDetails);
                         case 'completed':
-                            $this->_handleCompletedRefund($payment, $transaction, $refundDetails);
-                            break;
+                            return $this->_handleCompletedRefund($payment, $transaction, $refundDetails);
                     }
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -833,28 +885,83 @@ class Creativestyle_AmazonPayments_Model_Manager {
             switch ($notification->getNotificationType()) {
                 case Creativestyle_AmazonPayments_Model_Api_Ipn::NOTIFICATION_TYPE_ORDER_REFERENCE:
                     if ($notification->isSetOrderReference()) {
-                        $this->importOrderReferenceDetails($notification->getOrderReference());
+                        $transactionStatus = $this->importOrderReferenceDetails($notification->getOrderReference());
+                        if (null !== $transactionStatus) {
+                            $payment = $this->_lookupPayment($notification->getOrderReference()->getAmazonOrderReferenceId());
+                            if ($payment) {
+                                $transaction = $payment->lookupTransaction(
+                                    $notification->getOrderReference()->getAmazonOrderReferenceId(),
+                                    Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER
+                                );
+                                if ($transaction) {
+                                    $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+                                    $transaction->save();
+                                }
+                            }
+                        }
                     } else {
                         throw new Creativestyle_AmazonPayments_Exception('OrderReference field not found in submitted notification');
                     }
                     break;
                 case Creativestyle_AmazonPayments_Model_Api_Ipn::NOTIFICATION_TYPE_AUTHORIZATION:
                     if ($notification->isSetAuthorizationDetails()) {
-                        $this->importAuthorizationDetails($notification->getAuthorizationDetails());
+                        $transactionStatus = $this->importAuthorizationDetails($notification->getAuthorizationDetails());
+                        if (null !== $transactionStatus) {
+                            $referenceId = $this->_sanitizeReferenceId($notification->getAuthorizationDetails()->getAuthorizationReferenceId());
+                            $payment = $this->_lookupPayment($referenceId);
+                            if ($payment) {
+                                $transaction = $payment->lookupTransaction(
+                                    $notification->getAuthorizationDetails()->getAmazonAuthorizationId(),
+                                    Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH
+                                );
+                                if ($transaction) {
+                                    $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+                                    $transaction->save();
+                                }
+                            }
+                        }
                     } else {
                         throw new Creativestyle_AmazonPayments_Exception('AuthorizationDetails field not found in submitted notification');
                     }
                     break;
                 case Creativestyle_AmazonPayments_Model_Api_Ipn::NOTIFICATION_TYPE_CAPTURE:
                     if ($notification->isSetCaptureDetails()) {
-                        $this->importCaptureDetails($notification->getCaptureDetails());
+                        $transactionStatus = $this->importCaptureDetails($notification->getCaptureDetails());
+                        if (null !== $transactionStatus) {
+                            $referenceId = $this->_sanitizeReferenceId($notification->getCaptureDetails()->getCaptureReferenceId());
+                            $payment = $this->_lookupPayment($referenceId);
+                            if ($payment) {
+                                $transaction = $payment->lookupTransaction(
+                                    $notification->getCaptureDetails()->getAmazonCaptureId(),
+                                    Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE
+                                );
+                                if ($transaction) {
+                                    $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+                                    $transaction->save();
+                                }
+                            }
+                        }
                     } else {
                         throw new Creativestyle_AmazonPayments_Exception('CaptureDetails field not found in submitted notification');
                     }
                     break;
                 case Creativestyle_AmazonPayments_Model_Api_Ipn::NOTIFICATION_TYPE_REFUND:
                     if ($notification->isSetRefundDetails()) {
-                        $this->importRefundDetails($notification->getRefundDetails());
+                        $transactionStatus = $this->importRefundDetails($notification->getRefundDetails());
+                        if (null !== $transactionStatus) {
+                            $referenceId = $this->_sanitizeReferenceId($notification->getRefundDetails()->getRefundReferenceId());
+                            $payment = $this->_lookupPayment($referenceId);
+                            if ($payment) {
+                                $transaction = $payment->lookupTransaction(
+                                    $notification->getRefundDetails()->getAmazonRefundId(),
+                                    Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
+                                );
+                                if ($transaction) {
+                                    $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS, $transactionStatus);
+                                    $transaction->save();
+                                }
+                            }
+                        }
                     } else {
                         throw new Creativestyle_AmazonPayments_Exception('RefundDetails field not found in submitted notification');
                     }
@@ -868,4 +975,3 @@ class Creativestyle_AmazonPayments_Model_Manager {
     }
 
 }
-

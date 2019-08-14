@@ -69,6 +69,7 @@ class OffAmazonPaymentsService_Model_CaptureRequest extends OffAmazonPaymentsSer
 
         'SellerCaptureNote' => array('FieldValue' => null, 'FieldType' => 'string'),
         'SoftDescriptor' => array('FieldValue' => null, 'FieldType' => 'string'),
+        'ProviderCreditList' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_ProviderCreditList'),		
         );
         parent::__construct($data);
     }
@@ -342,6 +343,52 @@ class OffAmazonPaymentsService_Model_CaptureRequest extends OffAmazonPaymentsSer
     public function isSetSoftDescriptor()
     {
         return !is_null($this->_fields['SoftDescriptor']['FieldValue']);
+    }
+    
+    /**
+     * Gets the value of the ProviderCreditList.
+     *
+     * @return ProviderCreditList ProviderCreditList
+     */
+    public function getProviderCreditList()
+    {
+    	return $this->_fields['ProviderCreditList']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditList.
+     *
+     * @param ProviderCreditList ProviderCreditList
+     * @return void
+     */
+    public function setProviderCreditList($value)
+    {
+    	$this->_fields['ProviderCreditList']['FieldValue'] = $value;
+    	return;
+    }
+    
+    /**
+     * Sets the value of the ProviderCreditList  and returns this instance
+     *
+     * @param ProviderCreditList $value ProviderCreditList
+     * @return OffAmazonPaymentsService_Model_CaptureRequest instance
+     */
+    public function withProviderCreditList($value)
+    {
+    	$this->setProviderCreditList($value);
+    	return $this;
+    }
+    
+    
+    /**
+     * Checks if ProviderCreditList  is set
+     *
+     * @return bool true if ProviderCreditList property is set
+     */
+    public function isSetProviderCreditList()
+    {
+    	return !is_null($this->_fields['ProviderCreditList']['FieldValue']);
+    
     }
 }
 ?>

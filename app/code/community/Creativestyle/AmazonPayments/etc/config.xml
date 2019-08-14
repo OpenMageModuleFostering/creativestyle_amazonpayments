@@ -17,7 +17,7 @@
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.1.2</version>
+            <version>1.2.2</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -85,6 +85,24 @@
                     </amazonpayments_advanced_observer>
                 </observers>
             </controller_action_layout_render_before_adminhtml_sales_order_view>
+            <sales_order_payment_transaction_save_before>
+                <observers>
+                    <amazonpayments_advanced_observer>
+                        <type>singleton</type>
+                        <class>Creativestyle_AmazonPayments_Model_Observer</class>
+                        <method>closeTransaction</method>
+                    </amazonpayments_advanced_observer>
+                </observers>
+            </sales_order_payment_transaction_save_before>
+            <sales_order_payment_transaction_save_after>
+                <observers>
+                    <amazonpayments_advanced_observer>
+                        <type>singleton</type>
+                        <class>Creativestyle_AmazonPayments_Model_Observer</class>
+                        <method>updateParentTransaction</method>
+                    </amazonpayments_advanced_observer>
+                </observers>
+            </sales_order_payment_transaction_save_after>
         </events>
         <payment>
             <groups>
@@ -116,6 +134,34 @@
                         <live>https://payments.amazon.co.uk/gp/widgets/button</live>
                     </uk>
                 </button_urls>
+                <login_api_urls>
+                    <de>
+                        <sandbox>https://api.sandbox.amazon.de/</sandbox>
+                        <live>https://api.amazon.de/</live>
+                    </de>
+                    <uk>
+                        <sandbox>https://api.sandbox.amazon.co.uk/</sandbox>
+                        <live>https://api.amazon.co.uk/</live>
+                    </uk>
+                </login_api_urls>
+                <login_widget_urls>
+                    <de>
+                        <sandbox>https://static-eu.payments-amazon.com/OffAmazonPayments/de/sandbox/lpa/js/Widgets.js</sandbox>
+                        <live>https://static-eu.payments-amazon.com/OffAmazonPayments/de/lpa/js/Widgets.js</live>
+                    </de>
+                    <uk>
+                        <sandbox>https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js</sandbox>
+                        <live>https://static-eu.payments-amazon.com/OffAmazonPayments/uk/lpa/js/Widgets.js</live>
+                    </uk>
+                </login_widget_urls>
+                <customer_attributes>
+                    <prefix />
+                    <middlename/>
+                    <suffix/>
+                    <dob/>
+                    <taxvat/>
+                    <gender/>
+                </customer_attributes>
                 <objects>
                     <OrderReference>
                         <states>
@@ -179,7 +225,7 @@
                                     <InvalidPaymentMethod>
                                         <simulation_allowed>1</simulation_allowed>
                                         <simulation_options>
-                                            <PaymentMethodUpdateTimeInMins type="int">60</PaymentMethodUpdateTimeInMins>
+                                            <PaymentMethodUpdateTimeInMins type="int">10</PaymentMethodUpdateTimeInMins>
                                         </simulation_options>
                                     </InvalidPaymentMethod>
                                     <AmazonRejected>
@@ -198,7 +244,7 @@
                                     <ExpiredUnused>
                                         <simulation_allowed>1</simulation_allowed>
                                         <simulation_options>
-                                            <ExpirationTimeInMins type="int">60</ExpirationTimeInMins>
+                                            <ExpirationTimeInMins type="int">10</ExpirationTimeInMins>
                                         </simulation_options>
                                     </ExpiredUnused>
                                     <MaxCapturesProcessed>
@@ -312,6 +358,7 @@
         </translate>
         <secure_url>
             <amazonpayments>/amazonpayments</amazonpayments>
+            <amazon_cart>/checkout/cart</amazon_cart>
         </secure_url>
     </frontend>
     <admin>
@@ -349,6 +396,9 @@
                 <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
                 <run><model>amazonpayments/observer::rotateLogfiles</model></run>
             </amazonpayments_advanced_log_rotate>
+            <amazonpayments_advanced_data_poll>
+                <run><model>amazonpayments/observer::pollObjectsData</model></run>
+            </amazonpayments_advanced_data_poll>
         </jobs>
     </crontab>
     <default>
@@ -382,19 +432,32 @@
                 <payment_action>authorize</payment_action>
                 <authorized_order_status>processing</authorized_order_status>
             </general>
+            <login>
+                <active>0</active>
+            </login>
             <email>
                 <order_confirmation>1</order_confirmation>
                 <authorization_declined_template>amazonpayments_advanced_authorization_declined</authorization_declined_template>
                 <authorization_declined_identity>sales</authorization_declined_identity>
             </email>
             <design>
-                <button_size>large</button_size>
-                <button_color>orange</button_color>
                 <address_width>442</address_width>
                 <address_height>260</address_height>
                 <payment_width>442</payment_width>
                 <payment_height>260</payment_height>
             </design>
+            <design_login>
+                <login_button_type>LwA</login_button_type>
+                <login_button_size>small</login_button_size>
+                <login_button_color>Gold</login_button_color>
+                <pay_button_type>PwA</pay_button_type>
+                <pay_button_size>small</pay_button_size>
+                <pay_button_color>Gold</pay_button_color>
+            </design_login>
+            <design_pay>
+                <button_size>large</button_size>
+                <button_color>orange</button_color>
+            </design_pay>
             <developer>
                 <log_active>1</log_active>
             </developer>

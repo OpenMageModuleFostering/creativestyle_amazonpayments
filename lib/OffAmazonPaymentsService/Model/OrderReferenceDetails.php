@@ -35,13 +35,15 @@ require_once 'OffAmazonPaymentsService/Model.php';
  * <li>SellerNote: string</li>
  * <li>PlatformId: string</li>
  * <li>Destination: OffAmazonPaymentsService_Model_Destination</li>
+ * <li>BillingAddress: OffAmazonPaymentsService_Model_BillingAddress</li>
  * <li>ReleaseEnvironment: string</li>
  * <li>SellerOrderAttributes: OffAmazonPaymentsService_Model_SellerOrderAttributes</li>
  * <li>OrderReferenceStatus: OffAmazonPaymentsService_Model_OrderReferenceStatus</li>
  * <li>Constraints: OffAmazonPaymentsService_Model_Constraints</li>
  * <li>CreationTimestamp: string</li>
  * <li>ExpirationTimestamp: string</li>
- *
+ * <li>IdList: OffAmazonPaymentsService_Model_IdList</li>
+ * <li>ParentDetails: OffAmazonPaymentsService_Model_ParentDetails</li>
  * </ul>
  */ 
 class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaymentsService_Model
@@ -61,13 +63,16 @@ class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaym
      * <li>SellerNote: string</li>
      * <li>PlatformId: string</li>
      * <li>Destination: OffAmazonPaymentsService_Model_Destination</li>
+     * <li>BillingAddress: OffAmazonPaymentsService_Model_BillingAddress</li> 
      * <li>ReleaseEnvironment: string</li>
      * <li>SellerOrderAttributes: OffAmazonPaymentsService_Model_SellerOrderAttributes</li>
      * <li>OrderReferenceStatus: OffAmazonPaymentsService_Model_OrderReferenceStatus</li>
      * <li>Constraints: OffAmazonPaymentsService_Model_Constraints</li>
      * <li>CreationTimestamp: string</li>
      * <li>ExpirationTimestamp: string</li>
-     *
+     * <li>IdList: OffAmazonPaymentsService_Model_IdList</li>
+     * <li>ParentDetails: OffAmazonPaymentsService_Model_ParentDetails</li>
+     * 
      * </ul>
      */
     public function __construct($data = null)
@@ -85,11 +90,12 @@ class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaym
         'PlatformId' => array('FieldValue' => null, 'FieldType' => 'string'),
 
         'Destination' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Destination'),
-
+        
+        'BillingAddress' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_BillingAddress'),
+  
         'ReleaseEnvironment' => array('FieldValue' => null, 'FieldType' => 'string'),
 
         'SellerOrderAttributes' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_SellerOrderAttributes'),
-
 
         'OrderReferenceStatus' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_OrderReferenceStatus'),
 
@@ -98,6 +104,11 @@ class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaym
 
         'CreationTimestamp' => array('FieldValue' => null, 'FieldType' => 'string'),
         'ExpirationTimestamp' => array('FieldValue' => null, 'FieldType' => 'string'),
+        		
+        'IdList' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_IdList'),
+        
+        'ParentDetails' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_ParentDetails'),
+        		
         );
         parent::__construct($data);
     }
@@ -376,6 +387,52 @@ class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaym
     }
 
     /**
+     * Gets the value of the BillingAddress.
+     *
+     * @return BillingAddress BillingAddress
+     */
+    public function getBillingAddress()
+    {
+    	return $this->_fields['BillingAddress']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the BillingAddress.
+     *
+     * @param BillingAddress BillingAddress
+     * @return void
+     */
+    public function setBillingAddress($value)
+    {
+    	$this->_fields['BillingAddress']['FieldValue'] = $value;
+    	return;
+    }
+    
+    /**
+     * Sets the value of the BillingAddress  and returns this instance
+     *
+     * @param BillingAddress $value BillingAddress
+     * @return OffAmazonPaymentsService_Model_OrderReferenceDetails instance
+     */
+    public function withBillingAddress($value)
+    {
+    	$this->setBillingAddress($value);
+    	return $this;
+    }
+
+    /**
+     * Checks if BillingAddress  is set
+     *
+     * @return bool true if BillingAddress property is set
+     */
+    public function isSetBillingAddress()
+    {
+    	return !is_null($this->_fields['BillingAddress']['FieldValue']);
+    
+    }
+    
+    
+    /**
      * Gets the value of the ReleaseEnvironment property.
      * 
      * @return string ReleaseEnvironment
@@ -465,7 +522,7 @@ class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaym
         return !is_null($this->_fields['SellerOrderAttributes']['FieldValue']);
 
     }
-
+    
     /**
      * Gets the value of the OrderReferenceStatus.
      * 
@@ -649,7 +706,97 @@ class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaym
     }
 
 
-
+    /**
+     * Gets the value of the IdList.
+     *
+     * @return IdList IdList
+     */
+    public function getIdList()
+    {
+    	return $this->_fields['IdList']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the IdList.
+     *
+     * @param IdList IdList
+     * @return void
+     */
+    public function setIdList($value)
+    {
+    	$this->_fields['IdList']['FieldValue'] = $value;
+    	return;
+    }
+    
+    /**
+     * Sets the value of the IdList  and returns this instance
+     *
+     * @param IdList $value IdList
+     * @return OffAmazonPaymentsService_Model_OrderReferenceDetails instance
+     */
+    public function withIdList($value)
+    {
+    	$this->setIdList($value);
+    	return $this;
+    }
+    
+    
+    /**
+     * Checks if IdList  is set
+     *
+     * @return bool true if IdList property is set
+     */
+    public function isSetIdList()
+    {
+    	return !is_null($this->_fields['IdList']['FieldValue']);
+    
+    }
+    
+    /**
+     * Gets the value of the ParentDetails.
+     *
+     * @return OffAmazonPaymentsService_Model_ParentDetails ParentDetails
+     */
+    public function getParentDetails()
+    {
+        return $this->_fields['ParentDetails']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the ParentDetails.
+     *
+     * @param OffAmazonPaymentsService_Model_ParentDetails ParentDetails
+     * @return void
+     */
+    public function setParentDetails($value)
+    {
+        $this->_fields['ParentDetails']['FieldValue'] = $value;
+        return;
+    }
+    
+    /**
+     * Sets the value of the ParentDetails  and returns this instance
+     *
+     * @param ParentDetails $value ParentDetails
+     * @return OffAmazonPaymentsService_Model_OrderReferenceDetails instance
+     */
+    public function withParentDetails($value)
+    {
+        $this->setParentDetails($value);
+        return $this;
+    }
+    
+    
+    /**
+     * Checks if ParentDetails is set
+     *
+     * @return bool true if ParentDetails property is set
+     */
+    public function isSetParentDetails()
+    {
+        return !is_null($this->_fields['ParentDetails']['FieldValue']);
+    
+    }
 
 }
 ?>

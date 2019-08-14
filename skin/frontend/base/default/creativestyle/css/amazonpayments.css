@@ -47,10 +47,11 @@
 .pay-with-amazon-onepage-shortcut p img {
     display: none;
 }
-.buttonWidget img {
+.payButtonWidget img {
     cursor: pointer;
 }
-.checkout-onepage-index .buttonWidget {
+.checkout-onepage-index .loginButtonWidget,
+.checkout-onepage-index .payButtonWidget {
     margin-bottom: 15px;
     text-align: right;
 }
@@ -138,4 +139,22 @@ ol.apa.desktop-layout {
 }
 .desktop-layout #apa-shipping {
     margin-right: 16px;
+}
+
+.amazon-login {
+    padding-top: 27px;
+}
+
+.amazon-login.position-before {
+    padding-top: 0 !important;
+    padding-bottom: 27px;
+}
+
+.amazon-login .content {
+    min-height: 100px;
+}
+
+.buttons-set button.cancel span {
+    border-color:#406a83;
+    background:#618499;
 }

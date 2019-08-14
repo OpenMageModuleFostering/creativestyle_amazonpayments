@@ -43,6 +43,7 @@ require_once 'OffAmazonPaymentsService/Model.php';
  * <li>OrderItemCategories: OffAmazonPaymentsService_Model_OrderItemCategories</li>
  * <li>CaptureNow: bool</li>
  * <li>SoftDescriptor: string</li>
+ * <li>AddressVerificationCode: string</li>
  *
  * </ul>
  */ 
@@ -71,7 +72,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      * <li>OrderItemCategories: OffAmazonPaymentsService_Model_OrderItemCategories</li>
      * <li>CaptureNow: bool</li>
      * <li>SoftDescriptor: string</li>
-     *
+     * <li>AddressVerificationCode: string</li>
+     * 
      * </ul>
      */
     public function __construct($data = null)
@@ -103,6 +105,7 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
 
         'CaptureNow' => array('FieldValue' => null, 'FieldType' => 'bool'),
         'SoftDescriptor' => array('FieldValue' => null, 'FieldType' => 'string'),
+        'AddressVerificationCode' => array('FieldValue' => null, 'FieldType' => 'string'),
         );
         parent::__construct($data);
     }
@@ -742,5 +745,51 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     {
         return !is_null($this->_fields['SoftDescriptor']['FieldValue']);
     }
+    
+    /**
+     * Gets the value of the AddrerificationCode property.
+     *
+     * @param string AddressVerificationCode
+     * @return this instance
+     */
+    public function getAddressVerificationCode()
+    {
+    	return $this->_fields['AddressVerificationCode']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the AddressVerificationCode property.
+     * 
+     * @param string AddressVerificationCode
+     * @return this instance
+     */
+    public function setAddressVerificationCode($value)
+    {
+    	$this->_fields['AddressVerificationCode']['FieldValue'] = $value;
+    	return $this;
+    }
+    
+    /**
+     * Sets the value of the AddressVerificationCode and return this instance
+     * 
+     * @param string $value AddressVerificationCode
+     * @return OffAmazonPaymentsService_Model_AuthorizationDetails instance
+     */
+    public function withAddressVerificationCode($value)
+    {
+    	$this->setAddressVerificationCode($value);
+    	return $this;
+    }
+    
+    /**
+     * Checks if AddressVerificationCode is set
+     * 
+     * @return bool true if AddressVerificationCode is set
+     */
+    public function isSetAddressVerificationCode()
+    {
+    	return !is_null($this->_fields['AddressVerificationCode']['FieldValue']);
+    }
+    
 }
 ?>

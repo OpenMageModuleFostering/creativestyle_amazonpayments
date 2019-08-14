@@ -28,6 +28,7 @@ require_once 'OffAmazonPaymentsService/Model.php';
  * <li>SellerNote: string</li>
  * <li>PlatformId: string</li>
  * <li>Destination: OffAmazonPaymentsService_Model_Destination</li>
+ * <li>BillingAddress: OffAmazonPaymentsService_Model_BillingAddress</li>
  * <li>ReleaseEnvironment: string</li>
  * <li>SellerBillingAgreementAttributes: OffAmazonPaymentsService_Model_SellerBillingAgreementAttributes</li>
  * <li>BillingAgreementStatus: OffAmazonPaymentsService_Model_BillingAgreementStatus</li>
@@ -55,6 +56,7 @@ class OffAmazonPaymentsService_Model_BillingAgreementDetails extends OffAmazonPa
      * <li>SellerNote: string</li>
      * <li>PlatformId: string</li>
      * <li>Destination: OffAmazonPaymentsService_Model_Destination</li>
+     * <li>BillingAddress: OffAmazonPaymentsService_Model_BillingAddress</li>
      * <li>ReleaseEnvironment: string</li>
      * <li>SellerBillingAgreementAttributes: OffAmazonPaymentsService_Model_SellerBillingAgreementAttributes</li>
      * <li>BillingAgreementStatus: OffAmazonPaymentsService_Model_BillingAgreementStatus</li>
@@ -96,7 +98,12 @@ class OffAmazonPaymentsService_Model_BillingAgreementDetails extends OffAmazonPa
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_Destination'
             ),
-            
+           
+            'BillingAddress' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_BillingAddress'
+            ),
+ 
             'ReleaseEnvironment' => array(
                 'FieldValue' => null,
                 'FieldType' => 'string'
@@ -395,6 +402,50 @@ class OffAmazonPaymentsService_Model_BillingAgreementDetails extends OffAmazonPa
     public function isSetDestination ()
     {
         return ! is_null($this->_fields['Destination']['FieldValue']);
+    }
+
+    /**
+     * Gets the value of the BillingAddress.
+     * 
+     * @return BillingAddress BillingAddress
+     */
+    public function getBillingAddress ()
+    {
+        return $this->_fields['BillingAddress']['FieldValue'];
+    }
+
+    /**
+     * Sets the value of the BillingAddress.
+     * 
+     * @param BillingAddress BillingAddress
+     * @return void
+     */
+    public function setBillingAddress ($value)
+    {
+        $this->_fields['BillingAddress']['FieldValue'] = $value;
+        return;
+    }
+
+    /**
+     * Sets the value of the BillingAddress  and returns this instance
+     * 
+     * @param BillingAddress $value BillingAddress
+     * @return OffAmazonPaymentsService_Model_BillingAgreementDetails instance
+     */
+    public function withBillingAddress ($value)
+    {
+        $this->setBillingAddress($value);
+        return $this;
+    }
+
+    /**
+     * Checks if BillingAddress  is set
+     * 
+     * @return bool true if BillingAddress property is set
+     */
+    public function isSetBillingAddress ()
+    {
+        return ! is_null($this->_fields['BillingAddress']['FieldValue']);
     }
 
     /**
