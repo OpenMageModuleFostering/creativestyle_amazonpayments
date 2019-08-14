@@ -203,4 +203,3 @@ class OffAmazonPaymentsService_Model_CancelOrderReferenceResponse extends OffAma
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

@@ -20,7 +20,7 @@
  * Wrapper around a decoded IPN notification message
  * in json format
  */
-class IpnNotificationParser
+class OffAmazonPaymentsNotifications_Impl_IpnNotificationParser
 {
     /**
      * Converts a an sns message into a
@@ -30,12 +30,12 @@ class IpnNotificationParser
      *
      * @throws OffAmazonPaymentsNotifications if there is an error
      *
-     * @return Message ipn message
+     * @return OffAmazonPaymentsNotifications_Impl_Message ipn message
      */
-    public static function parseSnsMessage(Message $snsMsg)
+    public static function parseSnsMessage(OffAmazonPaymentsNotifications_Impl_Message $snsMsg)
     {
         // Create the message and extract the information we need
-        $ipnMsg = new Message($snsMsg->getMandatoryField("Message"));
+        $ipnMsg = new OffAmazonPaymentsNotifications_Impl_Message($snsMsg->getMandatoryField("Message"));
         self::_addMetadataToIpnMessage(
             $ipnMsg, 
             $snsMsg->getNotificationMetadata()
@@ -47,21 +47,20 @@ class IpnNotificationParser
      * Create the metadata object for the ipn message and attach
      * to the object instance
      *
-     * @param Message                                             $ipnMsg          ipn message
+     * @param OffAmazonPaymentsNotifications_Impl_Message                                             $ipnMsg          ipn message
      * @param OffAmazonPaymentsNotifications_NotificationMetadata $messageMetadata parent notification
      *
      * @return void
      */
     private static function _addMetadataToIpnMessage (
-        Message $ipnMsg,
+        OffAmazonPaymentsNotifications_Impl_Message $ipnMsg,
         OffAmazonPaymentsNotifications_NotificationMetadata $messageMetadata = null
     ) {
         $ipnMetadata
-            = new OffAmazonPaymentsNotifications_Model_IPNNotificationMetadata(
+            = new OffAmazonPaymentsNotifications_Model_IpnNotificationMetadata(
                 $ipnMsg,
                 $messageMetadata
             );
         $ipnMsg->setNotificationMetadata($ipnMetadata);
     }
 }
-?>

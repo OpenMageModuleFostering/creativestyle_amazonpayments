@@ -198,4 +198,3 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

@@ -369,4 +369,3 @@ class OffAmazonPaymentsNotifications_Model_OrderReference
         return !is_null($this->fields['ExpirationTimestamp']['FieldValue']);
     }
 }
-?>

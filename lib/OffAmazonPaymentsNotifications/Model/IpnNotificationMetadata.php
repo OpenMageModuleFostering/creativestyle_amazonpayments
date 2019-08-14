@@ -19,7 +19,7 @@
 /**
  * IPN Message information
  */
-class OffAmazonPaymentsNotifications_Model_IPNNotificationMetadata 
+class OffAmazonPaymentsNotifications_Model_IpnNotificationMetadata 
     extends OffAmazonPaymentsNotifications_Model_NotificationMetadataImpl
 {
     /**
@@ -64,7 +64,7 @@ class OffAmazonPaymentsNotifications_Model_IPNNotificationMetadata
      * @return void
      */
     public function __construct(
-        Message $message, 
+        OffAmazonPaymentsNotifications_Impl_Message $message, 
         OffAmazonPaymentsNotifications_NotificationMetadata $parentNotificationMetadata = null
     ) {
         $this->_timestamp 
@@ -118,4 +118,3 @@ class OffAmazonPaymentsNotifications_Model_IPNNotificationMetadata
         return self::SOURCE_MESSAGE_TYPE;
     }
 }
-?>

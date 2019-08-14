@@ -21,7 +21,7 @@
  * an implementation of the notification interface
  *
  */
-abstract class OffAmazonPaymentsNotifications_NotificationImpl
+abstract class OffAmazonPaymentsNotifications_Model_NotificationImpl
     extends OffAmazonPayments_Model
     implements OffAmazonPaymentsNotifications_Notification
 {
@@ -82,4 +82,3 @@ abstract class OffAmazonPaymentsNotifications_NotificationImpl
         return $this->_notificationMetadata;
     }
 }
-?>

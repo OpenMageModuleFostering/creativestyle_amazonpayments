@@ -148,4 +148,3 @@ class OffAmazonPaymentsService_Model_ConfirmOrderReferenceRequest extends OffAma
         return !is_null($this->_fields['SellerId']['FieldValue']);
     }
 }
-?>

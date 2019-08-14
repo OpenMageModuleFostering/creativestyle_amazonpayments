@@ -28,7 +28,7 @@
  * </ul>
  */ 
 class OffAmazonPaymentsNotifications_Model_AuthorizationNotification 
-    extends OffAmazonPaymentsNotifications_NotificationImpl
+    extends OffAmazonPaymentsNotifications_Model_NotificationImpl
 {
     /**
      * Construct new OffAmazonPaymentsNotifications_Model_AuthorizationNotification
@@ -156,4 +156,3 @@ class OffAmazonPaymentsNotifications_Model_AuthorizationNotification
         return $xml;
     }
 }
-?>

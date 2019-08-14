@@ -17,7 +17,7 @@
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.2.6.2</version>
+            <version>1.3.2</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -103,24 +103,6 @@
                     </amazonpayments_advanced_observer>
                 </observers>
             </sales_order_payment_transaction_save_after>
-            <resource_get_tablename>
-                <observers>
-                    <amazonpayments_advanced_observer>
-                        <type>singleton</type>
-                        <class>Creativestyle_AmazonPayments_Model_Observer</class>
-                        <method>addAmazonAutoloader</method>
-                    </amazonpayments_advanced_observer>
-                </observers>
-            </resource_get_tablename>
-            <add_spl_autoloader>
-                <observers>
-                    <amazonpayments_advanced_observer>
-                        <type>singleton</type>
-                        <class>Creativestyle_AmazonPayments_Model_Observer</class>
-                        <method>addAmazonAutoloader</method>
-                    </amazonpayments_advanced_observer>
-                </observers>
-            </add_spl_autoloader>
         </events>
         <payment>
             <groups>

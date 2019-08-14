@@ -147,4 +147,3 @@ class OffAmazonPaymentsService_Model_AuthorizeOnBillingAgreementResult extends O
         return ! is_null($this->_fields['AmazonOrderReferenceId']['FieldValue']);
     }
 }
-?>

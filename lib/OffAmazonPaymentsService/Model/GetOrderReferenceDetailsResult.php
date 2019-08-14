@@ -107,4 +107,3 @@ class OffAmazonPaymentsService_Model_GetOrderReferenceDetailsResult extends OffA
 
 
 }
-?>

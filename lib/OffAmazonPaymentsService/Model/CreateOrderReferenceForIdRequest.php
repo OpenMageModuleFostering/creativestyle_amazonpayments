@@ -347,4 +347,3 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdRequest extends Of
         return ! is_null($this->_fields['OrderReferenceAttributes']['FieldValue']);
     }
 }
-?>

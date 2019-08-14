@@ -348,4 +348,3 @@ abstract class OffAmazonPayments_Model
         return "https://mws.amazonservices.com/ipn/OffAmazonPayments/2013-01-01";
     }
 }
-?>

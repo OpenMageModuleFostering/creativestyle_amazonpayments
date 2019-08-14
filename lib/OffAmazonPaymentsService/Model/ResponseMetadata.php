@@ -104,4 +104,3 @@ class OffAmazonPaymentsService_Model_ResponseMetadata extends OffAmazonPaymentsS
 
 
 }
-?>

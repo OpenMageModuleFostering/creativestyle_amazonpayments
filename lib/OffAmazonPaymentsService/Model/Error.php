@@ -246,4 +246,3 @@ class OffAmazonPaymentsService_Model_Error extends OffAmazonPaymentsService_Mode
 
     }
 }
-?>

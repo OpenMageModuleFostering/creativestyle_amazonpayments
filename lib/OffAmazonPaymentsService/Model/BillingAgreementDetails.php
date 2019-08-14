@@ -755,4 +755,4 @@ class OffAmazonPaymentsService_Model_BillingAgreementDetails extends OffAmazonPa
         return ! is_null($this->_fields['BillingAgreementConsent']['FieldValue']);
     }
 }
-?>
+

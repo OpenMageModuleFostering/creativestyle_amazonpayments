@@ -245,4 +245,3 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementRequest extends OffAma
         return ! is_null($this->_fields['ReasonCode']['FieldValue']);
     }
 }
-?>

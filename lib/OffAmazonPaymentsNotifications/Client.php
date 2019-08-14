@@ -28,7 +28,7 @@ class OffAmazonPaymentsNotifications_Client
      * Store an instance of the sns message validator
      * object
      *
-     * @var SnsMessageValidator
+     * @var OffAmazonPaymentsNotifications_Impl_SnsMessageValidator
      */
     private $_snsMessageValidator = null;
     
@@ -40,7 +40,7 @@ class OffAmazonPaymentsNotifications_Client
     public function __construct()
     {
         $this->_snsMessageValidator 
-            = new SnsMessageValidator(new OpenSslVerifySignature());  
+            = new OffAmazonPaymentsNotifications_Impl_SnsMessageValidator(new OffAmazonPaymentsNotifications_Impl_OpenSslVerifySignature());  
     }
     
     /**
@@ -58,15 +58,14 @@ class OffAmazonPaymentsNotifications_Client
     {
         // Is this json, is this
         // an sns message, do we have the fields we require
-        $snsMessage = SnsMessageParser::parseNotification($headers, $body);
+        $snsMessage = OffAmazonPaymentsNotifications_Impl_SnsMessageParser::parseNotification($headers, $body);
         // security validation - check that this message is
         // from amazon and that it has been signed correctly
         $this->_snsMessageValidator->validateMessage($snsMessage);
         
         // Convert to object - convert from basic class to object
-        $ipnMessage = IpnNotificationParser::parseSnsMessage($snsMessage);
+        $ipnMessage = OffAmazonPaymentsNotifications_Impl_IpnNotificationParser::parseSnsMessage($snsMessage);
 
-        return XmlNotificationParser::parseIpnMessage($ipnMessage);
+        return OffAmazonPaymentsNotifications_Impl_XmlNotificationParser::parseIpnMessage($ipnMessage);
     }
 }
-?>

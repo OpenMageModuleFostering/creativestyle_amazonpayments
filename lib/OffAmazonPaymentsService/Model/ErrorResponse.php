@@ -206,4 +206,3 @@ class OffAmazonPaymentsService_Model_ErrorResponse extends OffAmazonPaymentsServ
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

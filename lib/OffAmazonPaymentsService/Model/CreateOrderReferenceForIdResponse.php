@@ -198,4 +198,3 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

@@ -49,4 +49,3 @@ class OffAmazonPaymentsService_Model_ResponseHeaderMetadata {
   }
 }
 
-?>

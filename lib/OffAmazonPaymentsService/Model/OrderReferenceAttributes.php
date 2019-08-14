@@ -254,4 +254,3 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
 
 
 }
-?>

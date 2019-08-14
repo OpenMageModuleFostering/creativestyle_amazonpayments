@@ -208,4 +208,3 @@ class OffAmazonPaymentsNotifications_Model_SellerOrderAttributes
         return !is_null($this->fields['OrderItemCategories']['FieldValue']);
     }
 }
-?>

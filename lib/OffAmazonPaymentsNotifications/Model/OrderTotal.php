@@ -147,4 +147,3 @@ class OffAmazonPaymentsNotifications_Model_OrderTotal
         return !is_null($this->fields['Amount']['FieldValue']);
     }
 }
-?>

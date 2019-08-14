@@ -20,7 +20,7 @@
  * Class to wrap a Certificate
  * 
  */
-class Certificate
+class OffAmazonPaymentsNotifications_Impl_Certificate
 {
     /**
      * Certificate as string (read from file/URL)
@@ -75,4 +75,4 @@ class Certificate
         return $certSubject;
     }
 }
-?>
+

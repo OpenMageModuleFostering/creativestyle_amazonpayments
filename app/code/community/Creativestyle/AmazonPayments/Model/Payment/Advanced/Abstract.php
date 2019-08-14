@@ -382,4 +382,12 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
         throw new Creativestyle_AmazonPayments_Exception('Transaction not found.');
     }
 
+    public function closeOrderReference(Mage_Payment_Model_Info $payment) {
+        $orderTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER);
+        if ($orderTransaction && !$orderTransaction->getIsClosed()) {
+            $this->_getApi()->setStore($payment->getOrder()->getStoreId())->closeOrderReference($orderTransaction->getTxnId());
+            $orderTransaction->close(true);
+        }
+    }
+
 }

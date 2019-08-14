@@ -20,7 +20,7 @@
  * Class to wrap a message
  * 
  */
-class Message
+class OffAmazonPaymentsNotifications_Impl_Message
 {
     /**
      * Json message as associative array
@@ -153,4 +153,3 @@ class Message
         }
     }
 }
-?>

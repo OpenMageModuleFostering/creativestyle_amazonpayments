@@ -25,7 +25,7 @@
  *
  * </ul>
  */
-class OffAmazonPaymentsNotifications_Model_BillingAgreementNotification extends OffAmazonPaymentsNotifications_NotificationImpl
+class OffAmazonPaymentsNotifications_Model_BillingAgreementNotification extends OffAmazonPaymentsNotifications_Model_NotificationImpl
 {
 
     /**
@@ -144,4 +144,3 @@ class OffAmazonPaymentsNotifications_Model_BillingAgreementNotification extends 
         return $xml;
     }
 }
-?>

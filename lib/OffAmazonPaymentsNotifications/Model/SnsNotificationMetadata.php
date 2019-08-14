@@ -64,7 +64,7 @@ class OffAmazonPaymentsNotifications_Model_SnsNotificationMetadata
      * @return void
      */
     public function __construct(
-        Message $message, 
+        OffAmazonPaymentsNotifications_Impl_Message $message, 
         NotificationMetadata $parentNotificationMetadata = null
     ) {
         $this->_timestamp 
@@ -117,4 +117,3 @@ class OffAmazonPaymentsNotifications_Model_SnsNotificationMetadata
         return self::SOURCE_MESSAGE_TYPE;
     }
 }
-?>

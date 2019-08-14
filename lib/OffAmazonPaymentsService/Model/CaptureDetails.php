@@ -597,4 +597,3 @@ class OffAmazonPaymentsService_Model_CaptureDetails extends OffAmazonPaymentsSer
     }
 
 }
-?>

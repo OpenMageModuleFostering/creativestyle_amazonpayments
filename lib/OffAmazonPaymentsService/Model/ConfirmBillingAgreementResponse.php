@@ -198,4 +198,3 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

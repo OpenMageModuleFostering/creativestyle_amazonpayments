@@ -203,4 +203,3 @@ class OffAmazonPaymentsService_Model_CloseOrderReferenceResponse extends OffAmaz
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

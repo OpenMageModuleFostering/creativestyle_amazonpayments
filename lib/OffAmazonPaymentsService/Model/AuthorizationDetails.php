@@ -791,4 +791,3 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     }
     
 }
-?>

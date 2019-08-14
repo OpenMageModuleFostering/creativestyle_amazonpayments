@@ -20,7 +20,7 @@
  * signature verification algorithm
  * 
  */
-interface VerifySignature
+interface OffAmazonPaymentsNotifications_Impl_VerifySignature
 {
     /**
      * Verify that the signature is correct for the given data and
@@ -38,4 +38,3 @@ interface VerifySignature
      */
     function verifySignatureIsCorrect($data, $signature, $certificatePath);
 }
-?>

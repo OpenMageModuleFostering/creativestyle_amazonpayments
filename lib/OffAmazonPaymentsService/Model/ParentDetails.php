@@ -149,4 +149,3 @@ class OffAmazonPaymentsService_Model_ParentDetails extends OffAmazonPaymentsServ
         return ! is_null($this->_fields['Type']['FieldValue']);
     }
 }
-?>

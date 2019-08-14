@@ -27,7 +27,7 @@
  * </ul>
  */ 
 class OffAmazonPaymentsNotifications_Model_CaptureNotification 
-    extends OffAmazonPaymentsNotifications_NotificationImpl
+    extends OffAmazonPaymentsNotifications_Model_NotificationImpl
 {
     /**
      * Construct new OffAmazonPaymentsNotifications_Model_CaptureNotification
@@ -155,4 +155,3 @@ class OffAmazonPaymentsNotifications_Model_CaptureNotification
         return $xml;
     }
 }
-?>

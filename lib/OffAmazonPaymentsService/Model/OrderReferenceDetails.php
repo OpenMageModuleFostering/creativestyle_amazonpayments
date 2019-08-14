@@ -798,4 +798,3 @@ class OffAmazonPaymentsService_Model_OrderReferenceDetails extends OffAmazonPaym
     }
 
 }
-?>

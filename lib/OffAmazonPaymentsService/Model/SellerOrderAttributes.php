@@ -251,4 +251,3 @@ class OffAmazonPaymentsService_Model_SellerOrderAttributes extends OffAmazonPaym
 
 
 }
-?>

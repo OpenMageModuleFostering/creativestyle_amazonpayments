@@ -152,4 +152,3 @@ class OffAmazonPaymentsService_Model_ConfirmOrderReferenceResponse extends OffAm
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

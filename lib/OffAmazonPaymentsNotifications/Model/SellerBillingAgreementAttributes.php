@@ -145,4 +145,3 @@ class OffAmazonPaymentsNotifications_Model_SellerBillingAgreementAttributes exte
         return ! is_null($this->fields['SellerId']['FieldValue']);
     }
 }
-?>

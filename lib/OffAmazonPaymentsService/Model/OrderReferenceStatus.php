@@ -248,4 +248,3 @@ class OffAmazonPaymentsService_Model_OrderReferenceStatus extends OffAmazonPayme
 
 
 }
-?>

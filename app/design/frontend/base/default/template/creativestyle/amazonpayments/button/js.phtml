@@ -13,8 +13,12 @@
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 ?>
-<script type="text/javascript">//<![CDATA[
-    APA.initialize(
-        '<?php echo $this->getMerchantId(); ?>', null, <?php echo ($this->isLive() ? 'true' : 'false'); ?>, <?php echo ($this->isVirtual() ? 'true' : 'false'); ?>, <?php echo $this->getUrlParams(); ?>, null, <?php echo $this->getDesignParams(); ?> 
-    ).renderButtonWidget('<?php echo $this->getChildHtml('amazonpayments_button_tooltip'); ?>');
-//]]></script>
+APA.initialize(
+    '<?php echo $this->getMerchantId(); ?>', null, <?php echo ($this->isLive() ? 'true' : 'false'); ?>, <?php echo ($this->isVirtual() ? 'true' : 'false'); ?>, <?php echo $this->getUrlParams(); ?>, null, <?php echo $this->getDesignParams(); ?>
+).renderButtonWidget(
+<?php if ($this->isVirtual()): ?>
+    '<img src="<?php echo $this->getSkinUrl('creativestyle/images/logo_a-glyph_1x.png'); ?>" alt="<?php echo $this->__('Pay with Amazon'); ?>"/><?php echo $this->__('<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details.'); ?>'
+<?php else: ?>
+    '<img src="<?php echo $this->getSkinUrl('creativestyle/images/logo_a-glyph_1x.png'); ?>" alt="<?php echo $this->__('Pay with Amazon'); ?>"/><?php echo $this->__('<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details. All Amazon transactions are protected by Amazon&apos;s A-to-z Guarantee.'); ?>'
+<?php endif; ?>
+);

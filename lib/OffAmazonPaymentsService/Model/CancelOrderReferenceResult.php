@@ -52,4 +52,3 @@ class OffAmazonPaymentsService_Model_CancelOrderReferenceResult extends OffAmazo
         parent::__construct($data);
     }
 }
-?>

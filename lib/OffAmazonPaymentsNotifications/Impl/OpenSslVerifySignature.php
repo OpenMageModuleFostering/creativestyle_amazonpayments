@@ -20,7 +20,7 @@
  * OpenSSL Implemntation of the verify signature algorithm
  *
  */
-class OpenSslVerifySignature implements VerifySignature
+class OffAmazonPaymentsNotifications_Impl_OpenSslVerifySignature implements OffAmazonPaymentsNotifications_Impl_VerifySignature
 {
     /**
      * Create a new instance of the openssl implementation of
@@ -50,7 +50,7 @@ class OpenSslVerifySignature implements VerifySignature
     public function verifySignatureIsCorrect($data, $signature, $certificatePath)
     {
         $cert = $this->_getCertificateFromCertifcatePath($certificatePath);
-        $certificate = new Certificate($cert);
+        $certificate = new OffAmazonPaymentsNotifications_Impl_Certificate($cert);
 
         return $this->verifySignatureIsCorrectFromCertificate($data, $signature, $certificate);
     }
@@ -155,4 +155,4 @@ class OpenSslVerifySignature implements VerifySignature
         return $cert;
     }
 }
-?>
+

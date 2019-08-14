@@ -36,4 +36,3 @@ interface OffAmazonPaymentsNotifications_Interface
     public function parseRawMessage($headers, $body);
 }
 
-?>

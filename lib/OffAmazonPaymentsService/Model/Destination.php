@@ -151,4 +151,3 @@ class OffAmazonPaymentsService_Model_Destination extends OffAmazonPaymentsServic
 
     }
 }
-?>

@@ -13,7 +13,9 @@
  * @copyright  Copyright (c) 2014 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Button_Js extends Creativestyle_AmazonPayments_Block_Abstract {
+class Creativestyle_AmazonPayments_Block_Button_Js
+    extends Creativestyle_AmazonPayments_Block_Abstract
+    implements Creativestyle_AmazonPayments_Block_Js_Interface {
 
     public function getUrlParams() {
         if ($this->isLoginActive()) {
@@ -46,6 +48,10 @@ class Creativestyle_AmazonPayments_Block_Button_Js extends Creativestyle_AmazonP
             return $this->helper('core')->jsonEncode($params);
         }
         return '{}';
+    }
+
+    public function getCallbackName() {
+        return 'window.onAmazonPaymentsReady';
     }
 
 }

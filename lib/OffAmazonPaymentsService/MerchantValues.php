@@ -200,4 +200,4 @@ class OffAmazonPaymentsService_MerchantValues
     	return $instance;
     }
 }
-?>
+

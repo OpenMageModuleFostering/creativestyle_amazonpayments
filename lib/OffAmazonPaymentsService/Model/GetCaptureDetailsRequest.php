@@ -148,4 +148,3 @@ class OffAmazonPaymentsService_Model_GetCaptureDetailsRequest extends OffAmazonP
         return !is_null($this->_fields['AmazonCaptureId']['FieldValue']);
     }
 }
-?>

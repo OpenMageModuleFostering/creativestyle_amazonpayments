@@ -52,4 +52,3 @@ class OffAmazonPaymentsService_Model_CloseOrderReferenceResult extends OffAmazon
         parent::__construct($data);
     }
 }
-?>

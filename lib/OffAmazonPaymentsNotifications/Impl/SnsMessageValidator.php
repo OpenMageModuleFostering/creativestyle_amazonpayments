@@ -22,26 +22,26 @@
  * Amazon
  * 
  */
-class SnsMessageValidator
+class OffAmazonPaymentsNotifications_Impl_SnsMessageValidator
 {
     /**
      * Implementation of the signature verification algorithm
      *
-     * @var VerifySignature
+     * @var OffAmazonPaymentsNotifications_Impl_VerifySignature
      */
     private $_verifySignature = null;
     
     /**
      * Create new instance of the SnsMessageValidator
      * 
-     * @param VerifySignature $verifySignature implementation of the 
+     * @param OffAmazonPaymentsNotifications_Impl_VerifySignature $verifySignature implementation of the 
      *                                         verify signature algorithm
      *                                         
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException if verification fails
      * 
      * @return void
      */
-    public function __construct(VerifySignature $verifySignature)
+    public function __construct(OffAmazonPaymentsNotifications_Impl_VerifySignature $verifySignature)
     {
         $this->_verifySignature = $verifySignature;
     }
@@ -51,7 +51,7 @@ class SnsMessageValidator
      * defined as being signed by Amazon and that the
      * signature matches the message contents
      * 
-     * @param Message $snsMessage sns message to check
+     * @param OffAmazonPaymentsNotifications_Impl_Message $snsMessage sns message to check
      * 
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException if the
      *                                                                validation
@@ -59,7 +59,7 @@ class SnsMessageValidator
      *
      * @return void
      */
-    public function validateMessage(Message $snsMessage)
+    public function validateMessage(OffAmazonPaymentsNotifications_Impl_Message $snsMessage)
     {
         switch($snsMessage->getMandatoryField("SignatureVersion")) {
         case "1":
@@ -77,7 +77,7 @@ class SnsMessageValidator
     /**
      * Implement the version one signature verification algorithm
      * 
-     * @param Message $snsMessage sns message
+     * @param OffAmazonPaymentsNotifications_Impl_Message $snsMessage sns message
      * 
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException if the
      *                                                                validation
@@ -85,7 +85,7 @@ class SnsMessageValidator
      *
      * @return void
      */
-    private function _verifySignatureWithVersionOneAlgorithm(Message $snsMessage)
+    private function _verifySignatureWithVersionOneAlgorithm(OffAmazonPaymentsNotifications_Impl_Message $snsMessage)
     {      
         $result = $this->_verifySignature->verifySignatureIsCorrect(
             $this->_constructSignatureFromSnsMessage($snsMessage),
@@ -109,7 +109,7 @@ class SnsMessageValidator
      * Recreate the signature based on the field values for the
      * sns message
      * 
-     * @param Message $snsMessage sns message
+     * @param OffAmazonPaymentsNotifications_Impl_Message $snsMessage sns message
      * 
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException if the
      *                                                                validation
@@ -117,7 +117,7 @@ class SnsMessageValidator
      * 
      * @return string signature string
      */
-    private function _constructSignatureFromSnsMessage(Message $snsMessage)
+    private function _constructSignatureFromSnsMessage(OffAmazonPaymentsNotifications_Impl_Message $snsMessage)
     {
         if (strcmp($snsMessage->getMandatoryField("Type"), "Notification") != 0) {
             throw new OffAmazonPaymentsNotifications_InvalidMessageException(
@@ -159,4 +159,4 @@ class SnsMessageValidator
         return implode("\n", $signatureFields) . "\n";
     }
 }
-?>
+

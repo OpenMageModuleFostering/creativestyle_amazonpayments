@@ -196,4 +196,3 @@ class OffAmazonPaymentsService_Model_Buyer extends OffAmazonPaymentsService_Mode
         return !is_null($this->_fields['Phone']['FieldValue']);
     }
 }
-?>

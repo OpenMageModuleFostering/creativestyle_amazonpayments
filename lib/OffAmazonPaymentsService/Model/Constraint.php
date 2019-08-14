@@ -148,4 +148,3 @@ class OffAmazonPaymentsService_Model_Constraint extends OffAmazonPaymentsService
         return !is_null($this->_fields['Description']['FieldValue']);
     }
 }
-?>

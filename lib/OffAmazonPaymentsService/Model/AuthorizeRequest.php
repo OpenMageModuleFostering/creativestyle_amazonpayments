@@ -537,4 +537,3 @@ class OffAmazonPaymentsService_Model_AuthorizeRequest extends OffAmazonPaymentsS
     
     }
 }
-?>

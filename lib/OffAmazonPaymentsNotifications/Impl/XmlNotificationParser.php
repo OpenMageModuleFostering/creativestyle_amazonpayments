@@ -21,7 +21,7 @@
  * Wrapper around a decoded IPN notification message to create
  * the notification
  */
-class XmlNotificationParser
+class OffAmazonPaymentsNotifications_Impl_XmlNotificationParser
 {
     /**
      * Converts a ipn message into a
@@ -31,9 +31,9 @@ class XmlNotificationParser
      * 
      * @throws OffAmazonPaymentsNotifications if there is an error
      * 
-     * @return Message
+     * @return OffAmazonPaymentsNotifications_Impl_Message
      */
-    public static function parseIpnMessage(Message $ipnMsg)
+    public static function parseIpnMessage(OffAmazonPaymentsNotifications_Impl_Message $ipnMsg)
     {
         $xmlDocumentElement = self::_getXmlFromIpnMessage($ipnMsg);
         return self::_createNotificationForNotificationType(
@@ -46,13 +46,13 @@ class XmlNotificationParser
      * Convert the xml message from the ipn payload 
      * into an xml document
      * 
-     * @param Message $ipnMsg ipn message
+     * @param OffAmazonPaymentsNotifications_Impl_Message $ipnMsg ipn message
      * 
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException
      * 
      * @return XmlElement xml document element
      */
-    private static function _getXmlFromIpnMessage(Message $ipnMsg)
+    private static function _getXmlFromIpnMessage(OffAmazonPaymentsNotifications_Impl_Message $ipnMsg)
     {        
         // Try and load the notification data as xml
         $notificationData = $ipnMsg->getMandatoryField("NotificationData");
@@ -75,7 +75,7 @@ class XmlNotificationParser
     /**
      * Return a notification object initialised by the xml
      * 
-     * @param Message $ipnMsg             ipn message
+     * @param OffAmazonPaymentsNotifications_Impl_Message $ipnMsg             ipn message
      * @param XmlNode $xmlDocumentElement xml message
      * 
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException
@@ -83,7 +83,7 @@ class XmlNotificationParser
      * @return OffAmazonPaymentsNotifications_Notification
      */
     private static function _createNotificationForNotificationType(
-        Message $ipnMsg,
+        OffAmazonPaymentsNotifications_Impl_Message $ipnMsg,
         $xmlDocumentElement
     ) {           
         // Construct an instance of the notification class
@@ -155,4 +155,3 @@ class XmlNotificationParser
         return $notification;
     }
 }
-?>

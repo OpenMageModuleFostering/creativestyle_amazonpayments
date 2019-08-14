@@ -18,7 +18,6 @@ class Creativestyle_AmazonPayments_Model_Observer {
     const DATA_POLL_TRANSACTION_LIMIT  = 36;
     const DATA_POLL_SLEEP_BETWEEN_TIME = 300000;
 
-    static private $_autoloadAdded = false;
 
 
     // **********************************************************************
@@ -38,11 +37,11 @@ class Creativestyle_AmazonPayments_Model_Observer {
      *
      * @param Mage_Sales_Model_Order_Payment_Transaction $transaction
      */
-    protected function _fetchTransactionInfo($transaction) {
+    protected function _fetchTransactionInfo($transaction, $shouldSave = true) {
         $transaction->getOrderPaymentObject()
             ->setOrder($transaction->getOrder())
             ->importTransactionInfo($transaction);
-        $transaction->save();
+        if ($shouldSave) $transaction->save();
         return $transaction->getId();
     }
 
@@ -89,6 +88,12 @@ class Creativestyle_AmazonPayments_Model_Observer {
                             usleep(self::DATA_POLL_SLEEP_BETWEEN_TIME);
                         }
                         break;
+                    case null:
+                        $recentTransactionId = $this->_fetchTransactionInfo($transaction);
+                        $count++;
+                        usleep(self::DATA_POLL_SLEEP_BETWEEN_TIME);
+                        break;
+
                 }
                 if ($count >= self::DATA_POLL_TRANSACTION_LIMIT) {
                     break;
@@ -106,18 +111,59 @@ class Creativestyle_AmazonPayments_Model_Observer {
 
     }
 
+    protected function _shouldUpdateParentTransaction($transaction) {
+        $updateMatrix = array(
+            'completed' => array(
+                Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE,
+                Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
+            ),
+            'closed' => array(
+                Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH,
+                Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE
+            ),
+            'declined' => array(
+                Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH,
+                Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE,
+                Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND
+            )
+        );
+        $txnStatus = strtolower(Mage::helper('amazonpayments')->getTransactionStatus($transaction));
+        $txnType = $transaction->getTxnType();
+        if (array_key_exists($txnStatus, $updateMatrix) && in_array($txnType, $updateMatrix[$txnStatus])) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function _updateParentTransaction($transaction, $shouldSave = true) {
+        if ($this->_shouldUpdateParentTransaction($transaction)) {
+            $parentTransaction = $transaction->getParentTransaction();
+            if ($parentTransaction && !$parentTransaction->getIsClosed()) {
+                $this->_fetchTransactionInfo($parentTransaction, $shouldSave);
+            }
+        }
+        return $this;
+    }
+
+    protected function _updateOrderTransaction($transaction, $shouldSave = true) {
+        if ($transaction->getTxnType() == Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE) {
+            $txnStatus = strtolower(Mage::helper('amazonpayments')->getTransactionStatus($transaction));
+            if (in_array($txnStatus, array('completed', 'closed'))) {
+                $payment = $transaction->getOrderPaymentObject();
+                if ($payment) {
+                    $payment->getMethodInstance()
+                        ->setOrder($transaction->getOrder())
+                        ->closeOrderReference($payment);
+                }
+            }
+        }
+        return $this;
+    }
+
 
 
     // **********************************************************************
     // Event observers
-
-    public function addAmazonAutoloader($observer) {
-        if (!self::$_autoloadAdded) {
-            Creativestyle_AmazonPayments_Model_Autoload::register();
-            self::$_autoloadAdded = true;
-        }
-        return $this;
-    }
 
     /**
      * Inject Authorize button to the admin order view page
@@ -206,27 +252,8 @@ class Creativestyle_AmazonPayments_Model_Observer {
         try {
             $transaction = $observer->getEvent()->getOrderPaymentTransaction();
             if ($transaction->getId() && in_array($transaction->getOrderPaymentObject()->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
-                $updateFor = array();
-                switch ($transaction->getTxnType()) {
-                    case Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH:
-                        $updateFor = array('closed', 'declined');
-                        break;
-                    case Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE:
-                        $updateFor = array('completed', 'closed', 'declined');
-                        break;
-                    case Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND:
-                        $updateFor = array('completed', 'declined');
-                        break;
-                }
-                if (!empty($updateFor)) {
-                    $parentTransaction = $transaction->getParentTransaction();
-                    if (in_array(strtolower(Mage::helper('amazonpayments')->getTransactionStatus($transaction)), $updateFor) && $parentTransaction && !$parentTransaction->getIsClosed()) {
-                        $parentTransaction->getOrderPaymentObject()
-                            ->setOrder($parentTransaction->getOrder())
-                            ->importTransactionInfo($parentTransaction);
-                        $parentTransaction->save();
-                    }
-                }
+                $this->_updateParentTransaction($transaction);
+                $this->_updateOrderTransaction($transaction);
             }
         } catch (Exception $e) {
             Creativestyle_AmazonPayments_Model_Logger::logException($e);

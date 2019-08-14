@@ -525,4 +525,3 @@ class OffAmazonPaymentsNotifications_Model_RefundDetails extends OffAmazonPaymen
     
     }
 }
-?>

@@ -198,4 +198,3 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

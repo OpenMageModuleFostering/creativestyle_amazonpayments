@@ -250,4 +250,3 @@ class OffAmazonPaymentsNotifications_Model_BillingAgreementLimits extends OffAma
         return ! is_null($this->fields['CurrentRemainingBalance']['FieldValue']);
     }
 }
-?>

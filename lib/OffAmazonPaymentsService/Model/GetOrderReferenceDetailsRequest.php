@@ -197,4 +197,3 @@ class OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest extends Off
     }
 
 }
-?>

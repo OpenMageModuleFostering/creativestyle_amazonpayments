@@ -97,4 +97,3 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResult extends Of
         return ! is_null($this->_fields['BillingAgreementDetails']['FieldValue']);
     }
 }
-?>

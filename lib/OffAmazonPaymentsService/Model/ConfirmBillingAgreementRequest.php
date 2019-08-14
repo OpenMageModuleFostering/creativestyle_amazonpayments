@@ -145,4 +145,3 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
         return ! is_null($this->_fields['AmazonBillingAgreementId']['FieldValue']);
     }
 }
-?>

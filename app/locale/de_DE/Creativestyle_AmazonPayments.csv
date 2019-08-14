@@ -26,6 +26,7 @@
 "30 days","30 Tage"
 "30 minutes","30 Minuten"
 "<div id=""creative-system-config"">creativestyle Extensions</div>","<div id=""creative-system-config"">creativestyle Erweiterungen</div>"
+"<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details.","Mit <strong>Amazon Payments</strong> können Sie die in Ihrem Amazon-Account hinterlegten Zahlungs- und Versandinformationen nutzen, um schnell und sicher einzukaufen."
 "<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details. All Amazon transactions are protected by Amazon&apos;s A-to-z Guarantee.","Mit <strong>Amazon Payments</strong> können Sie die in Ihrem Amazon-Account hinterlegten Zahlungs- und Versandinformationen nutzen, um schnell und sicher einzukaufen. Zudem genießen Sie den Käuferschutz, den Amazon mit der A-bis-z-Garantie bietet."
 "A capture of %s has been processed by Amazon Payments (%s). The new status is %s.","Eine Belastung (Capture) über %s wurde von Amazon Payments bearbeitet (%s). Der neue Status ist %s."
 "A capture request for %s has been submitted to Amazon Payments.","Eine Belastung (Capture) über %s wurde an Amazon Payments geschickt."

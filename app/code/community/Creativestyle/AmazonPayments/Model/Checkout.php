@@ -107,7 +107,9 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
             return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid shipping method.'));
         }
         $this->getQuote()->getShippingAddress()
-            ->setShippingMethod($shippingMethod);
+            ->setShippingMethod($shippingMethod)
+            ->collectTotals()
+            ->save();
 
         $this->getCheckout()
             ->setStepData('shipping_method', 'complete', true)

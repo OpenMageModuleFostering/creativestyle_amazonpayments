@@ -203,4 +203,3 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

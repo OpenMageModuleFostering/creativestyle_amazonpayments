@@ -103,4 +103,3 @@ class OffAmazonPaymentsService_Model_AuthorizeResult extends OffAmazonPaymentsSe
 
     }
 }
-?>

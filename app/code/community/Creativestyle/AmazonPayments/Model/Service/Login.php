@@ -106,6 +106,7 @@ class Creativestyle_AmazonPayments_Model_Service_Login {
                 ->setLastname($customerName->getLastname())
                 ->setEmail($this->_amazonUserData->getEmail())
                 ->setPassword($password)
+                ->setPasswordConfirmation($password)
                 ->setConfirmation($password)
                 ->setAmazonUserId($this->_amazonUserData->getUserId());
 

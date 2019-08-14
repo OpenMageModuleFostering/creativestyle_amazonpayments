@@ -133,6 +133,9 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getHeadJs() {
         if ($this->_getConfig()->isActive()) {
+            if ($this->_getConfig()->getEnvironment() == 'sandbox') {
+                return 'creativestyle/apa_checkout.js';
+            }
             return 'creativestyle/apa_checkout.min.js';
         }
     }

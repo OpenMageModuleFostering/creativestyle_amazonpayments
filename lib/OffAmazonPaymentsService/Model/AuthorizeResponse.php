@@ -203,4 +203,3 @@ class OffAmazonPaymentsService_Model_AuthorizeResponse extends OffAmazonPayments
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

@@ -27,7 +27,7 @@
  * </ul>
  */ 
 class OffAmazonPaymentsNotifications_Model_RefundNotification 
-    extends OffAmazonPaymentsNotifications_NotificationImpl
+    extends OffAmazonPaymentsNotifications_Model_NotificationImpl
 {
     /**
      * Construct new OffAmazonPaymentsNotifications_Model_RefundNotification
@@ -152,4 +152,3 @@ class OffAmazonPaymentsNotifications_Model_RefundNotification
         return $xml;
     }
 }
-?>

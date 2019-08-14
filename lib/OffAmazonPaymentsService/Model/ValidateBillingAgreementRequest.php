@@ -145,4 +145,3 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementRequest extends Off
         return ! is_null($this->_fields['SellerId']['FieldValue']);
     }
 }
-?>

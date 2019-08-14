@@ -195,4 +195,3 @@ class OffAmazonPaymentsService_Model_SellerBillingAgreementAttributes extends Of
         return ! is_null($this->_fields['CustomInformation']['FieldValue']);
     }
 }
-?>

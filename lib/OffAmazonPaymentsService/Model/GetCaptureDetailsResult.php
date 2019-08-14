@@ -107,4 +107,3 @@ class OffAmazonPaymentsService_Model_GetCaptureDetailsResult extends OffAmazonPa
 
 
 }
-?>

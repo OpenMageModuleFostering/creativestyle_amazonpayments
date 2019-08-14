@@ -13,4 +13,8 @@
  * @copyright  Copyright (c) 2014 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Login_Logout extends Creativestyle_AmazonPayments_Block_Login_Abstract {}
+interface Creativestyle_AmazonPayments_Block_Js_Interface {
+
+    public function getCallbackName();
+
+}

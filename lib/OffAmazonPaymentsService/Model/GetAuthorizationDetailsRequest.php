@@ -148,4 +148,3 @@ class OffAmazonPaymentsService_Model_GetAuthorizationDetailsRequest extends OffA
         return !is_null($this->_fields['AmazonAuthorizationId']['FieldValue']);
     }
 }
-?>

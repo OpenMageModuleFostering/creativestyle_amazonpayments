@@ -249,4 +249,3 @@ class OffAmazonPaymentsService_Model_BillingAgreementLimits extends OffAmazonPay
         return ! is_null($this->_fields['CurrentRemainingBalance']['FieldValue']);
     }
 }
-?>

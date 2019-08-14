@@ -15,7 +15,7 @@
  */
 class Creativestyle_AmazonPayments_Model_Api_Login extends Creativestyle_AmazonPayments_Model_Api_Abstract {
 
-    protected function _getApi($path, $params = null) {
+    protected function _initApi($path, $params = null) {
         $url = trim($this->_getConfig()->getLoginApiUrl($this->_store), '/') . '/' . vsprintf($path, $params);
         $this->_api = curl_init($url);
         curl_setopt($this->_api, CURLOPT_RETURNTRANSFER, true);
@@ -25,6 +25,15 @@ class Creativestyle_AmazonPayments_Model_Api_Login extends Creativestyle_AmazonP
     protected function _call() {
         if (null !== $this->_api) {
             $response = curl_exec($this->_api);
+
+            if ($response === false) {
+                $errorNo = curl_errno($this->_api);
+                $errorMsg = curl_error($this->_api);
+                curl_close($this->_api);
+                $this->_api = null;
+                throw new Creativestyle_AmazonPayments_Exception('[LWA-cURL:' . $errorNo . '] ' . $errorMsg);
+            }
+
             $responseData = $this->_processApiResponse($response);
             curl_close($this->_api);
             $this->_api = null;
@@ -54,11 +63,11 @@ class Creativestyle_AmazonPayments_Model_Api_Login extends Creativestyle_AmazonP
     }
 
     public function getTokenInfo($accessToken) {
-        return $this->_getApi('auth/o2/tokeninfo?access_token=%s', array($accessToken))->_call();
+        return $this->_initApi('auth/o2/tokeninfo?access_token=%s', array(urlencode($accessToken)))->_call();
     }
 
     public function getUserProfile($accessToken) {
-        return $this->_getApi('user/profile')->_setAuthorizationHeader($accessToken)->_call();
+        return $this->_initApi('user/profile')->_setAuthorizationHeader($accessToken)->_call();
     }
 
 }

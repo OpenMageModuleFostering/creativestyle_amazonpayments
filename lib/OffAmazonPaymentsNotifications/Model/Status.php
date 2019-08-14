@@ -260,4 +260,3 @@ class OffAmazonPaymentsNotifications_Model_Status extends OffAmazonPayments_Mode
         return !is_null($this->fields['ReasonDescription']['FieldValue']);
     }
 }
-?>

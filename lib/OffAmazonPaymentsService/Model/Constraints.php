@@ -109,4 +109,3 @@ class OffAmazonPaymentsService_Model_Constraints extends OffAmazonPaymentsServic
         return count ($this->_fields['Constraint']['FieldValue']) > 0;
     }
 }
-?>

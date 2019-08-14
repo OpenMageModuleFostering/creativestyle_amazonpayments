@@ -27,7 +27,7 @@
  * </ul>
  */ 
 class OffAmazonPaymentsNotifications_Model_ProviderCreditNotification 
-    extends OffAmazonPaymentsNotifications_NotificationImpl
+    extends OffAmazonPaymentsNotifications_Model_NotificationImpl
 {
     /**
      * Construct new OffAmazonPaymentsNotifications_Model_ProviderCreditNotification
@@ -154,4 +154,3 @@ class OffAmazonPaymentsNotifications_Model_ProviderCreditNotification
         return $xml;
     }
 }
-?>

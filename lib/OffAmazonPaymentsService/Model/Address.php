@@ -580,4 +580,3 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         return !is_null($this->_fields['Phone']['FieldValue']);
     }
 }
-?>

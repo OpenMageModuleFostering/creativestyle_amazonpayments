@@ -197,4 +197,3 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResult extends OffA
         return ! is_null($this->_fields['BillingAgreementStatus']['FieldValue']);
     }
 }
-?>

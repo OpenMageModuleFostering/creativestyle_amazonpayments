@@ -199,4 +199,3 @@ class OffAmazonPaymentsService_Model_AuthorizeOnBillingAgreementResponse extends
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }
-?>

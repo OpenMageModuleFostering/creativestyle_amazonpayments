@@ -196,4 +196,3 @@ class OffAmazonPaymentsService_Model_CancelOrderReferenceRequest extends OffAmaz
         return !is_null($this->_fields['CancelationReason']['FieldValue']);
     }
 }
-?>

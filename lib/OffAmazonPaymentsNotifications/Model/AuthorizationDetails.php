@@ -741,4 +741,3 @@ class OffAmazonPaymentsNotifications_Model_AuthorizationDetails extends OffAmazo
         return !is_null($this->fields['SoftDescriptor']['FieldValue']);
     }
 }
-?>

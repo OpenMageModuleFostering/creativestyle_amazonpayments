@@ -204,4 +204,3 @@ class OffAmazonPaymentsService_Model_SetOrderReferenceDetailsResponse extends Of
     }
 
 }
-?>

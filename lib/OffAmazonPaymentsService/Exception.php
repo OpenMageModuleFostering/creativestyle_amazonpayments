@@ -142,4 +142,3 @@ class OffAmazonPaymentsService_Exception extends Exception
       return $this->_responseHeaderMetadata;
     }
 }
-?>

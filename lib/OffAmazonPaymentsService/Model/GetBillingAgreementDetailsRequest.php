@@ -195,4 +195,3 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsRequest extends O
         return ! is_null($this->_fields['AddressConsentToken']['FieldValue']);
     }
 }
-?>

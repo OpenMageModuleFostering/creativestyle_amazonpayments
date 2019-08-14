@@ -196,4 +196,3 @@ class OffAmazonPaymentsService_Model_CloseOrderReferenceRequest extends OffAmazo
         return !is_null($this->_fields['ClosureReason']['FieldValue']);
     }
 }
-?>

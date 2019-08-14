@@ -152,4 +152,3 @@ class OffAmazonPaymentsService_Model_Price extends OffAmazonPaymentsService_Mode
 
 
 }
-?>

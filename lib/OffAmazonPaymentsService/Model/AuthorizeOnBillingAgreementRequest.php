@@ -650,4 +650,3 @@ class OffAmazonPaymentsService_Model_AuthorizeOnBillingAgreementRequest extends 
         return ! is_null($this->_fields['InheritShippingAddress']['FieldValue']);
     }
 }
-?>

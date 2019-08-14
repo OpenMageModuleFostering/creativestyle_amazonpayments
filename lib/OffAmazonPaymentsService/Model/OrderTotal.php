@@ -152,4 +152,3 @@ class OffAmazonPaymentsService_Model_OrderTotal extends OffAmazonPaymentsService
 
 
 }
-?>

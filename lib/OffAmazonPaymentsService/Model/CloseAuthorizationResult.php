@@ -52,4 +52,3 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationResult extends OffAmazonP
         parent::__construct($data);
     }
 }
-?>

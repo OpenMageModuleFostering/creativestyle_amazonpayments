@@ -19,7 +19,7 @@
 /**
  * Parses a json string message into an sns message
  */
-class SnsMessageParser
+class OffAmazonPaymentsNotifications_Impl_SnsMessageParser
 {
 
     /**
@@ -30,12 +30,12 @@ class SnsMessageParser
      *
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException if not valid json
      *
-     * @return Message converted message
+     * @return OffAmazonPaymentsNotifications_Impl_Message converted message
      */
     public static function parseNotification($headers, $jsonString)
     {
         self::_validateHeaders($headers);
-        $snsMsg = new Message($jsonString);
+        $snsMsg = new OffAmazonPaymentsNotifications_Impl_Message($jsonString);
         self::_checkForCorrectMessageType($snsMsg);
         self::_setMetadataForMessage($snsMsg);
         return $snsMsg;
@@ -99,11 +99,10 @@ class SnsMessageParser
      *
      * @return void
      */
-    private static function _setMetadataForMessage(Message $snsMsg)
+    private static function _setMetadataForMessage(OffAmazonPaymentsNotifications_Impl_Message $snsMsg)
     {
         $notificationMetadata 
             = new OffAmazonPaymentsNotifications_Model_SnsNotificationMetadata($snsMsg);
         $snsMsg->setNotificationMetadata($notificationMetadata);
     }
 }
-?>

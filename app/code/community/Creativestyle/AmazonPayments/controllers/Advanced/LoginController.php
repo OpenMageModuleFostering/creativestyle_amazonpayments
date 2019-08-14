@@ -54,6 +54,7 @@ class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Co
     public function indexAction() {
         $accessToken = $this->getRequest()->getParam('access_token', null);
         if (null !== $accessToken) {
+            $accessToken = urldecode($accessToken);
             try {
                 $tokenInfo = $this->_getApi()->getTokenInfo($accessToken);
                 if ($this->_validateAuthToken($tokenInfo)) {

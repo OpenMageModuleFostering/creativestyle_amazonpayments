@@ -13,7 +13,9 @@
  * @copyright  Copyright (c) 2014 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Checkout_Js extends Creativestyle_AmazonPayments_Block_Checkout_Abstract {
+class Creativestyle_AmazonPayments_Block_Checkout_Js
+    extends Creativestyle_AmazonPayments_Block_Checkout_Abstract
+    implements Creativestyle_AmazonPayments_Block_Js_Interface {
 
     public function getAddressBookWidgetSize() {
         return $this->_getConfig()->getAddressBookWidgetSize();
@@ -29,6 +31,10 @@ class Creativestyle_AmazonPayments_Block_Checkout_Js extends Creativestyle_Amazo
 
     public function isResponsive() {
         return $this->_getConfig()->isResponsive();
+    }
+
+    public function getCallbackName() {
+        return 'window.onAmazonPaymentsReady';
     }
 
 }

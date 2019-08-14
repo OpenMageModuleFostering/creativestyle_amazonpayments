@@ -542,4 +542,3 @@ class OffAmazonPaymentsService_Model_RefundDetails extends OffAmazonPaymentsServ
     }
 
 }
-?>
