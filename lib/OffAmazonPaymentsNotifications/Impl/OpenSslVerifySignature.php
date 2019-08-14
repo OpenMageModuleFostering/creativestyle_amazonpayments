@@ -15,9 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPaymentsNotifications/Impl/VerifySignature.php';
-require_once 'OffAmazonPaymentsNotifications/InvalidMessageException.php';
-require_once 'OffAmazonPaymentsNotifications/Impl/Certificate.php';
 
 /**
  * OpenSSL Implemntation of the verify signature algorithm

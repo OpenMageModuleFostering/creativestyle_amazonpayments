@@ -15,7 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPaymentsNotifications/InvalidCertificateException.php';
 
 /**
  * Class to wrap a Certificate

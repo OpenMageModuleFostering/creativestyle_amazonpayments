@@ -45,6 +45,11 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_CredentialsValidator extends 
         $html .= '<td rowspan="2" class="scope-label"></td>';
         $html .= '<td rowspan="2" class=""></td>';
 
+        // Magento 1.5, 1.6 and 1.7.0.0 backward compatibility
+        if (!method_exists($this, '_decorateRowHtml')) {
+            return '<tr id="row_' . $element->getHtmlId() . '">' . $html . '</tr>';
+        }
+
         return $this->_decorateRowHtml($element, $html);
     }
 

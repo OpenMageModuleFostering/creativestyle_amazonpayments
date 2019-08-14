@@ -28,7 +28,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Advanced_Abstract exte
     protected $_canRefund                   = true;
     protected $_canRefundInvoicePartial     = true;
     protected $_canVoid                     = true;
-    protected $_canUseInternal              = true;
+    protected $_canUseInternal              = false;
     protected $_canUseCheckout              = false;
     protected $_canUseForMultishipping      = false;
     protected $_isInitializeNeeded          = true;

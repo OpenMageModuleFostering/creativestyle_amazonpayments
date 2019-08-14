@@ -188,11 +188,6 @@ abstract class OffAmazonPayments_Model
                 if ($this->_isComplexType($fieldType[0])) {
                     $elements = $xpath->query("//*[local-name()='$fieldName']", $dom);
                     if ($elements->length >= 1) {
-                        include_once str_replace(
-                            '_',
-                            DIRECTORY_SEPARATOR,
-                            $fieldType[0]
-                        ) . ".php";
                         foreach ($elements as $element) {
                             $this->fields[$fieldName]['FieldValue'][] 
                                 = new $fieldType[0]($element);
@@ -212,11 +207,6 @@ abstract class OffAmazonPayments_Model
                 if ($this->_isComplexType($fieldType)) {
                     $elements = $xpath->query("//*[local-name()='$fieldName']", $dom);
                     if ($elements->length == 1) {
-                        include_once str_replace(
-                            '_',
-                            DIRECTORY_SEPARATOR,
-                            $fieldType
-                        ) . ".php";
                         $this->fields[$fieldName]['FieldValue'] 
                             = new $fieldType($elements->item(0));
                     }   
@@ -262,11 +252,6 @@ abstract class OffAmazonPayments_Model
                             $elements =  array($elements);    
                         }
                         if (count($elements) >= 1) {
-                            include_once str_replace(
-                                '_',
-                                DIRECTORY_SEPARATOR,
-                                $fieldType[0]
-                            ) . ".php";
                             foreach ($elements as $element) {
                                 $this->fields[$fieldName]['FieldValue'][] 
                                     = new $fieldType[0]($element);
@@ -290,11 +275,6 @@ abstract class OffAmazonPayments_Model
             } else {
                 if ($this->_isComplexType($fieldType)) {
                     if (array_key_exists($fieldName, $array)) {
-                        include_once str_replace(
-                            '_',
-                            DIRECTORY_SEPARATOR,
-                            $fieldType
-                        ) . ".php";
                         $this->fields[$fieldName]['FieldValue'] 
                             = new $fieldType($array[$fieldName]);
                     }   

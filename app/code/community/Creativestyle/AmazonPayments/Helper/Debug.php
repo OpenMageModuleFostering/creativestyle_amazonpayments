@@ -50,10 +50,10 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
             'amazonpayments/general/sandbox' => array($this, '_convertToBool'),
             'amazonpayments/general/sandbox_toolbox' => array($this, '_convertToBool'),
             'amazonpayments/general/ipn_active' => array($this, '_convertToBool'),
-            'amazonpayments/general/order_confirmation' => array($this, '_convertToBool'),
+            'amazonpayments/login/active' => array($this, '_convertToBool'),
             'amazonpayments/email/order_confirmation' => array($this, '_convertToBool'),
+            'amazonpayments/design/responsive' => array($this, '_convertToBool'),
             'amazonpayments/developer/log_active' => array($this, '_convertToBool'),
-            'amazonpayments/developer/log_availability' => array($this, '_convertToBool')
         );
     }
 
@@ -207,6 +207,7 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
             'Pay with Amazon SDK library version' => OffAmazonPaymentsService_Client::APPLICATION_LIBRARY_VERSION,
             'Magento version' => trim(Mage::getVersion() . ' ' . $this->_getMagentoEdition()),
             'PHP version' => PHP_VERSION,
+            'Magento Compiler enabled' => defined('COMPILER_INCLUDE_PATH'),
             'Current timestamp' => $this->_getCurrentTimestamp() . ' <em>&lt;' . Mage::getSingleton('core/date')->date("Y-m-d H:i:s", $this->_getCurrentTimestamp()) . '&gt;</em>'
         );
     }
@@ -384,12 +385,16 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
     public function getDebugData($debugArea = null) {
         if (null === $this->_debugData) {
             $this->_debugData = array(
+                'type' => 'APA',
                 'general' => $this->_getGeneralDebugData(),
                 'stores' => $this->_getStoreData(),
                 'amazon_account' => $this->_getConfigData('amazonpayments/account'),
                 'amazon_general' => $this->_getConfigData('amazonpayments/general'),
+                'amazon_login' => $this->_getConfigData('amazonpayments/login'),
                 'amazon_email' => $this->_getConfigData('amazonpayments/email'),
                 'amazon_design' => $this->_getConfigData('amazonpayments/design'),
+                'amazon_design_login' => $this->_getConfigData('amazonpayments/design_login'),
+                'amazon_design_pay' => $this->_getConfigData('amazonpayments/design_pay'),
                 'amazon_developer' => $this->_getConfigData('amazonpayments/developer'),
                 'magento_general' => $this->_getMagentoGeneralData(),
                 'cronjobs' => $this->_getCronjobsData(),

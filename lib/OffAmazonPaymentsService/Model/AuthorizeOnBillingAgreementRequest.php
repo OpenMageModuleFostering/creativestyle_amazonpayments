@@ -15,7 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPaymentsService/Model.php';
 
 /**
  * OffAmazonPaymentsService_Model_AuthorizeOnBillingAgreementRequest

@@ -18,7 +18,6 @@
 /**
  *  @see OffAmazonPaymentsService_Model
  */
-require_once 'OffAmazonPaymentsService/Model.php';
 
 /**
  * OffAmazonPaymentsService_Model_ParentDetails

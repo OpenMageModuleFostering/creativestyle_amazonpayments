@@ -15,7 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPayments/Model.php';  
 
 /**
  * OffAmazonPaymentsNotifications_Model_IdList

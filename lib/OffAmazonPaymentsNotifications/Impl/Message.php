@@ -15,7 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPaymentsNotifications/InvalidMessageException.php';
 
 /**
  * Class to wrap a message

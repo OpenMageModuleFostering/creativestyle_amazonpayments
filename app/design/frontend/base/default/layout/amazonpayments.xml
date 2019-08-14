@@ -18,6 +18,7 @@
     <default>
         <reference name="head">
             <action method="addCss"><stylesheet helper="amazonpayments/getHeadCss"/></action>
+            <action method="addCss"><stylesheet helper="amazonpayments/getWidgetsCss"/></action>
             <action method="addJs"><script helper="amazonpayments/getHeadJs"/></action>
             <action method="addJs"><script helper="amazonpayments/getHeadTooltipJs"/></action>
             <block type="amazonpayments/head" name="amazonpayments.head" template="creativestyle/amazonpayments/head.phtml">
@@ -73,9 +74,8 @@
         <reference name="content">
             <block type="amazonpayments/checkout" name="amazonpayments.checkout" as="checkout" template="creativestyle/amazonpayments/checkout.phtml">
                 <block type="amazonpayments/checkout_notice" name="amazonpayments.checkout.capture_notice" as="capture_notice" template="creativestyle/amazonpayments/checkout/capture_notice.phtml"/>
-                <block type="checkout/onepage_shipping_method" name="amazonpayments.checkout.shipping_method" as="shipping_method" template="creativestyle/amazonpayments/checkout/shipping_method.phtml">
-                    <block type="checkout/onepage_shipping_method_additional" name="amazonpayments.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
-                </block>
+                <block type="checkout/onepage_shipping_method" name="amazonpayments.checkout.shipping_method" as="shipping_method" template="creativestyle/amazonpayments/checkout/shipping_method.phtml"/>
+                <!--<block type="checkout/onepage_shipping_method_additional" name="amazonpayments.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>-->
                 <block type="amazonpayments/checkout_sandboxToolbox" name="amazonpayments.checkout.sandbox_toolbox" as="sandbox_toolbox" template="creativestyle/amazonpayments/checkout/sandbox_toolbox.phtml"/>
                 <block type="checkout/onepage_review_info" name="amazonpayments_advanced.checkout.review" as="review" template="checkout/onepage/review/info.phtml">
                     <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>

@@ -39,4 +39,8 @@ class Creativestyle_AmazonPayments_Block_Checkout extends Mage_Checkout_Block_On
         return $this->getQuote()->isVirtual();
     }
 
+    public function isResponsive() {
+        return $this->_getConfig()->isResponsive();
+    }
+
 }

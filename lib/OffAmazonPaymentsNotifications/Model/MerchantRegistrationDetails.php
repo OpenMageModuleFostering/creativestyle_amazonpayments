@@ -19,7 +19,6 @@
  *
  * @see OffAmazonPaymentsNotifications_Model
  */
-require_once 'OffAmazonPayments/Model.php';
 
 /**
  * OffAmazonPaymentsNotifications_Model_MerchantRegistrationDetails

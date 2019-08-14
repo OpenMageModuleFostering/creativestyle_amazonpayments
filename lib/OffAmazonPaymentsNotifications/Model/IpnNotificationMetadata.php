@@ -15,7 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPaymentsNotifications/Model/NotificationMetadataImpl.php';
 
 /**
  * IPN Message information

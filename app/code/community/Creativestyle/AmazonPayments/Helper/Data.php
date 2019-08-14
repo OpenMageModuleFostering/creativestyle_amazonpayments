@@ -72,6 +72,8 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @deprecated deprecated since 1.2.6
+     *
      * Check if the current User Agent is specific for any mobile device
      *
      * @return bool
@@ -116,6 +118,16 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
     public function getHeadCss() {
         if ($this->_getConfig()->isActive()) {
             return 'creativestyle/css/amazonpayments.css';
+        }
+    }
+
+    public function getWidgetsCss() {
+        if ($this->_getConfig()->isActive()) {
+            if ($this->_getConfig()->isResponsive()) {
+                return 'creativestyle/css/amazonpayments-responsive-widgets.css';
+            } else {
+                return 'creativestyle/css/amazonpayments-widgets.css';
+            }
         }
     }
 

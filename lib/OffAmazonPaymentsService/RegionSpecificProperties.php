@@ -16,7 +16,6 @@
  */
 
 
-require_once 'Client.php';
 
 /**
  * Encapsulation of properties that are tied to a region/environment pairing

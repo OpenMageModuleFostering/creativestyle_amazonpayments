@@ -15,8 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPaymentsNotifications/Impl/Message.php';
-require_once 'OffAmazonPaymentsNotifications/Model/SnsNotificationMetadata.php';
 
 /**
  * Parses a json string message into an sns message

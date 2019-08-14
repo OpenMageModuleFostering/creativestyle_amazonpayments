@@ -18,6 +18,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
     const DATA_POLL_TRANSACTION_LIMIT  = 36;
     const DATA_POLL_SLEEP_BETWEEN_TIME = 300000;
 
+    static private $_autoloadAdded = false;
 
 
     // **********************************************************************
@@ -109,6 +110,14 @@ class Creativestyle_AmazonPayments_Model_Observer {
 
     // **********************************************************************
     // Event observers
+
+    public function addAmazonAutoloader($observer) {
+        if (!self::$_autoloadAdded) {
+            Creativestyle_AmazonPayments_Model_Autoload::register();
+            self::$_autoloadAdded = true;
+        }
+        return $this;
+    }
 
     /**
      * Inject Authorize button to the admin order view page

@@ -27,4 +27,8 @@ class Creativestyle_AmazonPayments_Block_Checkout_Js extends Creativestyle_Amazo
         return (float)$this->_getQuote()->getBaseGrandTotal();
     }
 
+    public function isResponsive() {
+        return $this->_getConfig()->isResponsive();
+    }
+
 }

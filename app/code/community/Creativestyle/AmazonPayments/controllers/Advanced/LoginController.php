@@ -75,7 +75,7 @@ class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Co
                                         $this->_redirectUrl($this->_getTargetUrl());
                                         return;
                                     } else {
-                                        $this->_getCustomerSession()->addError($this->__('Invalid password.'));
+                                        $this->_getCustomerSession()->addError($this->__('Invalid password'));
                                     }
                                 }
                                 $update = $this->getLayout()->getUpdate();

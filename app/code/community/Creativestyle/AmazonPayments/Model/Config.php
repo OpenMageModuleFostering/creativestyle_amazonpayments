@@ -38,6 +38,7 @@ class Creativestyle_AmazonPayments_Model_Config {
     const XML_PATH_DESIGN_BUTTON_SIZE           = 'amazonpayments/design_pay/button_size';
     const XML_PATH_DESIGN_BUTTON_COLOR          = 'amazonpayments/design_pay/button_color';
 
+    const XML_PATH_DESIGN_RESPONSIVE            = 'amazonpayments/design/responsive';
     const XML_PATH_DESIGN_ADDRESS_WIDTH         = 'amazonpayments/design/address_width';
     const XML_PATH_DESIGN_ADDRESS_HEIGHT        = 'amazonpayments/design/address_height';
     const XML_PATH_DESIGN_PAYMENT_WIDTH         = 'amazonpayments/design/payment_width';
@@ -323,4 +324,7 @@ class Creativestyle_AmazonPayments_Model_Config {
         Mage::getConfig()->saveConfig(self::XML_PATH_GENERAL_RECENT_POLLED_TXN, $txnId)->cleanCache();
     }
 
+    public function isResponsive($store = null) {
+        return Mage::getStoreConfigFlag(self::XML_PATH_DESIGN_RESPONSIVE, $store);
+    }
 }

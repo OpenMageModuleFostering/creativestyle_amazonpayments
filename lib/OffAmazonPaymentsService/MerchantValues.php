@@ -16,7 +16,6 @@
  */
 
 
-require_once 'RegionSpecificProperties.php';
 
 class OffAmazonPaymentsService_MerchantValues
 {
@@ -160,13 +159,11 @@ class OffAmazonPaymentsService_MerchantValues
     
     private function _validateRegion($region)
     {
-    	include_once 'Regions.php';
         return self::_getValueForConstant($region, new OffAmazonPaymentsService_Regions());
     }
     
     private static function _validateEnvironment($environment)
     {
-        include_once 'Environments.php';
         return self::_getValueForConstant($environment, new OffAmazonPaymentsService_Environments());
     }
     

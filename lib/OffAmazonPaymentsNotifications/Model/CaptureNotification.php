@@ -15,8 +15,6 @@
  * *****************************************************************************
  */
 
-require_once 'OffAmazonPaymentsNotifications/Model/NotificationImpl.php';
-require_once 'OffAmazonPaymentsNotifications/NotificationMetadata.php';
 
 /**
  * OffAmazonPaymentsNotifications_Model_CaptureNotification
