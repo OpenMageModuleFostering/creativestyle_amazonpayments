@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Creativestyle_AmazonPayments",
+    "type": "magento-module",
+    "license": "Creative-Commons-Attribution-NoDerivatives-4.0-International",
+    "homepage": "",
+    "description": "Integration of your Magento shop with Pay with Amazon service",
+    "authors": [
+    {
+        "name": "creativestyle GmbH",
+        "email": "amazon@creativestyle.de"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

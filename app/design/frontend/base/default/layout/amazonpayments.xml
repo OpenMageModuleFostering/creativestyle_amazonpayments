@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * This file is part of the official Amazon Payments Advanced extension
+ * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
+ * All rights reserved
+ *
+ * Reuse or modification of this source code is not allowed
+ * without written permission from creativestyle GmbH
+ *
+ * @category   Creativestyle
+ * @package    Creativestyle_AmazonPayments
+ * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ */
+-->
+<layout version="1.0.0">
+    <default>
+        <reference name="head">
+            <action method="addCss" ifconfig="amazonpayments/general/active"><stylesheet>creativestyle/css/amazonpayments.css</stylesheet></action>
+            <action method="addJs" ifconfig="amazonpayments/general/active"><script>creativestyle/apa_checkout.min.js</script></action>
+            <action method="addJs" ifconfig="amazonpayments/general/active"><script>prototype/tooltip.js</script></action>
+            <block type="amazonpayments/advanced_head" name="amazonpayments_advanced.head" template="creativestyle/amazonpayments/advanced/head.phtml"/>
+        </reference>
+        <reference name="cart_sidebar.extra_actions">
+            <block type="amazonpayments/advanced_button" name="top_cart.amazonpayments_advanced.shorcut" template="creativestyle/amazonpayments/advanced/button.phtml" before="-">
+                <action method="setIdSuffix"><value>sidebar</value></action>
+            </block>
+        </reference>
+        <reference name="before_body_end">
+            <block type="amazonpayments/advanced_js" name="amazonpayments_advanced.button_js" template="creativestyle/amazonpayments/advanced/button/js.phtml">
+                <block type="core/template" name="amazonpayments_advanced.button_js.tooltip" as="amazonpayments_button_tooltip" template="creativestyle/amazonpayments/advanced/button/tooltip.phtml"/>
+            </block>
+        </reference>
+    </default>
+    <checkout_cart_index>
+        <reference name="checkout.cart.methods">
+            <block type="amazonpayments/advanced_button" name="checkout.cart.methods.amazonpayments_advanced.bottom" template="creativestyle/amazonpayments/advanced/button.phtml" before="-">
+                <action method="setIdSuffix"><value>div</value></action>
+            </block>
+        </reference>
+        <reference name="checkout.cart.top_methods">
+            <block type="amazonpayments/advanced_button" name="checkout.cart.methods.amazonpayments_advanced.top" template="creativestyle/amazonpayments/advanced/button.phtml" before="checkout.cart.methods.onepage">
+                <action method="setIdSuffix"><value>top</value></action>
+            </block>
+        </reference>
+    </checkout_cart_index>
+    <checkout_onepage_index>
+        <reference name="checkout.onepage.login.before">
+            <block type="amazonpayments/advanced_button" name="amazonpayments_advanced.onepage_button" template="creativestyle/amazonpayments/advanced/button/onepage.phtml">
+                <block type="core/template" name="amazonpayments_advanced.onepage_button.tooltip" as="amazonpayments_onepage_button_tooltip" template="creativestyle/amazonpayments/advanced/button/tooltip.phtml"/>
+            </block>
+        </reference>
+    </checkout_onepage_index>
+    <amazonpayments_advanced_checkout_index>
+        <label>AmazonPayments Advanced Checkout</label>
+        <remove name="left"/>
+        <remove name="right"/>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="amazonpayments/advanced_checkout" name="amazonpayments_advanced.checkout" as="checkout" template="creativestyle/amazonpayments/advanced/checkout.phtml">
+                <block type="amazonpayments/advanced_checkout_notice" name="amazonpayments_advanced.checkout.capture_notice" as="capture_notice" template="creativestyle/amazonpayments/advanced/checkout/capture_notice.phtml"/>
+                <block type="checkout/onepage_shipping_method" name="amazonpayments_advanced.checkout.shipping_method" as="shipping_method" template="creativestyle/amazonpayments/advanced/checkout/shipping_method.phtml">
+                    <block type="checkout/onepage_shipping_method_additional" name="amazonpayments_advanced.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
+                </block>
+                <block type="amazonpayments/advanced_checkout_sandboxToolbox" name="amazonpayments_advanced.checkout.sandbox_toolbox" as="sandbox_toolbox" template="creativestyle/amazonpayments/advanced/checkout/sandbox_toolbox.phtml"/>
+                <block type="checkout/onepage_review_info" name="amazonpayments_advanced.checkout.review" as="review" template="checkout/onepage/review/info.phtml">
+                    <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/onepage/review/item.phtml</template></action>
+                    <block type="checkout/cart_totals" name="checkout.onepage.review.info.totals" as="totals" template="checkout/onepage/review/totals.phtml"/>
+                    <block type="core/text_list" name="checkout.onepage.review.info.items.before" as="items_before" translate="label">
+                        <label>Items Before</label>
+                    </block>
+                    <block type="core/text_list" name="checkout.onepage.review.info.items.after" as="items_after" translate="label">
+                        <label>Items After</label>
+                    </block>
+                    <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
+                    <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/advanced/checkout/review/button.phtml"/>
+                </block>
+            </block>
+        </reference>
+        <reference name="before_body_end">
+            <block type="amazonpayments/advanced_js" name="amazonpayments_advanced.checkout_js" template="creativestyle/amazonpayments/advanced/checkout/js.phtml"/>
+        </reference>
+    </amazonpayments_advanced_checkout_index>
+    <amazonpayments_advanced_shippingmethod>
+        <remove name="right"/>
+        <remove name="left"/>
+        <block type="checkout/onepage_shipping_method_available" name="root" output="toHtml" template="checkout/onepage/shipping_method/available.phtml"/>
+    </amazonpayments_advanced_shippingmethod>
+    <amazonpayments_advanced_review>
+        <remove name="right"/>
+        <remove name="left"/>
+        <block type="checkout/onepage_review_info" name="root" output="toHtml" template="checkout/onepage/review/info.phtml">
+            <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
+            <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/item.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/onepage/review/item.phtml</template></action>
+            <block type="checkout/cart_totals" name="checkout.onepage.review.info.totals" as="totals" template="checkout/onepage/review/totals.phtml"/>
+            <block type="core/text_list" name="checkout.onepage.review.info.items.before" as="items_before" translate="label">
+                <label>Items Before</label>
+            </block>
+            <block type="core/text_list" name="checkout.onepage.review.info.items.after" as="items_after" translate="label">
+                <label>Items After</label>
+            </block>
+            <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
+            <block type="core/template" name="checkout.onepage.review.button" as="button" template="creativestyle/amazonpayments/advanced/checkout/review/button.phtml"/>
+        </block>
+    </amazonpayments_advanced_review>
+</layout>

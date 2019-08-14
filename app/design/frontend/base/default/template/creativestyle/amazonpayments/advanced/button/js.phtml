@@ -1,0 +1,19 @@
+<?php
+/**
+ * This file is part of the official Amazon Payments Advanced extension
+ * for Magento (c) creativestyle GmbH <amazon@creativestyle.de>
+ * All rights reserved
+ *
+ * Reuse or modification of this source code is not allowed
+ * without written permission from creativestyle GmbH
+ *
+ * @category   Creativestyle
+ * @package    Creativestyle_AmazonPayments
+ * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
+ */
+?>
+<script type="text/javascript">//<![CDATA[
+    APA.initialize('<?php echo $this->getMerchantId(); ?>', null, <?php echo ($this->isLive() ? 'true' : 'false'); ?>, <?php echo ($this->isVirtual() ? 'true' : 'false'); ?>, {checkout: '<?php echo $this->getCheckoutUrl(); ?>'})
+        .renderButtonWidget('<?php echo $this->getChildHtml('amazonpayments_button_tooltip'); ?>');
+//]]></script>
