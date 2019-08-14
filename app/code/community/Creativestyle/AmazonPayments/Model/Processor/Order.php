@@ -252,6 +252,7 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
                             'state' => Mage_Sales_Model_Order::STATE_HOLDED,
                             'status' => $this->_getConfig()->getHoldedOrderStatus($this->_store)
                         ));
+                        $this->_cancelInvoice($transactionAdapter);
                         break; // CAPTURE_DECLINED
                     case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED:
                         $stateObject->setData(array(
@@ -392,6 +393,37 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
             $this->getOrder()->addStatusHistoryComment($stateObject->getMessage());
         }
 
+        return $this;
+    }
+
+    /**
+     * TODO: [_getInvoiceForTransaction description]
+     *
+     * @param  Mage_Sales_Model_Order_Payment_Transaction $transaction
+     * @return Mage_Sales_Model_Order_Invoice|bool
+     */
+    protected function _getInvoiceForTransaction($transaction) {
+        foreach ($this->getOrder()->getInvoiceCollection() as $invoice) {
+            if ($invoice->getTransactionId() == $transaction->getTxnId()) {
+                $invoice->load($invoice->getId());
+                return $invoice;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * TODO: [_cancelInvoice description]
+     *
+     * @param  Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter $transactionAdapter
+     *
+     * @return Creativestyle_AmazonPayments_Model_Processor_Order
+     */
+    protected function _cancelInvoice($transactionAdapter) {
+        $invoice = $this->_getInvoiceForTransaction($transactionAdapter->getTransaction());
+        if ($invoice) {
+            $invoice->cancel()->save();
+        }
         return $this;
     }
 

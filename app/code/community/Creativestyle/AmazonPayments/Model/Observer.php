@@ -115,7 +115,8 @@ class Creativestyle_AmazonPayments_Model_Observer {
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH:
                 return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED,
-                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED
+                    /* temporary disabled as resulting in missing panrent order transaction for auth & capture */
+                    // Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED
                 ));
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE:
                 return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(

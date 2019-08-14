@@ -233,7 +233,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
             }
             return $transactionAdapter->getStatusChange();
         }
-        throw new Creativestyle_AmazonPayments_Exception('Transaction not found');
+        throw new Creativestyle_AmazonPayments_Exception(sprintf('Transaction %s not found', $transactionId));
     }
 
     /**
@@ -442,6 +442,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
                 $refundTransaction
             );
             $refundAdapter->validateTransactionStatus();
+            $this->_getOrderProcessor()->importTransactionDetails($refundAdapter, $stateObject)->saveOrder();
             // avoid transaction duplicates
             $payment->setSkipTransactionCreation(true);
         }
