@@ -34,6 +34,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_SellerCentral extends Mage_Ad
     protected $_storeGroups = array();
 
     protected $_merchantIds = null;
+    protected $_clientIds = null;
 
     protected function _construct() {
         $this->setTemplate('creativestyle/amazonpayments/seller_central.phtml');
@@ -76,6 +77,19 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_SellerCentral extends Mage_Ad
         return null;
     }
 
+    protected function _getClientId($storeId) {
+        if (null === $this->_clientIds) {
+            $this->_clientIds = array();
+            foreach ($this->_getStoreCollection() as $store) {
+                $this->_clientIds[$store->getId()] = $this->_getConfig()->getClientId($store->getId());
+            }
+        }
+        if (isset($this->_clientIds[$storeId])) {
+            return $this->_clientIds[$storeId];
+        }
+        return null;
+    }
+
     protected function _getDefaultStoreViewId($groupId) {
         return $this->_getStoreGroup($groupId)->getDefaultStoreId();
     }
@@ -84,21 +98,19 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_SellerCentral extends Mage_Ad
         if (null === $this->_ipnUrls) {
             $this->_ipnUrls = array();
             foreach ($this->_getStoreCollection() as $store) {
-                if (($this->_getConfig()->isActive($store->getId()) & Creativestyle_AmazonPayments_Model_Config::PAY_WITH_AMAZON_ACTIVE) && $this->_getConfig()->isIpnActive($store->getId())) {
-                    $urlParams = array(
-                        '_current' => false,
-                        '_nosid' => true,
-                        '_store' => $store->getId(),
-                        '_secure' => !$this->_getConfig()->isSandbox($store->getId())
-                    );
-                    $url = Mage::getModel('core/url')->setStore($store->getId())->getUrl('amazonpayments/advanced_ipn/', $urlParams);
-                    $scheme = parse_url($url, PHP_URL_SCHEME);
-                    if ($scheme == 'https' || $this->_getConfig()->isSandbox($store->getId())) {
-                        $merchantId = $this->_getMerchantId($store->getId());
-                        $defaultStoreId = $this->_getDefaultStoreViewId($store->getGroupId());
-                        if (array_search($url, $this->_ipnUrls) != $merchantId || $defaultStoreId == $store->getId()) {
-                            $this->_ipnUrls[$merchantId] = $url;
-                        }
+                $urlParams = array(
+                    '_current' => false,
+                    '_nosid' => true,
+                    '_store' => $store->getId(),
+                    '_secure' => !$this->_getConfig()->isSandbox($store->getId())
+                );
+                $url = Mage::getModel('core/url')->setStore($store->getId())->getUrl('amazonpayments/advanced_ipn/', $urlParams);
+                $scheme = parse_url($url, PHP_URL_SCHEME);
+                if ($scheme == 'https' || $this->_getConfig()->isSandbox($store->getId())) {
+                    $merchantId = $this->_getMerchantId($store->getId());
+                    $defaultStoreId = $this->_getDefaultStoreViewId($store->getGroupId());
+                    if (array_search($url, $this->_ipnUrls) != $merchantId || $defaultStoreId == $store->getId()) {
+                        $this->_ipnUrls[$merchantId] = $url;
                     }
                 }
             }
@@ -110,7 +122,6 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_SellerCentral extends Mage_Ad
         $placeholder = <<<EOH
 <em>I couldn't find any IPN endpoint URL :( Please double check if following conditions set is met in any store view:
     <ul>
-        <li><strong>Amazon Payments > General Settings > Enable Instant Payment Notifications</strong> is set to <strong>Yes</strong></li>
         <li><strong>General > Web > Secure > Base URL</strong> starts with <strong>https</strong> and <strong>General > Web > Secure > Use Secure URLs in Frontend</strong> is set to <strong>Yes</strong> (alternatively: <strong>Amazon Payments > General Settings > Sandbox Mode</strong> is set to <strong>Yes</strong>)</li>
     </ul>
 </em>
@@ -122,28 +133,22 @@ EOH;
         foreach ($ipnUrls as $merchantId => $ipnUrl) {
 
             $html .= '<div class="section-config">';
-            if ($ipnUrlsCount > 1) {
-                $html .= sprintf('<div class="entry-edit-head collapseable"><a id="%s-head" href="#" onclick="Fieldset.toggleCollapse(\'%s\'); return false;">%s</a></div>',
-                    $htmlId . '_' . $merchantId,
-                    $htmlId . '_' . $merchantId,
-                    $this->helper('amazonpayments')->__('<span class="close">Click to reveal config for </span>%s', $merchantId)
-                );
-                $html .= sprintf('<input id="%s-state" name="config_state[%s]" type="hidden" value="0">',
-                    $htmlId . '_' . $merchantId,
-                    $htmlId . '_' . $merchantId
-                );
-                $html .= '<div class="fieldset config" id="' . $htmlId . '_' . $merchantId . '">';
-            } else {
-                $html .= '<div class="fieldset">';
-            }
+            $html .= sprintf('<div class="entry-edit-head collapseable"><a id="%s-head" href="#" onclick="Fieldset.toggleCollapse(\'%s\'); return false;">%s</a></div>',
+                $htmlId . '_' . $merchantId,
+                $htmlId . '_' . $merchantId,
+                $this->helper('amazonpayments')->__('<span class="close">Click to reveal config for </span>%s', $merchantId)
+            );
+            $html .= sprintf('<input id="%s-state" name="config_state[%s]" type="hidden" value="1">',
+                $htmlId . '_' . $merchantId,
+                $htmlId . '_' . $merchantId
+            );
+            $html .= '<div class="fieldset config" id="' . $htmlId . '_' . $merchantId . '">';
             $html .= sprintf('<a class="nobr" href="%s">%s</a>', $ipnUrl, $ipnUrl);
             $html .= '</div>';
             $html .= '</div>';
-            if ($ipnUrlsCount > 1) {
-                $html .= '<script type="text/javascript">//<![CDATA[' . "\n";
-                $html .= 'Fieldset.applyCollapse(\'' . $htmlId . '_' . $merchantId . '\');' . "\n";
-                $html .= '//]]></script>' . "\n";
-            }
+            $html .= '<script type="text/javascript">//<![CDATA[' . "\n";
+            $html .= 'Fieldset.applyCollapse(\'' . $htmlId . '_' . $merchantId . '\');' . "\n";
+            $html .= '//]]></script>' . "\n";
         }
         return $html ? $html : $placeholder;
     }
@@ -152,28 +157,26 @@ EOH;
         if (null === $this->_jsOrigins) {
             $this->_jsOrigins = array();
             foreach ($this->_getStoreCollection() as $store) {
-                if ($this->_getConfig()->isActive($store->getId()) & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE) {
-                    $secureUrl = Mage::getModel('core/url')
-                        ->setStore($store->getId())
-                        ->getUrl('/', array(
-                            '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
-                        )
-                    );
-                    $scheme = parse_url($secureUrl, PHP_URL_SCHEME);
-                    if ($scheme == 'https') {
-                        $host = parse_url($secureUrl, PHP_URL_HOST);
-                        $origin = 'https://' . $host;
-                        $port = parse_url($secureUrl, PHP_URL_PORT);
-                        if ($port) {
-                            $origin .= ':' . $port;
-                        }
-                        $merchantId = $this->_getMerchantId($store->getId());
-                        if (!isset($this->_jsOrigins[$merchantId])) {
-                            $this->_jsOrigins[$merchantId] = array();
-                        }
-                        if (array_search($origin, $this->_jsOrigins[$merchantId]) === false) {
-                            $this->_jsOrigins[$merchantId][] = $origin;
-                        }
+                $secureUrl = Mage::getModel('core/url')
+                    ->setStore($store->getId())
+                    ->getUrl('/', array(
+                        '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
+                    )
+                );
+                $scheme = parse_url($secureUrl, PHP_URL_SCHEME);
+                if ($scheme == 'https') {
+                    $host = parse_url($secureUrl, PHP_URL_HOST);
+                    $origin = 'https://' . $host;
+                    $port = parse_url($secureUrl, PHP_URL_PORT);
+                    if ($port) {
+                        $origin .= ':' . $port;
+                    }
+                    $merchantId = $this->_getClientId($store->getId());
+                    if (!isset($this->_jsOrigins[$merchantId])) {
+                        $this->_jsOrigins[$merchantId] = array();
+                    }
+                    if (array_search($origin, $this->_jsOrigins[$merchantId]) === false) {
+                        $this->_jsOrigins[$merchantId][] = $origin;
                     }
                 }
             }
@@ -185,7 +188,6 @@ EOH;
         $placeholder = <<<EOH
 <em>I couldn't find any JS origin URL :( Please double check if following conditions set is met in any store view:
     <ul>
-        <li><strong>Amazon Payments > Login with Amazon > Enable Login with Amazon</strong> is set to <strong>Yes</strong></li>
         <li><strong>General > Web > Secure > Base URL</strong> starts with <strong>https</strong> and <strong>General > Web > Secure > Use Secure URLs in Frontend</strong> is set to <strong>Yes</strong></li>
     </ul>
 </em>
@@ -196,20 +198,16 @@ EOH;
         $jsOriginsCount = count($jsOrigins);
         foreach ($jsOrigins as $merchantId => $origins) {
             $html .= '<div class="section-config">';
-            if ($jsOriginsCount > 1) {
-                $html .= sprintf('<div class="entry-edit-head collapseable"><a id="%s-head" href="#" onclick="Fieldset.toggleCollapse(\'%s\'); return false;">%s</a></div>',
-                    $htmlId . '_' . $merchantId,
-                    $htmlId . '_' . $merchantId,
-                    $this->helper('amazonpayments')->__('<span class="close">Click to reveal config for </span>%s', $merchantId)
-                );
-                $html .= sprintf('<input id="%s-state" name="config_state[%s]" type="hidden" value="0">',
-                    $htmlId . '_' . $merchantId,
-                    $htmlId . '_' . $merchantId
-                );
-                $html .= '<div class="fieldset config" id="' . $htmlId . '_' . $merchantId . '">';
-            } else {
-                $html .= '<div class="fieldset">';
-            }
+            $html .= sprintf('<div class="entry-edit-head collapseable"><a id="%s-head" href="#" onclick="Fieldset.toggleCollapse(\'%s\'); return false;">%s</a></div>',
+                $htmlId . '_' . $merchantId,
+                $htmlId . '_' . $merchantId,
+                $this->helper('amazonpayments')->__('<span class="close">Click to reveal config for </span>%s', $merchantId)
+            );
+            $html .= sprintf('<input id="%s-state" name="config_state[%s]" type="hidden" value="1">',
+                $htmlId . '_' . $merchantId,
+                $htmlId . '_' . $merchantId
+            );
+            $html .= '<div class="fieldset config" id="' . $htmlId . '_' . $merchantId . '">';
             $jsOriginsHtml = array();
             foreach ($origins as $origin) {
                 $jsOriginsHtml[] = sprintf('<a class="nobr" href="%s">%s</a>', $origin, $origin);
@@ -217,11 +215,9 @@ EOH;
             $html .= implode('<br/>', $jsOriginsHtml);
             $html .= '</div>';
             $html .= '</div>';
-            if ($jsOriginsCount > 1) {
-                $html .= '<script type="text/javascript">//<![CDATA[' . "\n";
-                $html .= 'Fieldset.applyCollapse(\'' . $htmlId . '_' . $merchantId . '\');' . "\n";
-                $html .= '//]]></script>' . "\n";
-            }
+            $html .= '<script type="text/javascript">//<![CDATA[' . "\n";
+            $html .= 'Fieldset.applyCollapse(\'' . $htmlId . '_' . $merchantId . '\');' . "\n";
+            $html .= '//]]></script>' . "\n";
         }
         return $html ? $html : $placeholder;
     }
@@ -230,32 +226,30 @@ EOH;
         if (null === $this->_returnUrls) {
             $this->_returnUrls = array();
             foreach ($this->_getStoreCollection() as $store) {
-                if (($this->_getConfig()->isActive($store->getId()) & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE) && !$this->_getConfig()->isPopupAuthenticationExperience($store->getId())) {
-                    $urlModel = Mage::getModel('core/url');
-                    $urls = array(
-                        $urlModel->setStore($store->getId())->getUrl('amazonpayments/advanced_login/redirect', array(
-                            '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
-                        )),
-                        $urlModel->setStore($store->getId())->getUrl('amazonpayments/advanced_login/redirect', array(
-                            'target' => 'checkout', '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
-                        ))
-                    );
-                    foreach ($urls as $url) {
-                        $scheme = parse_url($url, PHP_URL_SCHEME);
-                        if ($scheme == 'https') {
-                            $host = parse_url($url, PHP_URL_HOST);
-                            $origin = 'https://' . $host;
-                            $port = parse_url($url, PHP_URL_PORT);
-                            if ($port) {
-                                $origin .= ':' . $port;
-                            }
-                            $merchantId = $this->_getMerchantId($store->getId());
-                            if (!isset($this->_returnUrls[$merchantId])) {
-                                $this->_returnUrls[$merchantId] = array();
-                            }
-                            if (array_search($url, $this->_returnUrls[$merchantId]) === false) {
-                                $this->_returnUrls[$merchantId][] = $url;
-                            }
+                $urlModel = Mage::getModel('core/url');
+                $urls = array(
+                    $urlModel->setStore($store->getId())->getUrl('amazonpayments/advanced_login/redirect', array(
+                        '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
+                    )),
+                    $urlModel->setStore($store->getId())->getUrl('amazonpayments/advanced_login/redirect', array(
+                        'target' => 'checkout', '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
+                    ))
+                );
+                foreach ($urls as $url) {
+                    $scheme = parse_url($url, PHP_URL_SCHEME);
+                    if ($scheme == 'https') {
+                        $host = parse_url($url, PHP_URL_HOST);
+                        $origin = 'https://' . $host;
+                        $port = parse_url($url, PHP_URL_PORT);
+                        if ($port) {
+                            $origin .= ':' . $port;
+                        }
+                        $merchantId = $this->_getClientId($store->getId());
+                        if (!isset($this->_returnUrls[$merchantId])) {
+                            $this->_returnUrls[$merchantId] = array();
+                        }
+                        if (array_search($url, $this->_returnUrls[$merchantId]) === false) {
+                            $this->_returnUrls[$merchantId][] = $url;
                         }
                     }
                 }
@@ -268,8 +262,6 @@ EOH;
         $placeholder = <<<EOH
 <em>I couldn't find any return URL :( Please double check if following conditions set is met in any store view:
     <ul>
-        <li><strong>Amazon Payments > Login with Amazon > Enable Login with Amazon</strong> is set to <strong>Yes</strong></li>
-        <li><strong>Amazon Payments > Login with Amazon > Authentication Experience</strong> is set to <strong>Auto</strong> or <strong>Redirect</strong></li>
         <li><strong>General > Web > Secure > Base URL</strong> starts with <strong>https</strong> and <strong>General > Web > Secure > Use Secure URLs in Frontend</strong> is set to <strong>Yes</strong></li>
     </ul>
 </em>
@@ -280,20 +272,16 @@ EOH;
         $returnUrlsCount = count($returnUrls);
         foreach ($returnUrls as $merchantId => $urls) {
             $html .= '<div class="section-config">';
-            if ($returnUrlsCount > 1) {
-                $html .= sprintf('<div class="entry-edit-head collapseable"><a id="%s-head" href="#" onclick="Fieldset.toggleCollapse(\'%s\'); return false;">%s</a></div>',
-                    $htmlId . '_' . $merchantId,
-                    $htmlId . '_' . $merchantId,
-                    $this->helper('amazonpayments')->__('<span class="close">Click to reveal config for </span>%s', $merchantId)
-                );
-                $html .= sprintf('<input id="%s-state" name="config_state[%s]" type="hidden" value="0">',
-                    $htmlId . '_' . $merchantId,
-                    $htmlId . '_' . $merchantId
-                );
-                $html .= '<div class="fieldset config" id="' . $htmlId . '_' . $merchantId . '">';
-            } else {
-                $html .= '<div class="fieldset">';
-            }
+            $html .= sprintf('<div class="entry-edit-head collapseable"><a id="%s-head" href="#" onclick="Fieldset.toggleCollapse(\'%s\'); return false;">%s</a></div>',
+                $htmlId . '_' . $merchantId,
+                $htmlId . '_' . $merchantId,
+                $this->helper('amazonpayments')->__('<span class="close">Click to reveal config for </span>%s', $merchantId)
+            );
+            $html .= sprintf('<input id="%s-state" name="config_state[%s]" type="hidden" value="1">',
+                $htmlId . '_' . $merchantId,
+                $htmlId . '_' . $merchantId
+            );
+            $html .= '<div class="fieldset config" id="' . $htmlId . '_' . $merchantId . '">';
             $returnUrlsHtml = array();
             foreach ($urls as $url) {
                 $returnUrlsHtml[] = sprintf('<a class="nobr" href="%s">%s</a>', $url, $url);
@@ -301,11 +289,9 @@ EOH;
             $html .= implode('<br/>', $returnUrlsHtml);
             $html .= '</div>';
             $html .= '</div>';
-            if ($returnUrlsCount > 1) {
-                $html .= '<script type="text/javascript">//<![CDATA[' . "\n";
-                $html .= 'Fieldset.applyCollapse(\'' . $htmlId . '_' . $merchantId . '\');' . "\n";
-                $html .= '//]]></script>' . "\n";
-            }
+            $html .= '<script type="text/javascript">//<![CDATA[' . "\n";
+            $html .= 'Fieldset.applyCollapse(\'' . $htmlId . '_' . $merchantId . '\');' . "\n";
+            $html .= '//]]></script>' . "\n";
         }
         return $html ? $html : $placeholder;
     }
@@ -363,6 +349,13 @@ EOH;
 
     public function getDependencyJs() {
         return '<script type="text/javascript">new FormElementDependenceController(' . $this->_getDependsJson() . ');</script>';
+    }
+
+    public function getState() {
+        if ($this->_getConfig()->getMerchantId()) {
+            return 1;
+        }
+        return 0;
     }
 
 }

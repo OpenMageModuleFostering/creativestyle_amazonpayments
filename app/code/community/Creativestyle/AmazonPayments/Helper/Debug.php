@@ -166,6 +166,10 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
         $stores['Code'][0] = 'admin';
         $stores['Base URL'][0] = sprintf('<a href="%s">%s</a>', $baseUrl, $baseUrl);
         $stores['Secure URL'][0] = sprintf('<a href="%s">%s</a>', $secureUrl, $secureUrl);
+        $stores['Use SSL on frontend'][0] = Mage::getStoreConfigFlag(Mage_Core_Model_Url::XML_PATH_SECURE_IN_FRONT);
+        $stores['IPN URL'][0] = false;
+        $stores['Allowed JavaScript Origin'][0] = false;
+        $stores['Allowed Return URLs'][0] = false;
         $stores['IPN URL'][0] = false;
         $stores['Locale'][0] = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE);
         $stores['Timezone'][0] = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_TIMEZONE);
@@ -182,11 +186,25 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
             $ipnUrl = Mage::getModel('core/url')->setStore($store->getId())->getUrl('amazonpayments/advanced_ipn', array(
                 '_current' => false, '_nosid' => true, '_store' => $store->getId()
             ));
+            $allowedJsOrigin = Mage::getModel('core/url')->setStore($store->getId())->getUrl('/', array(
+                '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
+            ));
+            $allowedReturnUrls = array(
+                Mage::getModel('core/url')->setStore($store->getId())->getUrl('amazonpayments/advanced_login/redirect', array(
+                    '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
+                )),
+                Mage::getModel('core/url')->setStore($store->getId())->getUrl('amazonpayments/advanced_login/redirect', array(
+                    'target' => 'checkout', '_current' => false, '_secure' => true, '_nosid' => true, '_store' => $store->getId()
+                )),
+            );
             $stores['__titles__'][$store->getCode()] = $store->getName();
             $stores['Code'][$store->getCode()] = $store->getCode();
             $stores['Base URL'][$store->getCode()] = sprintf('<a href="%s">%s</a>', $baseUrl, $baseUrl);
             $stores['Secure URL'][$store->getCode()] = sprintf('<a href="%s">%s</a>', $secureUrl, $secureUrl);
+            $stores['Use SSL on frontend'][$store->getCode()] = Mage::getStoreConfigFlag(Mage_Core_Model_Url::XML_PATH_SECURE_IN_FRONT, $store->getId());
             $stores['IPN URL'][$store->getCode()] = sprintf('<a href="%s">%s</a>', $ipnUrl, $ipnUrl);
+            $stores['Allowed JavaScript Origin'][$store->getCode()] = sprintf('<a href="%s">%s</a>', $allowedJsOrigin, $allowedJsOrigin);
+            $stores['Allowed Return URLs'][$store->getCode()] = implode("\n", array_map(function($url) { return sprintf('<a href="%s">%s</a>', $url, $url); }, $allowedReturnUrls));
             $stores['Locale'][$store->getCode()] = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $store->getId());
             $stores['Timezone'][$store->getCode()] = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_TIMEZONE, $store->getId());
             $stores['Store ID'][$store->getCode()] = $store->getId();
@@ -211,7 +229,9 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
                     : 'Unknown',
             'Magento version' => trim(Mage::getVersion() . ' ' . $this->_getMagentoEdition()),
             'PHP version' => PHP_VERSION,
+            'Suhosin installed' => defined('SUHOSIN_PATCH') || extension_loaded('suhosin'),
             'Magento Compiler enabled' => defined('COMPILER_INCLUDE_PATH'),
+            'Amazon User ID attribute present' => Mage::getResourceModel('catalog/eav_attribute')->loadByCode('customer', 'amazon_user_id')->getId() ? true : false,
             'Current timestamp' => $this->_getCurrentTimestamp() . ' <em>&lt;' . Mage::getSingleton('core/date')->date("Y-m-d H:i:s", $this->_getCurrentTimestamp()) . '&gt;</em>'
         );
     }
@@ -250,6 +270,7 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
     protected function _getMagentoGeneralData() {
         $settings = array();
         $settings['__titles__'][0] = '<em>__default__</em>';
+        $settings['Allow guest checkout'][0] = Mage::getStoreConfigFlag(Mage_Checkout_Helper_Data::XML_PATH_GUEST_CHECKOUT);
         $settings['Allowed countries'][0] = str_replace(',', ', ', Mage::getStoreConfig('general/country/allow'));
         $settings['Optional postcode countries'][0] = str_replace(',', ', ', Mage::getStoreConfig('general/country/optional_zip_countries'));
         $settings['Base currency'][0] = Mage::getStoreConfig(Mage_Directory_Model_Currency::XML_PATH_CURRENCY_BASE);
@@ -262,6 +283,7 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
         $settings['Minimal order amount'][0] = Mage::getStoreConfigFlag('sales/minimum_order/active') ? Mage::helper('core')->currency(Mage::getStoreConfig('sales/minimum_order/amount'), true, false) : false;
         foreach ($this->_getStoreCollection() as $store) {
             $settings['__titles__'][$store->getCode()] = $store->getName();
+            $settings['Allow guest checkout'][$store->getCode()] = Mage::getStoreConfigFlag(Mage_Checkout_Helper_Data::XML_PATH_GUEST_CHECKOUT, $store->getId());
             $settings['Allowed countries'][$store->getCode()] = str_replace(',', ', ', Mage::getStoreConfig('general/country/allow', $store->getId()));
             $settings['Optional postcode countries'][$store->getCode()] = str_replace(',', ', ', Mage::getStoreConfig('general/country/optional_zip_countries', $store->getId()));
             $settings['Base currency'][$store->getCode()] = Mage::getStoreConfig(Mage_Directory_Model_Currency::XML_PATH_CURRENCY_BASE, $store->getId());
@@ -286,6 +308,7 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
             'job_code' => 'Job code',
             'job_id' => 'Job ID',
             'status' => 'Status',
+            'messages' => 'Messages',
             'scheduled_at' => 'Scheduled at',
             'executed_at' => 'Executed at',
             'finished_at' => 'Finished at',
@@ -304,6 +327,7 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
             $cronjobs[$cron->getId()]['job_code'] = $cron->getJobCode();
             $cronjobs[$cron->getId()]['job_id'] = $cron->getId();
             $cronjobs[$cron->getId()]['status'] = $cron->getStatus();
+            $cronjobs[$cron->getId()]['messages'] = $cron->getMessages();
             $cronjobs[$cron->getId()]['scheduled_at'] = ($cron->getScheduledAt() && $cron->getScheduledAt() != '0000-00-00 00:00:00') ? $dateModel->date("Y-m-d H:i:s", $cron->getScheduledAt()) : '';
             $cronjobs[$cron->getId()]['executed_at'] = ($cron->getExecutedAt() && $cron->getExecutedAt() != '0000-00-00 00:00:00') ? $dateModel->date("Y-m-d H:i:s", $cron->getExecutedAt()) : '';
             $cronjobs[$cron->getId()]['finished_at'] = ($cron->getFinishedAt() && $cron->getFinishedAt() != '0000-00-00 00:00:00') ? $dateModel->date("Y-m-d H:i:s", $cron->getFinishedAt()) : '';

@@ -30,10 +30,10 @@ class Creativestyle_AmazonPayments_Model_Config {
     const XML_PATH_GENERAL_ORDER_STATUS         = 'amazonpayments/general/authorized_order_status';
     const XML_PATH_GENERAL_RECENT_POLLED_TXN    = 'amazonpayments/general/recent_polled_transaction';
 
-    const XML_PATH_LOGIN_ACTIVE                 = 'amazonpayments/login/active';
-    const XML_PATH_LOGIN_CLIENT_ID              = 'amazonpayments/login/client_id';
-    const XML_PATH_LOGIN_LANGUAGE               = 'amazonpayments/login/language';
-    const XML_PATH_LOGIN_AUTHENTICATION         = 'amazonpayments/login/authentication';
+    const XML_PATH_LOGIN_ACTIVE                 = 'amazonpayments/general/login_active';
+    const XML_PATH_LOGIN_CLIENT_ID              = 'amazonpayments/account/client_id';
+    const XML_PATH_LOGIN_LANGUAGE               = 'amazonpayments/general/language';
+    const XML_PATH_LOGIN_AUTHENTICATION         = 'amazonpayments/general/authentication';
 
     const XML_PATH_EMAIL_ORDER_CONFIRMATION     = 'amazonpayments/email/order_confirmation';
     const XML_PATH_EMAIL_DECLINED_TEMPLATE      = 'amazonpayments/email/authorization_declined_template';
@@ -157,7 +157,14 @@ class Creativestyle_AmazonPayments_Model_Config {
     }
 
     public function getRegion($store = null) {
-        return Mage::getStoreConfig(self::XML_PATH_ACCOUNT_REGION, $store);
+        switch (Mage::getStoreConfig(self::XML_PATH_ACCOUNT_REGION, $store)) {
+            case 'EUR':
+                return 'de';
+            case 'GBP':
+                return 'uk';
+            default:
+                return null;
+        }
     }
 
     public function getEnvironment($store = null) {
@@ -226,7 +233,6 @@ class Creativestyle_AmazonPayments_Model_Config {
     public function showSandboxToolbox($store = null) {
         return $this->isSandbox($store) && Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX_TOOLBOX, $store);
     }
-
 
     public function getButtonType($store = null, $serviceType = null) {
         switch (strtolower($serviceType)) {

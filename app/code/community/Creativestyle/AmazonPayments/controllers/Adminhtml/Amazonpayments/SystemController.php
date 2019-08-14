@@ -15,12 +15,42 @@
  */
 class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_SystemController extends Mage_Adminhtml_Controller_Action {
 
-    protected function _checkCredentials($merchantId, $accessKey, $secretKey, $region, $sandbox) {
-        if (!($merchantId && $accessKey && $secretKey)) {
-            return array('error-msg', $this->__('Merchant ID, Access Key ID and Secret Key are required for the validation.'));
+    protected function _mapRegion($region) {
+        switch ($region) {
+            case 'EUR':
+                return 'de';
+            case 'GBP':
+                return 'uk';
+            default:
+                return null;
         }
+    }
 
-        $result = array('success-msg', $this->__('Congratulations! Your Amazon Payments account settings seem to be OK.'));
+    protected function _getRegionLabel($code) {
+        return Mage::getSingleton('amazonpayments/lookup_accountRegion')->getRegionLabelByCode($code);
+    }
+
+    protected function _checkCredentials($merchantId, $accessKey, $secretKey, $clientId, $region) {
+        $result = array('valid' => true, 'messages' => array());
+        if (!$merchantId) {
+            $result['valid'] = false;
+            $result['messages'][] = $this->__('Merchant ID is missing.');
+        }
+        if (!$accessKey) {
+            $result['valid'] = false;
+            $result['messages'][] = $this->__('Access Key ID is missing.');
+        }
+        if (!$secretKey) {
+            $result['valid'] = false;
+            $result['messages'][] = $this->__('Secret Key is missing.');
+        }
+        if (!$clientId) {
+            $result['valid'] = false;
+            $result['messages'][] = $this->__('Client ID is missing.');
+        }
+        if (!$result['valid']) {
+            return $result;
+        }
 
         try {
             $api = new OffAmazonPaymentsService_Client(array(
@@ -29,8 +59,8 @@ class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_SystemController ext
                 'secretKey' => trim($secretKey),
                 'applicationName' => 'Creativestyle Amazon Payments Advanced Magento Extension',
                 'applicationVersion' => Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version'),
-                'region' => $region,
-                'environment' => $sandbox ? 'sandbox' : 'live',
+                'region' => $this->_mapRegion($region),
+                'environment' => 'sandbox',
                 'serviceURL' => '',
                 'widgetURL' => '',
                 'caBundleFile' => '',
@@ -45,44 +75,51 @@ class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_SystemController ext
         } catch (OffAmazonPaymentsService_Exception $e) {
             switch ($e->getErrorCode()) {
                 case 'InvalidOrderReferenceId':
+                    $result['messages'][] = $this->__('Congratulations! Your Amazon Payments account settings seem to be OK.');
                     break;
                 case 'InvalidParameterValue':
-                    $result = array('error-msg', $this->__('Whoops! Your Merchant ID seems to be invalid.'));
+                    $result['valid'] = false;
+                    $result['messages'][] = $this->__('Whoops! Your Merchant ID seems to be invalid.');
                     break;
                 case 'InvalidAccessKeyId':
-                    $result = array('error-msg', $this->__('Whoops! Your Access Key ID seems to be invalid.'));
+                    $result['valid'] = false;
+                    $result['messages'][] = $this->__('Whoops! Your Access Key ID seems to be invalid.');
                     break;
                 case 'SignatureDoesNotMatch':
-                    $result = array('error-msg', $this->__('Whoops! Your Secret Access Key seems to be invalid.'));
+                    $result['valid'] = false;
+                    $result['messages'][] = $this->__('Whoops! Your Secret Access Key seems to be invalid.');
                     break;
                 default:
-                    $result = array('error-msg', $this->__('Whoops! Something went wrong while validating your account.'));
+                    $result['valid'] = false;
+                    $result['messages'][] = $this->__('Whoops! Something went wrong while validating your account.');
                     break;
             }
         } catch (Exception $ex) {
             Mage::logException($ex);
-            $result = array('error-msg', $this->__('Whoops! Something went wrong while validating your account.'));
+            $result['valid'] = false;
+            $result['messages'][] = $this->__('Whoops! Something went wrong while validating your account.');
         }
         return $result;
     }
 
     public function validateAction() {
-        $merchantId = $this->getRequest()->getPost('merchantId', null);
-        $accessKey = $this->getRequest()->getPost('accessKey', null);
-        $secretKey = $this->getRequest()->getPost('secretKey', null);
-        $region = $this->getRequest()->getPost('region', null);
-        $sandbox = $this->getRequest()->getPost('sandbox', null);
+        $merchantId = $this->getRequest()->getPost('merchant_id', null);
+        $accessKey = $this->getRequest()->getPost('access_key', null);
+        $secretKey = $this->getRequest()->getPost('secret_key', null);
+        $clientId = $this->getRequest()->getPost('client_id', null);
+        $region = $this->getRequest()->getPost('region', 'EUR');
 
-        $response = vsprintf(
-            '<ul class="messages">
-                <li class="%s">
-                    <ul>
-                        <li><span>%s</span></li>
-                    </ul>
-                </li>
-            </ul>', $this->_checkCredentials($merchantId, $accessKey, $secretKey, $region, $sandbox));
+        $result = $this->_checkCredentials($merchantId, $accessKey, $secretKey, $clientId, $region);
 
-        $this->getResponse()->setBody($response);
+        $result['data'] = array(
+            $this->__('Merchant ID') => $merchantId,
+            $this->__('Client ID') => $clientId,
+            $this->__('Access Key ID') => $accessKey,
+            $this->__('Secret Access Key') => $this->__('VALID'),
+            $this->__('Payment Region') => $this->_getRegionLabel($region)
+        );
+
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     }
 
     protected function _isAllowed() {

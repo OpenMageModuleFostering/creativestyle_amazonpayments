@@ -35,7 +35,7 @@ var APA = {
                         var firstShippingMethod = this.layer.down('input[type=radio]');
                         if (firstShippingMethod) {
                             firstShippingMethod.checked = true;
-                        };
+                        }
                     }
                     Event.stopObserving(this.layer, 'change').observe('change', this.onShippingMethodSelect.bindAsEventListener(this));
                     Event.stopObserving(this.layer, 'widget:checked').observe('widget:checked', this.onShippingMethodSelect.bindAsEventListener(this));
@@ -144,7 +144,7 @@ var APA = {
     },
 
     renderButtonWidget: function(tooltipContent) {
-        if (APA.urls.login != null) {
+        if (APA.urls.login !== null) {
             $$(APA.layers.payButtons).each(function(button) {
                 var buttonParams = {
                     type: button.buttonType || APA.design.payButton.type || 'PwA',
@@ -156,7 +156,7 @@ var APA = {
                             popup: APA.popup
                         }, APA.urls.pay);
                     },
-                    onError: APA.amazonErrorCallback
+                    onError: APA.buttonErrorCallback
                 };
                 if (APA.language) {
                     buttonParams.language = APA.language;
@@ -174,7 +174,7 @@ var APA = {
                             popup: APA.popup
                         }, APA.urls.login);
                     },
-                    onError: APA.amazonErrorCallback
+                    onError: APA.buttonErrorCallback
                 };
                 if (APA.language) {
                     buttonParams.language = APA.language;
@@ -187,7 +187,7 @@ var APA = {
                     sellerId: APA.sellerId,
                     useAmazonAddressBook: !APA.virtual,
                     onSignIn: APA.signInCallback,
-                    onError: APA.amazonErrorCallback
+                    onError: APA.buttonErrorCallback
                 }).bind(button.identify());
             });
         }
@@ -332,7 +332,7 @@ var APA = {
         response = eval('(' + transport.responseText + ')');
         if (response.error) {
             APA.magentoErrorCallback(response.error_messages);
-        };
+        }
 
         if (response.render_widget) {
             $H(response.render_widget).each(function(pair) {
@@ -341,7 +341,7 @@ var APA = {
                     APA.unsetLoadWaiting(APA.layers[pair.key.camelize()]);
                 }
             });
-        };
+        }
 
         if (response.allow_submit) {
             APA.allowSubmit(true);
@@ -354,12 +354,9 @@ var APA = {
         response = eval('(' + transport.responseText + ')');
         if (response.success) {
             window.location = APA.urls.success;
-        };
+        }
         if (response.logout && typeof amazon != 'undefined') {
             amazon.Login.logout();
-        };
-        if (response.redirect) {
-            window.location = response.redirect;
         }
         if (response.error) {
             APA.unsetOrderSaveWaiting();
@@ -368,26 +365,73 @@ var APA = {
                 APA.reloaded = false;
                 APA.orderReferenceId = null;
                 APA.initCheckout();
-            };
+            }
             if (response.reload_wallet) {
                 APA.reloaded = true;
                 APA.disableSubmit().reloadWallet();
-            };
-        };
+            }
+        }
+        if (response.redirect) {
+            window.location = response.redirect;
+        }
     },
 
     ajaxFailureCallback: function() {
         window.location.href = APA.urls.failure;
     },
 
-    amazonErrorCallback: function(error) {
+    confirmErrorRedirect: function(error, redirect_url) {
+        return confirm('An error occured. Redirect to failure URL?' +
+            '\n\nERROR DETAILS:' +
+            '\n==============' +
+            '\n[' + error.getErrorCode() + ']: ' + error.getErrorMessage() +
+            '\n\nDEBUG DATA:' +
+            '\n==============' +
+            '\nREDIRECT URL = ' + redirect_url +
+            (APA.sellerId ? '\nMERCHANT ID = ' + APA.sellerId : '') +
+            (APA.orderReferenceId ? '\nORDER REFERENCE ID = ' + APA.orderReferenceId : '') +
+            (APA.language ? '\nLANGUAGE = ' + APA.language : '') +
+            '\nPOPUP EXPERIENCE = ' + (APA.popup ? 'yes' : 'no') +
+            '\nVIRTUAL ORDER = ' + (APA.virtual ? 'yes' : 'no') +
+            '\n\nSTACK TRACE:' +
+            '\n==============' +
+            '\n' + (new Error()).stack +
+            '');
+    },
+
+    buttonErrorCallback: function(error) {
         if (!APA.live) {
+            console.error('BUTTON ERROR [' + error.getErrorCode() + ']: ' + error.getErrorMessage());
             console.trace();
-            alert(error.getErrorMessage());
         }
-        var redirectErrors = ['BuyerNotAssociated', 'BuyerSessionExpired', 'StaleOrderReference', 'InvalidOrderReferenceId'];
-        if (redirectErrors.any(function(errorCode) { return errorCode == error.getErrorCode() })) {
-            window.location.href = APA.urls.failure;
+    },
+
+    amazonErrorCallback: function(error) {
+        var debug_data = {'Order Reference ID': APA.orderReferenceId};
+        var clearOrderReferenceErrors = ['InvalidOrderReferenceId'];
+        if (clearOrderReferenceErrors.any(function(errorCode) { return errorCode == error.getErrorCode(); })) {
+            if (APA.live || APA.confirmErrorRedirect(error, APA.urls.clear || APA.urls.failure)) {
+                window.location.href = APA.urls.clear || APA.urls.failure;
+            }
+            return;
+        }
+        var voidOrderReferenceErrors = ['AddressNotModifiable', 'PaymentMethodNotModifiable'];
+        if (voidOrderReferenceErrors.any(function(errorCode) { return errorCode == error.getErrorCode(); })) {
+            if (APA.live || APA.confirmErrorRedirect(error, APA.urls.void || APA.urls.failure)) {
+                window.location.href = APA.urls.void || APA.urls.failure;
+            }
+            return;
+        }
+        var redirectErrors = ['BuyerNotAssociated', 'BuyerSessionExpired', 'StaleOrderReference'];
+        if (redirectErrors.any(function(errorCode) { return errorCode == error.getErrorCode(); })) {
+            if (APA.live || APA.confirmErrorRedirect(error, APA.urls.failure)) {
+                window.location.href = APA.urls.failure;
+            }
+            return;
+        }
+        if (!APA.live) {
+            console.error('AMAZON ERROR [' + error.getErrorCode() + ']: ' + error.getErrorMessage());
+            console.trace();
         }
     },
 
@@ -550,6 +594,8 @@ var APA = {
                 saveShipping:       null,
                 saveShippingMethod: null,
                 saveOrder:          null,
+                clear:              null,
+                void:               null,
                 success:            null,
                 failure:            null
             }, options.urls),

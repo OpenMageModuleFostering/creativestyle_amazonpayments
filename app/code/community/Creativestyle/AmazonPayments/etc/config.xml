@@ -10,14 +10,14 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.7.8</version>
+            <version>1.8.2</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -40,7 +40,7 @@
             <amazonpayments_setup>
                 <setup>
                     <module>Creativestyle_AmazonPayments</module>
-                    <class>Mage_Eav_Model_Entity_Setup</class>
+                    <class>Creativestyle_AmazonPayments_Model_Setup</class>
                 </setup>
                 <connection>
                     <use>core_setup</use>
@@ -129,6 +129,10 @@
         </template>
         <creativestyle>
             <amazonpayments>
+                <account_regions>
+                    <EUR>Eurozone</EUR>
+                    <GBP>United Kingdom</GBP>
+                </account_regions>
                 <regions>
                     <de>Germany</de>
                     <uk>United Kingdom</uk>
@@ -419,6 +423,16 @@
                 <group>amazonpayments</group>
                 <active>1</active>
             </amazonpayments_advanced_sandbox>
+            <checkoutbyamazon>
+                <title>Checkout by Amazon</title>
+                <model>amazonpayments/payment_legacy</model>
+                <active>0</active>
+            </checkoutbyamazon>
+            <checkoutbyamazon_sandbox>
+                <title>Checkout by Amazon (Sandbox)</title>
+                <model>amazonpayments/payment_legacy</model>
+                <active>0</active>
+            </checkoutbyamazon_sandbox>
         </payment>
         <amazonpayments>
             <account>

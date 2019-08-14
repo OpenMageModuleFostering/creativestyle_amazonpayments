@@ -31,6 +31,8 @@ APA.setup('<?php echo $this->getMerchantId(); ?>', {
         saveShipping:       '<?php echo $this->getUrl('amazonpayments/advanced_checkout/saveShipping'); ?>',
         saveShippingMethod: '<?php echo $this->getUrl('amazonpayments/advanced_checkout/saveShippingMethod'); ?>',
         saveOrder:          '<?php echo $this->getUrl('amazonpayments/advanced_checkout/saveOrder'); ?>',
+        clear:              '<?php echo $this->getUrl('amazonpayments/advanced_checkout/clearOrderReference'); ?>',
+        void:               '<?php echo $this->getUrl('amazonpayments/advanced_checkout/voidOrderReference'); ?>',
         success:            '<?php echo $this->getUrl('checkout/onepage/success'); ?>',
         failure:            '<?php echo $this->getUrl('checkout/cart') ?>'
     },

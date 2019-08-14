@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
@@ -42,7 +42,7 @@
                     <show_in_store>1</show_in_store>
                 </plugin_info>
                 <account translate="label">
-                    <label>Amazon Payments Account</label>
+                    <label>Your Amazon Payments Account Information</label>
                     <sort_order>100</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -75,22 +75,24 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </secret_key>
+                        <client_id translate="label comment">
+                            <label>Client ID</label>
+                            <comment><![CDATA[Account information can be found <a target="_blank" href="https://sellercentral-europe.amazon.com/hz/me/integration/details">here</a>]]></comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>34</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </client_id>
                         <region translate="label">
-                            <label>Marketplace</label>
+                            <label>Payment Region</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>amazonpayments/lookup_region</source_model>
+                            <source_model>amazonpayments/lookup_accountRegion</source_model>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </region>
-                        <validator translate="label">
-                            <frontend_model>amazonpayments/adminhtml_credentialsValidator</frontend_model>
-                            <sort_order>50</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </validator>
                     </fields>
                 </account>
                 <general translate="label">
@@ -109,6 +111,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
+                        <login_active translate="label">
+                            <label>Enable Login with Amazon</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </login_active>
                         <sandbox translate="label">
                             <label>Sandbox Mode</label>
                             <frontend_type>select</frontend_type>
@@ -158,6 +169,7 @@
                             <comment>This feature requires valid SSL certificate to be installed on this server. Pay attention that the SSL certificate must be issued by a trusted Certificate Authority, self-signed certificates are not permitted.</comment>
                             <frontend_type>select</frontend_type>
                             <source_model>amazonpayments/lookup_ipnActive</source_model>
+                            <backend_model>amazonpayments/system_config_backend_dataPolling_cron</backend_model>
                             <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
@@ -206,14 +218,33 @@
                             <show_in_store>1</show_in_store>
                             <depends><active>1</active></depends>
                         </authorized_order_status>
+                        <language>
+                            <label>Display Language</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_language</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </language>
+                        <authentication>
+                            <label>Authentication Experience</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>amazonpayments/lookup_authentication</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><active>1</active></depends>
+                        </authentication>
                     </fields>
                 </general>
                 <login translate="label">
                     <label>Login with Amazon</label>
                     <sort_order>250</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
+                    <show_in_default>0</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
                     <fields>
                         <active translate="label">
                             <label>Enable Login with Amazon</label>

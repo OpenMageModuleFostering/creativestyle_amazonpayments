@@ -17,7 +17,7 @@
     <div class="entry-edit-head collapseable">
         <a id="<?php echo $this->getHtmlId(); ?>-head" href="#" onclick="Fieldset.toggleCollapse('<?php echo $this->getHtmlId(); ?>'); return false;"><?php echo $this->helper('amazonpayments')->__('<span class="close">Click to reveal your </span>Amazon Seller Central config') ?></a>
     </div>
-    <input id="<?php echo $this->getHtmlId(); ?>-state" name="config_state[<?php echo $this->getHtmlId(); ?>]" type="hidden" value="0">
+    <input id="<?php echo $this->getHtmlId(); ?>-state" name="config_state[<?php echo $this->getHtmlId(); ?>]" type="hidden" value="<?php echo $this->getState(); ?>">
     <div class="fieldset config" id="<?php echo $this->getHtmlId(); ?>">
         <table cellspacing="0" class="form-list">
             <colgroup class="label"></colgroup>

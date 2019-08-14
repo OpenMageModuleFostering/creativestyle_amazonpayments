@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
@@ -21,6 +21,9 @@
         </reference>
         <reference name="before_body_end">
             <block type="core/template" template="creativestyle/amazonpayments/init.phtml" />
+        </reference>
+        <reference name="notifications">
+            <block type="amazonpayments/adminhtml_notifications" name="amazonpayments_notifications" template="creativestyle/amazonpayments/notifications.phtml"/>
         </reference>
     </default>
     <adminhtml_amazonpayments_debug_index>
@@ -67,4 +70,9 @@
             <block type="core/template" name="amazonpayments_log_api.js" template="creativestyle/amazonpayments/advanced/log/js.phtml"/>
         </reference>
     </adminhtml_amazonpayments_log_ipn_view>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addJs"><file>creativestyle/adminhtml/amazonpayments.min.js</file></action>
+        </reference>
+    </adminhtml_system_config_edit>
 </layout>

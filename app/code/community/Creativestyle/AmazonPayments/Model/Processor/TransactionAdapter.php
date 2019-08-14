@@ -453,9 +453,7 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
                             throw new Creativestyle_AmazonPayments_Exception('Invalid Capture status');
                     }
                 case Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND:
-                    default:
-                        return true;
-                        //throw new Creativestyle_AmazonPayments_Exception('Invalid Refund status');
+                    return true;
                 default:
                     throw new Creativestyle_AmazonPayments_Exception('Invalid transaction type');
             }

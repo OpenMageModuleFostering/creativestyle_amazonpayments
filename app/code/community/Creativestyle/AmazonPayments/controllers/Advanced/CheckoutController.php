@@ -78,11 +78,25 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
         return true;
     }
 
-    protected function _shiftOrderReferenceId() {
+    /**
+     * Clear Order Reference ID in controller properties
+     * and in session data and return its value
+     *
+     * @return string
+     */
+    protected function _clearOrderReferenceId() {
         $orderReferenceId = $this->_orderReferenceId;
         $this->_orderReferenceId = null;
         $this->_getCheckoutSession()->setOrderReferenceId($this->_orderReferenceId);
         return $orderReferenceId;
+    }
+
+    protected function _voidOrderReferenceId() {
+        $orderReferenceId = $this->_clearOrderReferenceId();
+        if ($orderReferenceId) {
+            return $this->_getApi()->cancelOrderReference($orderReferenceId);
+        }
+        return null;
     }
 
     /**
@@ -149,6 +163,7 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
             }
 
             $this->_getCheckoutSession()->setCartWasUpdated(false);
+            $this->_getCheckout()->savePayment(null);
 
             $this->loadLayout();
             $this->getLayout()->getBlock('head')->setTitle($this->__('Pay with Amazon'));
@@ -269,8 +284,6 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 );
             }
 
-            $this->_getCheckout()->savePayment(null);
-
             $this->_getQuote()->getPayment()->setTransactionId($this->_getOrderReferenceId());
 
             if ($this->getRequest()->getPost('reloaded', false)) {
@@ -310,7 +323,7 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 'reload_wallet'  => true
             )));
         } catch (Creativestyle_AmazonPayments_Exception_InvalidStatus_Unrecoverable $e) {
-            $this->_shiftOrderReferenceId();
+            $this->_clearOrderReferenceId();
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode(array(
                 'success'        => false,
                 'error'          => true,
@@ -319,7 +332,7 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 'redirect'       => Mage::getUrl('checkout/cart')
             )));
         } catch (Creativestyle_AmazonPayments_Exception_InvalidStatus $e) {
-            $this->_getApi()->cancelOrderReference($this->_shiftOrderReferenceId());
+            $this->_voidOrderReferenceId();
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode(array(
                 'success'        => false,
                 'error'          => true,
@@ -329,13 +342,25 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
         } catch (Exception $e) {
             Creativestyle_AmazonPayments_Model_Logger::logException($e);
             Mage::helper('checkout')->sendPaymentFailedEmail($this->_getQuote(), $e->getMessage());
-            $this->_getApi()->cancelOrderReference($this->_shiftOrderReferenceId());
+            $this->_voidOrderReferenceId();
             $this->_getCheckoutSession()->addError($this->__('There was an error processing your order. Please contact us or try again later.'));
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode(array(
                 'success'  => false,
                 'redirect' => Mage::getUrl('checkout/cart')
             )));
         }
+    }
+
+    public function clearOrderReferenceAction() {
+        $this->_clearOrderReferenceId();
+        $this->_redirect('checkout/cart');
+        return;
+    }
+
+    public function voidOrderReferenceAction() {
+        $this->_voidOrderReferenceId();
+        $this->_redirect('checkout/cart');
+        return;
     }
 
 }
