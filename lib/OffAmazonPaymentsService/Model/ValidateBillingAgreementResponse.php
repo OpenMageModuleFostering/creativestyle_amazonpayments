@@ -17,10 +17,10 @@
 
 /**
  * OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>ValidateBillingAgreementResult: OffAmazonPaymentsService_Model_ValidateBillingAgreementResult</li>
  * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
  *
@@ -31,12 +31,12 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Construct new OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>ValidateBillingAgreementResult: OffAmazonPaymentsService_Model_ValidateBillingAgreementResult</li>
      * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
      *
@@ -45,33 +45,32 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
     public function __construct ($data = null)
     {
         $this->_fields = array(
-            
+
             'ValidateBillingAgreementResult' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_ValidateBillingAgreementResult'
             ),
-            
+
             'ResponseMetadata' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_ResponseMetadata'
             )
-        )
-        ;
+        );
         parent::__construct($data);
     }
 
     /**
      * Construct OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse from XML string
-     * 
+     *
      * @param string $xml XML string to construct from
-     * @return OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse 
+     * @return OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse
      */
     public static function fromXML ($xml)
     {
         $dom = new DOMDocument();
         $dom->loadXML($xml);
         $xpath = new DOMXPath($dom);
-        $xpath->registerNamespace('a', 
+        $xpath->registerNamespace('a',
                 'http://mws.amazonservices.com/schema/OffAmazonPayments/2013-01-01');
         $response = $xpath->query('//a:ValidateBillingAgreementResponse');
         if ($response->length == 1) {
@@ -79,15 +78,15 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
                     ($response->item(0)));
         } else {
             throw new Exception(
-                    "Unable to construct OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse from provided XML. 
+                    "Unable to construct OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse from provided XML.
                                   Make sure that ValidateBillingAgreementResponse is a root element");
         }
     }
 
     /**
      * Gets the value of the ValidateBillingAgreementResult.
-     * 
-     * @return ValidateBillingAgreementResult ValidateBillingAgreementResult
+     *
+     * @return OffAmazonPaymentsService_Model_ValidateBillingAgreementResult ValidateBillingAgreementResult
      */
     public function getValidateBillingAgreementResult ()
     {
@@ -96,8 +95,8 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Sets the value of the ValidateBillingAgreementResult.
-     * 
-     * @param ValidateBillingAgreementResult ValidateBillingAgreementResult
+     *
+     * @param OffAmazonPaymentsService_Model_ValidateBillingAgreementResult ValidateBillingAgreementResult
      * @return void
      */
     public function setValidateBillingAgreementResult ($value)
@@ -108,8 +107,8 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Sets the value of the ValidateBillingAgreementResult  and returns this instance
-     * 
-     * @param ValidateBillingAgreementResult $value ValidateBillingAgreementResult
+     *
+     * @param OffAmazonPaymentsService_Model_ValidateBillingAgreementResult $value ValidateBillingAgreementResult
      * @return OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse instance
      */
     public function withValidateBillingAgreementResult ($value)
@@ -120,7 +119,7 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Checks if ValidateBillingAgreementResult  is set
-     * 
+     *
      * @return bool true if ValidateBillingAgreementResult property is set
      */
     public function isSetValidateBillingAgreementResult ()
@@ -130,8 +129,8 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Gets the value of the ResponseMetadata.
-     * 
-     * @return ResponseMetadata ResponseMetadata
+     *
+     * @return OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      */
     public function getResponseMetadata ()
     {
@@ -140,8 +139,8 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Sets the value of the ResponseMetadata.
-     * 
-     * @param ResponseMetadata ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      * @return void
      */
     public function setResponseMetadata ($value)
@@ -152,8 +151,8 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Sets the value of the ResponseMetadata  and returns this instance
-     * 
-     * @param ResponseMetadata $value ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata $value ResponseMetadata
      * @return OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse instance
      */
     public function withResponseMetadata ($value)
@@ -164,7 +163,7 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * Checks if ResponseMetadata  is set
-     * 
+     *
      * @return bool true if ResponseMetadata property is set
      */
     public function isSetResponseMetadata ()
@@ -174,7 +173,7 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
 
     /**
      * XML Representation for this object
-     * 
+     *
      * @return string XML for this object
      */
     public function toXML ()
@@ -197,4 +196,5 @@ class OffAmazonPaymentsService_Model_ValidateBillingAgreementResponse extends Of
     {
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
+
 }

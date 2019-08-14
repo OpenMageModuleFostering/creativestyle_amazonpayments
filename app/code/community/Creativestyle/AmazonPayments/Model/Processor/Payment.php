@@ -91,7 +91,8 @@ class Creativestyle_AmazonPayments_Model_Processor_Payment {
                 $transactionSequenceId,
                 $amount,
                 $this->getPayment()->getOrder()->getBaseCurrencyCode(),
-                $this->getPayment()->getOrder()->getIncrementId()
+                $this->getPayment()->getOrder()->getIncrementId(),
+                $this->getPayment()->getOrder()->getStore()->getFrontendName() . ' (' . $this->getPayment()->getOrder()->getStore()->getName() . ')'
             );
         }
         $this->_getApi()->confirmOrderReference($transactionSequenceId);

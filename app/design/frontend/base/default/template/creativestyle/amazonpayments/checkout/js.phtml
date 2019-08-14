@@ -19,7 +19,7 @@ var quoteBaseGrandTotal = <?php echo (float)$this->getQuoteBaseGrandTotal(); ?>;
 var checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
 var lastPrice;
 if (typeof Translator != 'undefined') {
-    Translator.add('There was an error processing your order. Please contact us or try again later.', '<?php echo $this->__('There was an error processing your order. Please contact us or try again later.'); ?>');
+    Translator.add('There was an error processing your order. Please contact us or try again later.', '<?php echo $this->jsQuoteEscape($this->__('There was an error processing your order. Please contact us or try again later.')); ?>');
 }
 
 APA.setup('<?php echo $this->getMerchantId(); ?>', {

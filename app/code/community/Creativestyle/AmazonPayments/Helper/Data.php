@@ -126,8 +126,8 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
         $explodedName = explode(' ', trim($customerName));
         $result = array();
         if (count($explodedName) > 1) {
-            $result['firstname'] = reset($explodedName);
-            $result['lastname'] = trim(str_replace($result['firstname'], "", $customerName));
+            $result['firstname'] = array_shift($explodedName);
+            $result['lastname'] = implode(' ', $explodedName);
         } else {
             $result['firstname'] = $emptyValuePlaceholder ? Mage::helper('amazonpayments')->__($emptyValuePlaceholder) : null;
             $result['lastname'] = reset($explodedName);

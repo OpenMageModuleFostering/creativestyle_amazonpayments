@@ -18,7 +18,9 @@ class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Co
     const ACCESS_TOKEN_PARAM_NAME = 'access_token';
 
     private function _extractAccessTokenFromUrl() {
-        return $this->getRequest()->getParam(self::ACCESS_TOKEN_PARAM_NAME, null);
+        $accessToken = $this->getRequest()->getParam(self::ACCESS_TOKEN_PARAM_NAME, null);
+        $accessToken = str_replace('|', '%7C', $accessToken);
+        return $accessToken;
     }
 
     private function _getApi() {

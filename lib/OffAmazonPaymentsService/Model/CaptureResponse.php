@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_CaptureResponse
@@ -32,10 +32,10 @@
  * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_CaptureResponse
      * 
@@ -51,18 +51,24 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-
-        'CaptureResult' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_CaptureResult'),
-
-
-        'ResponseMetadata' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_ResponseMetadata'),
-
+        $this->_fields = array(
+            
+            'CaptureResult' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_CaptureResult'
+            ),
+            
+            
+            'ResponseMetadata' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_ResponseMetadata'
+            )
+            
         );
         parent::__construct($data);
     }
-
-       
+    
+    
     /**
      * Construct OffAmazonPaymentsService_Model_CaptureResponse from XML string
      * 
@@ -74,43 +80,43 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
         $dom = new DOMDocument();
         $dom->loadXML($xml);
         $xpath = new DOMXPath($dom);
-    	$xpath->registerNamespace('a', 'http://mws.amazonservices.com/schema/OffAmazonPayments/2013-01-01');
+        $xpath->registerNamespace('a', 'http://mws.amazonservices.com/schema/OffAmazonPayments/2013-01-01');
         $response = $xpath->query('//a:CaptureResponse');
         if ($response->length == 1) {
-            return new OffAmazonPaymentsService_Model_CaptureResponse(($response->item(0))); 
+            return new OffAmazonPaymentsService_Model_CaptureResponse(($response->item(0)));
         } else {
-            throw new Exception ("Unable to construct OffAmazonPaymentsService_Model_CaptureResponse from provided XML. 
+            throw new Exception("Unable to construct OffAmazonPaymentsService_Model_CaptureResponse from provided XML. 
                                   Make sure that CaptureResponse is a root element");
         }
-          
+        
     }
     
     /**
      * Gets the value of the CaptureResult.
      * 
-     * @return CaptureResult CaptureResult
+     * @return OffAmazonPaymentsService_Model_CaptureResult CaptureResult
      */
-    public function getCaptureResult() 
+    public function getCaptureResult()
     {
         return $this->_fields['CaptureResult']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the CaptureResult.
      * 
-     * @param CaptureResult CaptureResult
+     * @param OffAmazonPaymentsService_Model_CaptureResult CaptureResult
      * @return void
      */
-    public function setCaptureResult($value) 
+    public function setCaptureResult($value)
     {
         $this->_fields['CaptureResult']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the CaptureResult  and returns this instance
      * 
-     * @param CaptureResult $value CaptureResult
+     * @param OffAmazonPaymentsService_Model_CaptureResult $value CaptureResult
      * @return OffAmazonPaymentsService_Model_CaptureResponse instance
      */
     public function withCaptureResult($value)
@@ -118,8 +124,8 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
         $this->setCaptureResult($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if CaptureResult  is set
      * 
@@ -128,35 +134,35 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
     public function isSetCaptureResult()
     {
         return !is_null($this->_fields['CaptureResult']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the ResponseMetadata.
      * 
-     * @return ResponseMetadata ResponseMetadata
+     * @return OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      */
-    public function getResponseMetadata() 
+    public function getResponseMetadata()
     {
         return $this->_fields['ResponseMetadata']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the ResponseMetadata.
      * 
-     * @param ResponseMetadata ResponseMetadata
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      * @return void
      */
-    public function setResponseMetadata($value) 
+    public function setResponseMetadata($value)
     {
         $this->_fields['ResponseMetadata']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the ResponseMetadata  and returns this instance
      * 
-     * @param ResponseMetadata $value ResponseMetadata
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata $value ResponseMetadata
      * @return OffAmazonPaymentsService_Model_CaptureResponse instance
      */
     public function withResponseMetadata($value)
@@ -164,8 +170,8 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
         $this->setResponseMetadata($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if ResponseMetadata  is set
      * 
@@ -174,17 +180,15 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
     public function isSetResponseMetadata()
     {
         return !is_null($this->_fields['ResponseMetadata']['FieldValue']);
-
+        
     }
-
-
-
+      
     /**
      * XML Representation for this object
      * 
      * @return string XML for this object
      */
-    public function toXML() 
+    public function toXML()
     {
         $xml = "";
         $xml .= "<CaptureResponse xmlns=\"http://mws.amazonservices.com/schema/OffAmazonPayments/2013-01-01\">";
@@ -192,14 +196,16 @@ class OffAmazonPaymentsService_Model_CaptureResponse extends OffAmazonPaymentsSe
         $xml .= "</CaptureResponse>";
         return $xml;
     }
-
+    
     private $_responseHeaderMetadata = null;
-
-    public function getResponseHeaderMetadata() {
+    
+    public function getResponseHeaderMetadata()
+    {
         return $this->_responseHeaderMetadata;
     }
-
-    public function setResponseHeaderMetadata($responseHeaderMetadata) {
+    
+    public function setResponseHeaderMetadata($responseHeaderMetadata)
+    {
         return $this->_responseHeaderMetadata = $responseHeaderMetadata;
     }
 }

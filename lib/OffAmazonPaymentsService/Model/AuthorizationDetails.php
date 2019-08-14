@@ -1,5 +1,4 @@
 <?php
-
 /*******************************************************************************
  *  Copyright 2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +19,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_AuthorizationDetails
@@ -45,10 +44,10 @@
  * <li>AddressVerificationCode: string</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_AuthorizationDetails
      * 
@@ -77,60 +76,93 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-        'AmazonAuthorizationId' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AuthorizationReferenceId' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AuthorizationBillingAddress' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Address'),
-        'SellerAuthorizationNote' => array('FieldValue' => null, 'FieldType' => 'string'),
-
-        'AuthorizationAmount' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Price'),
-
-
-        'CapturedAmount' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Price'),
-
-
-        'AuthorizationFee' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Price'),
-
-
-        'IdList' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_IdList'),
-
-        'CreationTimestamp' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'ExpirationTimestamp' => array('FieldValue' => null, 'FieldType' => 'string'),
-
-        'AuthorizationStatus' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Status'),
-
-
-        'OrderItemCategories' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_OrderItemCategories'),
-
-        'CaptureNow' => array('FieldValue' => null, 'FieldType' => 'bool'),
-        'SoftDescriptor' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AddressVerificationCode' => array('FieldValue' => null, 'FieldType' => 'string'),
+        $this->_fields = array(
+            'AmazonAuthorizationId' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'AuthorizationReferenceId' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'AuthorizationBillingAddress' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_Address'
+            ),
+            'SellerAuthorizationNote' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'AuthorizationAmount' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_Price'
+            ),
+            'CapturedAmount' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_Price'
+            ),
+            'AuthorizationFee' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_Price'
+            ),
+            'IdList' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_IdList'
+            ),
+            'CreationTimestamp' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'ExpirationTimestamp' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'AuthorizationStatus' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_Status'
+            ),
+            'OrderItemCategories' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_OrderItemCategories'
+            ),
+            'CaptureNow' => array(
+                'FieldValue' => null,
+                'FieldType' => 'bool'
+            ),
+            'SoftDescriptor' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'AddressVerificationCode' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            )
         );
         parent::__construct($data);
     }
-
+    
     /**
      * Gets the value of the AmazonAuthorizationId property.
      * 
      * @return string AmazonAuthorizationId
      */
-    public function getAmazonAuthorizationId() 
+    public function getAmazonAuthorizationId()
     {
         return $this->_fields['AmazonAuthorizationId']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AmazonAuthorizationId property.
      * 
      * @param string AmazonAuthorizationId
      * @return this instance
      */
-    public function setAmazonAuthorizationId($value) 
+    public function setAmazonAuthorizationId($value)
     {
         $this->_fields['AmazonAuthorizationId']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the AmazonAuthorizationId and returns this instance
      * 
@@ -142,8 +174,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setAmazonAuthorizationId($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AmazonAuthorizationId is set
      * 
@@ -153,29 +185,29 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     {
         return !is_null($this->_fields['AmazonAuthorizationId']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AuthorizationReferenceId property.
      * 
      * @return string AuthorizationReferenceId
      */
-    public function getAuthorizationReferenceId() 
+    public function getAuthorizationReferenceId()
     {
         return $this->_fields['AuthorizationReferenceId']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AuthorizationReferenceId property.
      * 
      * @param string AuthorizationReferenceId
      * @return this instance
      */
-    public function setAuthorizationReferenceId($value) 
+    public function setAuthorizationReferenceId($value)
     {
         $this->_fields['AuthorizationReferenceId']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the AuthorizationReferenceId and returns this instance
      * 
@@ -187,8 +219,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setAuthorizationReferenceId($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AuthorizationReferenceId is set
      * 
@@ -206,7 +238,7 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function getAuthorizationBillingAddress()
     {
-    	return $this->_fields['AuthorizationBillingAddress']['FieldValue'];
+        return $this->_fields['AuthorizationBillingAddress']['FieldValue'];
     }
     
     /**
@@ -217,8 +249,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function setAuthorizationBillingAddress($value)
     {
-    	$this->_fields['AuthorizationBillingAddress']['FieldValue'] = $value;
-    	return $this;
+        $this->_fields['AuthorizationBillingAddress']['FieldValue'] = $value;
+        return $this;
     }
     
     /**
@@ -229,8 +261,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function withAuthorizationBillingAddress($value)
     {
-    	$this->setAuthorizationBillingAddress($value);
-    	return $this;
+        $this->setAuthorizationBillingAddress($value);
+        return $this;
     }
     
     
@@ -241,31 +273,31 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function isSetAuthorizationBillingAddress()
     {
-    	return !is_null($this->_fields['AuthorizationBillingAddress']['FieldValue']);
+        return !is_null($this->_fields['AuthorizationBillingAddress']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the SellerAuthorizationNote property.
      * 
      * @return string SellerAuthorizationNote
      */
-    public function getSellerAuthorizationNote() 
+    public function getSellerAuthorizationNote()
     {
         return $this->_fields['SellerAuthorizationNote']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the SellerAuthorizationNote property.
      * 
      * @param string SellerAuthorizationNote
      * @return this instance
      */
-    public function setSellerAuthorizationNote($value) 
+    public function setSellerAuthorizationNote($value)
     {
         $this->_fields['SellerAuthorizationNote']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the SellerAuthorizationNote and returns this instance
      * 
@@ -277,8 +309,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setSellerAuthorizationNote($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if SellerAuthorizationNote is set
      * 
@@ -288,29 +320,29 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     {
         return !is_null($this->_fields['SellerAuthorizationNote']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AuthorizationAmount.
      * 
      * @return Price AuthorizationAmount
      */
-    public function getAuthorizationAmount() 
+    public function getAuthorizationAmount()
     {
         return $this->_fields['AuthorizationAmount']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AuthorizationAmount.
      * 
      * @param Price AuthorizationAmount
      * @return void
      */
-    public function setAuthorizationAmount($value) 
+    public function setAuthorizationAmount($value)
     {
         $this->_fields['AuthorizationAmount']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the AuthorizationAmount  and returns this instance
      * 
@@ -322,8 +354,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setAuthorizationAmount($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AuthorizationAmount  is set
      * 
@@ -332,31 +364,31 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     public function isSetAuthorizationAmount()
     {
         return !is_null($this->_fields['AuthorizationAmount']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the CapturedAmount.
      * 
      * @return Price CapturedAmount
      */
-    public function getCapturedAmount() 
+    public function getCapturedAmount()
     {
         return $this->_fields['CapturedAmount']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the CapturedAmount.
      * 
      * @param Price CapturedAmount
      * @return void
      */
-    public function setCapturedAmount($value) 
+    public function setCapturedAmount($value)
     {
         $this->_fields['CapturedAmount']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the CapturedAmount  and returns this instance
      * 
@@ -368,8 +400,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setCapturedAmount($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if CapturedAmount  is set
      * 
@@ -378,31 +410,31 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     public function isSetCapturedAmount()
     {
         return !is_null($this->_fields['CapturedAmount']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the AuthorizationFee.
      * 
      * @return Price AuthorizationFee
      */
-    public function getAuthorizationFee() 
+    public function getAuthorizationFee()
     {
         return $this->_fields['AuthorizationFee']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AuthorizationFee.
      * 
      * @param Price AuthorizationFee
      * @return void
      */
-    public function setAuthorizationFee($value) 
+    public function setAuthorizationFee($value)
     {
         $this->_fields['AuthorizationFee']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the AuthorizationFee  and returns this instance
      * 
@@ -414,8 +446,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setAuthorizationFee($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AuthorizationFee  is set
      * 
@@ -424,31 +456,31 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     public function isSetAuthorizationFee()
     {
         return !is_null($this->_fields['AuthorizationFee']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the IdList.
      * 
      * @return IdList IdList
      */
-    public function getIdList() 
+    public function getIdList()
     {
         return $this->_fields['IdList']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the IdList.
      * 
      * @param IdList IdList
      * @return void
      */
-    public function setIdList($value) 
+    public function setIdList($value)
     {
         $this->_fields['IdList']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the IdList  and returns this instance
      * 
@@ -460,8 +492,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setIdList($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if IdList  is set
      * 
@@ -470,31 +502,31 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     public function isSetIdList()
     {
         return !is_null($this->_fields['IdList']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the CreationTimestamp property.
      * 
      * @return string CreationTimestamp
      */
-    public function getCreationTimestamp() 
+    public function getCreationTimestamp()
     {
         return $this->_fields['CreationTimestamp']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the CreationTimestamp property.
      * 
      * @param string CreationTimestamp
      * @return this instance
      */
-    public function setCreationTimestamp($value) 
+    public function setCreationTimestamp($value)
     {
         $this->_fields['CreationTimestamp']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the CreationTimestamp and returns this instance
      * 
@@ -506,8 +538,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setCreationTimestamp($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if CreationTimestamp is set
      * 
@@ -517,29 +549,29 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     {
         return !is_null($this->_fields['CreationTimestamp']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the ExpirationTimestamp property.
      * 
      * @return string ExpirationTimestamp
      */
-    public function getExpirationTimestamp() 
+    public function getExpirationTimestamp()
     {
         return $this->_fields['ExpirationTimestamp']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the ExpirationTimestamp property.
      * 
      * @param string ExpirationTimestamp
      * @return this instance
      */
-    public function setExpirationTimestamp($value) 
+    public function setExpirationTimestamp($value)
     {
         $this->_fields['ExpirationTimestamp']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the ExpirationTimestamp and returns this instance
      * 
@@ -551,8 +583,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setExpirationTimestamp($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if ExpirationTimestamp is set
      * 
@@ -562,29 +594,29 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     {
         return !is_null($this->_fields['ExpirationTimestamp']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AuthorizationStatus.
      * 
      * @return Status AuthorizationStatus
      */
-    public function getAuthorizationStatus() 
+    public function getAuthorizationStatus()
     {
         return $this->_fields['AuthorizationStatus']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AuthorizationStatus.
      * 
      * @param Status AuthorizationStatus
      * @return void
      */
-    public function setAuthorizationStatus($value) 
+    public function setAuthorizationStatus($value)
     {
         $this->_fields['AuthorizationStatus']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the AuthorizationStatus  and returns this instance
      * 
@@ -596,8 +628,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setAuthorizationStatus($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AuthorizationStatus  is set
      * 
@@ -606,31 +638,31 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     public function isSetAuthorizationStatus()
     {
         return !is_null($this->_fields['AuthorizationStatus']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the OrderItemCategories.
      * 
      * @return OrderItemCategories OrderItemCategories
      */
-    public function getOrderItemCategories() 
+    public function getOrderItemCategories()
     {
         return $this->_fields['OrderItemCategories']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the OrderItemCategories.
      * 
      * @param OrderItemCategories OrderItemCategories
      * @return void
      */
-    public function setOrderItemCategories($value) 
+    public function setOrderItemCategories($value)
     {
         $this->_fields['OrderItemCategories']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the OrderItemCategories  and returns this instance
      * 
@@ -642,8 +674,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setOrderItemCategories($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if OrderItemCategories  is set
      * 
@@ -652,31 +684,31 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     public function isSetOrderItemCategories()
     {
         return !is_null($this->_fields['OrderItemCategories']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the CaptureNow property.
      * 
      * @return bool CaptureNow
      */
-    public function getCaptureNow() 
+    public function getCaptureNow()
     {
         return $this->_fields['CaptureNow']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the CaptureNow property.
      * 
      * @param bool CaptureNow
      * @return this instance
      */
-    public function setCaptureNow($value) 
+    public function setCaptureNow($value)
     {
         $this->_fields['CaptureNow']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the CaptureNow and returns this instance
      * 
@@ -688,8 +720,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setCaptureNow($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if CaptureNow is set
      * 
@@ -699,29 +731,29 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
     {
         return !is_null($this->_fields['CaptureNow']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the SoftDescriptor property.
      * 
      * @return string SoftDescriptor
      */
-    public function getSoftDescriptor() 
+    public function getSoftDescriptor()
     {
         return $this->_fields['SoftDescriptor']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the SoftDescriptor property.
      * 
      * @param string SoftDescriptor
      * @return this instance
      */
-    public function setSoftDescriptor($value) 
+    public function setSoftDescriptor($value)
     {
         $this->_fields['SoftDescriptor']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the SoftDescriptor and returns this instance
      * 
@@ -733,8 +765,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
         $this->setSoftDescriptor($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if SoftDescriptor is set
      * 
@@ -753,7 +785,7 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function getAddressVerificationCode()
     {
-    	return $this->_fields['AddressVerificationCode']['FieldValue'];
+        return $this->_fields['AddressVerificationCode']['FieldValue'];
     }
     
     /**
@@ -764,8 +796,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function setAddressVerificationCode($value)
     {
-    	$this->_fields['AddressVerificationCode']['FieldValue'] = $value;
-    	return $this;
+        $this->_fields['AddressVerificationCode']['FieldValue'] = $value;
+        return $this;
     }
     
     /**
@@ -776,8 +808,8 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function withAddressVerificationCode($value)
     {
-    	$this->setAddressVerificationCode($value);
-    	return $this;
+        $this->setAddressVerificationCode($value);
+        return $this;
     }
     
     /**
@@ -787,7 +819,7 @@ class OffAmazonPaymentsService_Model_AuthorizationDetails extends OffAmazonPayme
      */
     public function isSetAddressVerificationCode()
     {
-    	return !is_null($this->_fields['AddressVerificationCode']['FieldValue']);
+        return !is_null($this->_fields['AddressVerificationCode']['FieldValue']);
     }
     
 }

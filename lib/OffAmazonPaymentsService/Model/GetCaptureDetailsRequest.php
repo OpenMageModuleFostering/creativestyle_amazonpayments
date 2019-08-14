@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_GetCaptureDetailsRequest
@@ -32,10 +32,10 @@
  * <li>AmazonCaptureId: string</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_GetCaptureDetailsRequest extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_GetCaptureDetailsRequest
      * 
@@ -51,35 +51,45 @@ class OffAmazonPaymentsService_Model_GetCaptureDetailsRequest extends OffAmazonP
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-        'SellerId' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AmazonCaptureId' => array('FieldValue' => null, 'FieldType' => 'string'),
+        $this->_fields = array(
+            'SellerId' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'AmazonCaptureId' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'MWSAuthToken' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            )
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the SellerId property.
      * 
      * @return string SellerId
      */
-    public function getSellerId() 
+    public function getSellerId()
     {
         return $this->_fields['SellerId']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the SellerId property.
      * 
      * @param string SellerId
      * @return this instance
      */
-    public function setSellerId($value) 
+    public function setSellerId($value)
     {
         $this->_fields['SellerId']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the SellerId and returns this instance
      * 
@@ -91,8 +101,8 @@ class OffAmazonPaymentsService_Model_GetCaptureDetailsRequest extends OffAmazonP
         $this->setSellerId($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if SellerId is set
      * 
@@ -102,29 +112,29 @@ class OffAmazonPaymentsService_Model_GetCaptureDetailsRequest extends OffAmazonP
     {
         return !is_null($this->_fields['SellerId']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AmazonCaptureId property.
      * 
      * @return string AmazonCaptureId
      */
-    public function getAmazonCaptureId() 
+    public function getAmazonCaptureId()
     {
         return $this->_fields['AmazonCaptureId']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AmazonCaptureId property.
      * 
      * @param string AmazonCaptureId
      * @return this instance
      */
-    public function setAmazonCaptureId($value) 
+    public function setAmazonCaptureId($value)
     {
         $this->_fields['AmazonCaptureId']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the AmazonCaptureId and returns this instance
      * 
@@ -136,8 +146,8 @@ class OffAmazonPaymentsService_Model_GetCaptureDetailsRequest extends OffAmazonP
         $this->setAmazonCaptureId($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AmazonCaptureId is set
      * 
@@ -146,5 +156,38 @@ class OffAmazonPaymentsService_Model_GetCaptureDetailsRequest extends OffAmazonP
     public function isSetAmazonCaptureId()
     {
         return !is_null($this->_fields['AmazonCaptureId']['FieldValue']);
+    }
+    
+    /**
+     * Gets the value of the MWSAuthToken property.
+     *
+     * @return string MWSAuthToken
+     */
+    public function getMWSAuthToken()
+    {
+        return $this->_fields['MWSAuthToken']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the MWSAuthToken and returns this instance
+     *
+     * @param string $value MWSAuthToken
+     * @return OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest instance
+     */
+    public function setMWSAuthToken($value)
+    {
+        $this->_fields['MWSAuthToken']['FieldValue'] = $value;
+        return $this;
+    }
+    
+    
+    /**
+     * Checks if MWSAuthToken is set
+     *
+     * @return bool true if MWSAuthToken is set
+     */
+    public function isSetMWSAuthToken()
+    {
+        return !is_null($this->_fields['MWSAuthToken']['FieldValue']);
     }
 }

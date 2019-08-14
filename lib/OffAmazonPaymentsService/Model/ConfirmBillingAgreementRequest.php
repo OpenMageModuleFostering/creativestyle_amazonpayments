@@ -17,10 +17,10 @@
 
 /**
  * OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>SellerId: string</li>
  * <li>AmazonBillingAgreementId: string</li>
  *
@@ -31,12 +31,12 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Construct new OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>SellerId: string</li>
      * <li>AmazonBillingAgreementId: string</li>
      *
@@ -52,6 +52,10 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
             'AmazonBillingAgreementId' => array(
                 'FieldValue' => null,
                 'FieldType' => 'string'
+            ),
+            'MWSAuthToken' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
             )
         );
         parent::__construct($data);
@@ -59,7 +63,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Gets the value of the SellerId property.
-     * 
+     *
      * @return string SellerId
      */
     public function getSellerId ()
@@ -69,7 +73,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Sets the value of the SellerId property.
-     * 
+     *
      * @param string SellerId
      * @return this instance
      */
@@ -81,7 +85,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Sets the value of the SellerId and returns this instance
-     * 
+     *
      * @param string $value SellerId
      * @return OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest instance
      */
@@ -93,7 +97,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Checks if SellerId is set
-     * 
+     *
      * @return bool true if SellerId  is set
      */
     public function isSetSellerId ()
@@ -103,7 +107,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Gets the value of the AmazonBillingAgreementId property.
-     * 
+     *
      * @return string AmazonBillingAgreementId
      */
     public function getAmazonBillingAgreementId ()
@@ -113,7 +117,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Sets the value of the AmazonBillingAgreementId property.
-     * 
+     *
      * @param string AmazonBillingAgreementId
      * @return this instance
      */
@@ -125,7 +129,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Sets the value of the AmazonBillingAgreementId and returns this instance
-     * 
+     *
      * @param string $value AmazonBillingAgreementId
      * @return OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest instance
      */
@@ -137,11 +141,44 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementRequest extends OffA
 
     /**
      * Checks if AmazonBillingAgreementId is set
-     * 
+     *
      * @return bool true if AmazonBillingAgreementId  is set
      */
     public function isSetAmazonBillingAgreementId ()
     {
         return ! is_null($this->_fields['AmazonBillingAgreementId']['FieldValue']);
+    }
+
+      /**
+     * Gets the value of the MWSAuthToken property.
+     *
+     * @return string MWSAuthToken
+     */
+    public function getMWSAuthToken()
+    {
+    	return $this->_fields['MWSAuthToken']['FieldValue'];
+    }
+
+    /**
+     * Sets the value of the MWSAuthToken and returns this instance
+     *
+     * @param string $value MWSAuthToken
+     * @return OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest instance
+     */
+    public function setMWSAuthToken($value)
+    {
+    	$this->_fields['MWSAuthToken']['FieldValue'] = $value;
+    	return $this;
+    }
+
+
+    /**
+     * Checks if MWSAuthToken is set
+     *
+     * @return bool true if MWSAuthToken is set
+     */
+    public function isSetMWSAuthToken()
+    {
+    	return !is_null($this->_fields['MWSAuthToken']['FieldValue']);
     }
 }

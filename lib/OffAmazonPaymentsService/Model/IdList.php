@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_IdList
@@ -31,10 +31,10 @@
  * <li>member: string</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_IdList extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_IdList
      * 
@@ -49,38 +49,45 @@ class OffAmazonPaymentsService_Model_IdList extends OffAmazonPaymentsService_Mod
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-        'member' => array('FieldValue' => array(), 'FieldType' => array('string')),
+        $this->_fields = array(
+            'member' => array(
+                'FieldValue' => array(),
+                'FieldType' => array(
+                    'string'
+                )
+            )
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the member .
      * 
      * @return array of string member
      */
-    public function getmember() 
+    public function getmember()
     {
         return $this->_fields['member']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the member.
      * 
      * @param string or an array of string member
      * @return this instance
      */
-    public function setmember($member) 
+    public function setmember($member)
     {
         if (!$this->_isNumericArray($member)) {
-            $member =  array ($member);    
+            $member = array(
+                $member
+            );
         }
         $this->_fields['member']['FieldValue'] = $member;
         return $this;
     }
-  
-
+    
+    
     /**
      * Sets single or multiple values of member list via variable number of arguments. 
      * For example, to set the list with two elements, simply pass two values as arguments to this function
@@ -95,9 +102,9 @@ class OffAmazonPaymentsService_Model_IdList extends OffAmazonPaymentsService_Mod
             $this->_fields['member']['FieldValue'][] = $member;
         }
         return $this;
-    }  
-      
-
+    }
+    
+    
     /**
      * Checks if member list is non-empty
      * 
@@ -105,10 +112,7 @@ class OffAmazonPaymentsService_Model_IdList extends OffAmazonPaymentsService_Mod
      */
     public function isSetmember()
     {
-        return count ($this->_fields['member']['FieldValue']) > 0;
+        return count($this->_fields['member']['FieldValue']) > 0;
     }
-
-
-
-
+    
 }

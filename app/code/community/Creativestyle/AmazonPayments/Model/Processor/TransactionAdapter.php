@@ -18,6 +18,7 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
     const TRANSACTION_STATE_KEY                 = 'State';
     const TRANSACTION_REASON_CODE_KEY           = 'ReasonCode';
     const TRANSACTION_REASON_DESCRIPTION_KEY    = 'ReasonDescription';
+    const TRANSACTION_LANGUAGE_KEY              = 'Language';
 
     const TRANSACTION_STATE_DRAFT               = 'Draft';
     const TRANSACTION_STATE_PENDING             = 'Pending';
@@ -31,6 +32,8 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
     const TRANSACTION_REASON_INVALID_PAYMENT    = 'InvalidPaymentMethod';
     const TRANSACTION_REASON_TIMEOUT            = 'TransactionTimedOut';
     const TRANSACTION_REASON_AMAZON_REJECTED    = 'AmazonRejected';
+    const TRANSACTION_REASON_AMAZON_CLOSED      = 'AmazonClosed';
+    const TRANSACTION_REASON_EXPIRED_UNUSED     = 'ExpiredUnused';
 
     /**
      * TODO: [$_store description]
@@ -98,6 +101,11 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
                 }
                 if ($transactionStatus->isSetReasonDescription()) {
                     $status[self::TRANSACTION_REASON_DESCRIPTION_KEY] = $transactionStatus->getReasonDescription();
+                }
+                if (is_callable(array($this->getTransactionDetails(), 'isSetOrderLanguage'))) {
+                    if ($this->getTransactionDetails()->isSetOrderLanguage()) {
+                        $status[self::TRANSACTION_LANGUAGE_KEY] = $this->getTransactionDetails()->getOrderLanguage();
+                    }
                 }
                 if (null !== $key) {
                     if (array_key_exists($key, $status)) {
@@ -375,6 +383,10 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
                             return $captureAdapter;
                         }
                     }
+                }
+                if ($this->_extractTransactionStatus(self::TRANSACTION_STATE_KEY) == self::TRANSACTION_STATE_CLOSED
+                    && $this->_extractTransactionStatus(self::TRANSACTION_REASON_CODE_KEY) == self::TRANSACTION_REASON_EXPIRED_UNUSED) {
+                    $order->getPayment()->getMethodInstance()->authorize($order->getPayment(), $this->getTransactionAmount());
                 }
                 break;
         }

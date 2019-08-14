@@ -159,4 +159,3 @@ class OffAmazonPaymentsNotifications_Impl_SnsMessageValidator
         return implode("\n", $signatureFields) . "\n";
     }
 }
-

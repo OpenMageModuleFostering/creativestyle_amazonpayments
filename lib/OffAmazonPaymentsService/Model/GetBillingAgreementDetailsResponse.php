@@ -17,10 +17,10 @@
 
 /**
  * OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>GetBillingAgreementDetailsResult: OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResult</li>
  * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
  *
@@ -31,12 +31,12 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Construct new OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>GetBillingAgreementDetailsResult: OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResult</li>
      * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
      *
@@ -45,12 +45,12 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
     public function __construct ($data = null)
     {
         $this->_fields = array(
-            
+
             'GetBillingAgreementDetailsResult' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResult'
             ),
-            
+
             'ResponseMetadata' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_ResponseMetadata'
@@ -62,16 +62,16 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Construct OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse from XML string
-     * 
+     *
      * @param string $xml XML string to construct from
-     * @return OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse 
+     * @return OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse
      */
     public static function fromXML ($xml)
     {
         $dom = new DOMDocument();
         $dom->loadXML($xml);
         $xpath = new DOMXPath($dom);
-        $xpath->registerNamespace('a', 
+        $xpath->registerNamespace('a',
                 'http://mws.amazonservices.com/schema/OffAmazonPayments/2013-01-01');
         $response = $xpath->query('//a:GetBillingAgreementDetailsResponse');
         if ($response->length == 1) {
@@ -79,15 +79,15 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
                     ($response->item(0)));
         } else {
             throw new Exception(
-                    "Unable to construct OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse from provided XML. 
+                    "Unable to construct OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse from provided XML.
                                   Make sure that GetBillingAgreementDetailsResponse is a root element");
         }
     }
 
     /**
      * Gets the value of the GetBillingAgreementDetailsResult.
-     * 
-     * @return GetBillingAgreementDetailsResult GetBillingAgreementDetailsResult
+     *
+     * @return OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResult GetBillingAgreementDetailsResult
      */
     public function getGetBillingAgreementDetailsResult ()
     {
@@ -96,8 +96,8 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Sets the value of the GetBillingAgreementDetailsResult.
-     * 
-     * @param GetBillingAgreementDetailsResult GetBillingAgreementDetailsResult
+     *
+     * @param OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResult GetBillingAgreementDetailsResult
      * @return void
      */
     public function setGetBillingAgreementDetailsResult ($value)
@@ -108,8 +108,8 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Sets the value of the GetBillingAgreementDetailsResult  and returns this instance
-     * 
-     * @param GetBillingAgreementDetailsResult $value GetBillingAgreementDetailsResult
+     *
+     * @param OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResult $value GetBillingAgreementDetailsResult
      * @return OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse instance
      */
     public function withGetBillingAgreementDetailsResult ($value)
@@ -120,7 +120,7 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Checks if GetBillingAgreementDetailsResult  is set
-     * 
+     *
      * @return bool true if GetBillingAgreementDetailsResult property is set
      */
     public function isSetGetBillingAgreementDetailsResult ()
@@ -130,8 +130,8 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Gets the value of the ResponseMetadata.
-     * 
-     * @return ResponseMetadata ResponseMetadata
+     *
+     * @return OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      */
     public function getResponseMetadata ()
     {
@@ -140,8 +140,8 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Sets the value of the ResponseMetadata.
-     * 
-     * @param ResponseMetadata ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      * @return void
      */
     public function setResponseMetadata ($value)
@@ -152,8 +152,8 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Sets the value of the ResponseMetadata  and returns this instance
-     * 
-     * @param ResponseMetadata $value ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata $value ResponseMetadata
      * @return OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse instance
      */
     public function withResponseMetadata ($value)
@@ -164,7 +164,7 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * Checks if ResponseMetadata  is set
-     * 
+     *
      * @return bool true if ResponseMetadata property is set
      */
     public function isSetResponseMetadata ()
@@ -174,7 +174,7 @@ class OffAmazonPaymentsService_Model_GetBillingAgreementDetailsResponse extends 
 
     /**
      * XML Representation for this object
-     * 
+     *
      * @return string XML for this object
      */
     public function toXML ()

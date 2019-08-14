@@ -17,10 +17,10 @@
 
 /**
  * OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>BillingAgreementDetails: OffAmazonPaymentsService_Model_BillingAgreementDetails</li>
  *
  * </ul>
@@ -30,12 +30,12 @@ class OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult extends Of
 
     /**
      * Construct new OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>BillingAgreementDetails: OffAmazonPaymentsService_Model_BillingAgreementDetails</li>
      *
      * </ul>
@@ -43,20 +43,19 @@ class OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult extends Of
     public function __construct ($data = null)
     {
         $this->_fields = array(
-            
+
             'BillingAgreementDetails' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_BillingAgreementDetails'
             )
-        )
-        ;
+        );
         parent::__construct($data);
     }
 
     /**
      * Gets the value of the BillingAgreementDetails.
-     * 
-     * @return BillingAgreementDetails BillingAgreementDetails
+     *
+     * @return OffAmazonPaymentsService_Model_BillingAgreementDetails BillingAgreementDetails
      */
     public function getBillingAgreementDetails ()
     {
@@ -65,8 +64,8 @@ class OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult extends Of
 
     /**
      * Sets the value of the BillingAgreementDetails.
-     * 
-     * @param BillingAgreementDetails BillingAgreementDetails
+     *
+     * @param OffAmazonPaymentsService_Model_BillingAgreementDetails BillingAgreementDetails
      * @return void
      */
     public function setBillingAgreementDetails ($value)
@@ -77,8 +76,8 @@ class OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult extends Of
 
     /**
      * Sets the value of the BillingAgreementDetails  and returns this instance
-     * 
-     * @param BillingAgreementDetails $value BillingAgreementDetails
+     *
+     * @param OffAmazonPaymentsService_Model_BillingAgreementDetails $value BillingAgreementDetails
      * @return OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult instance
      */
     public function withBillingAgreementDetails ($value)
@@ -89,7 +88,7 @@ class OffAmazonPaymentsService_Model_SetBillingAgreementDetailsResult extends Of
 
     /**
      * Checks if BillingAgreementDetails  is set
-     * 
+     *
      * @return bool true if BillingAgreementDetails property is set
      */
     public function isSetBillingAgreementDetails ()

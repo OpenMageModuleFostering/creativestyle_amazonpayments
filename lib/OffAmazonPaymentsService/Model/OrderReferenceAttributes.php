@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_OrderReferenceAttributes
@@ -34,10 +34,10 @@
  * <li>SellerOrderAttributes: OffAmazonPaymentsService_Model_SellerOrderAttributes</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_OrderReferenceAttributes
      * 
@@ -55,42 +55,54 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-
-        'OrderTotal' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_OrderTotal'),
-
-        'PlatformId' => array('FieldValue' => null, 'FieldType' => 'string'),
-
-        'SellerNote' => array('FieldValue' => null, 'FieldType' => 'string'),
-
-        'SellerOrderAttributes' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_SellerOrderAttributes'),
-
+        $this->_fields = array(
+            
+            'OrderTotal' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_OrderTotal'
+            ),
+            
+            'PlatformId' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'SellerNote' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'SellerOrderAttributes' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_SellerOrderAttributes'
+            )
+            
         );
         parent::__construct($data);
     }
-
+    
     /**
      * Gets the value of the OrderTotal.
      * 
      * @return OrderTotal OrderTotal
      */
-    public function getOrderTotal() 
+    public function getOrderTotal()
     {
         return $this->_fields['OrderTotal']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the OrderTotal.
      * 
      * @param OrderTotal OrderTotal
      * @return void
      */
-    public function setOrderTotal($value) 
+    public function setOrderTotal($value)
     {
         $this->_fields['OrderTotal']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the OrderTotal  and returns this instance
      * 
@@ -102,8 +114,8 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
         $this->setOrderTotal($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if OrderTotal  is set
      * 
@@ -112,31 +124,31 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
     public function isSetOrderTotal()
     {
         return !is_null($this->_fields['OrderTotal']['FieldValue']);
-
+        
     }
-
+    
     /**
      * Gets the value of the PlatformId property.
      * 
      * @return string PlatformId
      */
-    public function getPlatformId() 
+    public function getPlatformId()
     {
         return $this->_fields['PlatformId']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the PlatformId property.
      * 
      * @param string PlatformId
      * @return this instance
      */
-    public function setPlatformId($value) 
+    public function setPlatformId($value)
     {
         $this->_fields['PlatformId']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the PlatformId and returns this instance
      * 
@@ -156,31 +168,31 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
      */
     public function isSetPlatformId()
     {
-    	return !is_null($this->_fields['PlatformId']['FieldValue']);
+        return !is_null($this->_fields['PlatformId']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the SellerNote property.
      * 
      * @return string SellerNote
      */
-    public function getSellerNote() 
+    public function getSellerNote()
     {
         return $this->_fields['SellerNote']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the SellerNote property.
      * 
      * @param string SellerNote
      * @return this instance
      */
-    public function setSellerNote($value) 
+    public function setSellerNote($value)
     {
         $this->_fields['SellerNote']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the SellerNote and returns this instance
      * 
@@ -192,8 +204,8 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
         $this->setSellerNote($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if SellerNote is set
      * 
@@ -203,29 +215,29 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
     {
         return !is_null($this->_fields['SellerNote']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the SellerOrderAttributes.
      * 
      * @return SellerOrderAttributes SellerOrderAttributes
      */
-    public function getSellerOrderAttributes() 
+    public function getSellerOrderAttributes()
     {
         return $this->_fields['SellerOrderAttributes']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the SellerOrderAttributes.
      * 
      * @param SellerOrderAttributes SellerOrderAttributes
      * @return void
      */
-    public function setSellerOrderAttributes($value) 
+    public function setSellerOrderAttributes($value)
     {
         $this->_fields['SellerOrderAttributes']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the SellerOrderAttributes  and returns this instance
      * 
@@ -237,8 +249,8 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
         $this->setSellerOrderAttributes($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if SellerOrderAttributes  is set
      * 
@@ -247,10 +259,7 @@ class OffAmazonPaymentsService_Model_OrderReferenceAttributes extends OffAmazonP
     public function isSetSellerOrderAttributes()
     {
         return !is_null($this->_fields['SellerOrderAttributes']['FieldValue']);
-
+        
     }
-
-
-
-
+    
 }

@@ -17,10 +17,10 @@
 
 /**
  * OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>OrderReferenceDetails: OffAmazonPaymentsService_Model_OrderReferenceDetails</li>
  *
  * </ul>
@@ -30,12 +30,12 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult extends Off
 
     /**
      * Construct new OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>OrderReferenceDetails: OffAmazonPaymentsService_Model_OrderReferenceDetails</li>
      *
      * </ul>
@@ -43,20 +43,19 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult extends Off
     public function __construct ($data = null)
     {
         $this->_fields = array(
-            
+
             'OrderReferenceDetails' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_OrderReferenceDetails'
             )
-        )
-        ;
+        );
         parent::__construct($data);
     }
 
     /**
      * Gets the value of the OrderReferenceDetails.
-     * 
-     * @return OrderReferenceDetails OrderReferenceDetails
+     *
+     * @return OffAmazonPaymentsService_Model_OrderReferenceDetails OrderReferenceDetails
      */
     public function getOrderReferenceDetails ()
     {
@@ -65,8 +64,8 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult extends Off
 
     /**
      * Sets the value of the OrderReferenceDetails.
-     * 
-     * @param OrderReferenceDetails OrderReferenceDetails
+     *
+     * @param OffAmazonPaymentsService_Model_OrderReferenceDetails OrderReferenceDetails
      * @return void
      */
     public function setOrderReferenceDetails ($value)
@@ -77,8 +76,8 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult extends Off
 
     /**
      * Sets the value of the OrderReferenceDetails  and returns this instance
-     * 
-     * @param OrderReferenceDetails $value OrderReferenceDetails
+     *
+     * @param OffAmazonPaymentsService_Model_OrderReferenceDetails $value OrderReferenceDetails
      * @return OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult instance
      */
     public function withOrderReferenceDetails ($value)
@@ -89,7 +88,7 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult extends Off
 
     /**
      * Checks if OrderReferenceDetails  is set
-     * 
+     *
      * @return bool true if OrderReferenceDetails property is set
      */
     public function isSetOrderReferenceDetails ()

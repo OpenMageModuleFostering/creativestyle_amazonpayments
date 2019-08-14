@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_GetRefundDetailsResult
@@ -31,10 +31,10 @@
  * <li>RefundDetails: OffAmazonPaymentsService_Model_RefundDetails</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_GetRefundDetailsResult extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_GetRefundDetailsResult
      * 
@@ -49,40 +49,43 @@ class OffAmazonPaymentsService_Model_GetRefundDetailsResult extends OffAmazonPay
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-
-        'RefundDetails' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_RefundDetails'),
-
+        $this->_fields = array(
+            
+            'RefundDetails' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_RefundDetails'
+            )
+            
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the RefundDetails.
      * 
-     * @return RefundDetails RefundDetails
+     * @return OffAmazonPaymentsService_Model_RefundDetails RefundDetails
      */
-    public function getRefundDetails() 
+    public function getRefundDetails()
     {
         return $this->_fields['RefundDetails']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the RefundDetails.
      * 
-     * @param RefundDetails RefundDetails
+     * @param OffAmazonPaymentsService_Model_RefundDetails RefundDetails
      * @return void
      */
-    public function setRefundDetails($value) 
+    public function setRefundDetails($value)
     {
         $this->_fields['RefundDetails']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the RefundDetails  and returns this instance
      * 
-     * @param RefundDetails $value RefundDetails
+     * @param OffAmazonPaymentsService_Model_RefundDetails $value RefundDetails
      * @return OffAmazonPaymentsService_Model_GetRefundDetailsResult instance
      */
     public function withRefundDetails($value)
@@ -90,8 +93,8 @@ class OffAmazonPaymentsService_Model_GetRefundDetailsResult extends OffAmazonPay
         $this->setRefundDetails($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if RefundDetails  is set
      * 
@@ -100,10 +103,7 @@ class OffAmazonPaymentsService_Model_GetRefundDetailsResult extends OffAmazonPay
     public function isSetRefundDetails()
     {
         return !is_null($this->_fields['RefundDetails']['FieldValue']);
-
+        
     }
-
-
-
-
+    
 }

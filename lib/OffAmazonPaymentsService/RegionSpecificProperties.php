@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 /*******************************************************************************
  *  Copyright 2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -225,4 +225,3 @@ class OffAmazonPaymentsService_RegionSpecificProperties
 		return strcasecmp($environment,'sandbox') == 0;
 	}
 }
-

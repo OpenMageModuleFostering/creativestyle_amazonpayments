@@ -31,16 +31,21 @@ class OffAmazonPaymentsNotifications_Client
      * @var OffAmazonPaymentsNotifications_Impl_SnsMessageValidator
      */
     private $_snsMessageValidator = null;
-    
+
     /**
      * Create an instance of the client class
      * 
      * @return void
      */
-    public function __construct()
+    public function __construct($config = null)
     {
+        $merchantValues = OffAmazonPaymentsService_MerchantValuesBuilder::create($config)->build();
         $this->_snsMessageValidator 
-            = new OffAmazonPaymentsNotifications_Impl_SnsMessageValidator(new OffAmazonPaymentsNotifications_Impl_OpenSslVerifySignature());  
+            = new OffAmazonPaymentsNotifications_Impl_SnsMessageValidator(
+                new OffAmazonPaymentsNotifications_Impl_OpenSslVerifySignature($merchantValues->getCnName(), 
+                new OffAmazonPayments_HttpRequest_Impl_HttpRequestFactoryCurlImpl($merchantValues)
+                )
+            );  
     }
     
     /**

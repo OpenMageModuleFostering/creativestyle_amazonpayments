@@ -17,10 +17,10 @@
 
 /**
  * OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>ConfirmBillingAgreementResult: OffAmazonPaymentsService_Model_ConfirmBillingAgreementResult</li>
  * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
  *
@@ -31,12 +31,12 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Construct new OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>ConfirmBillingAgreementResult: OffAmazonPaymentsService_Model_ConfirmBillingAgreementResult</li>
      * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
      *
@@ -45,33 +45,32 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
     public function __construct ($data = null)
     {
         $this->_fields = array(
-            
+
             'ConfirmBillingAgreementResult' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_ConfirmBillingAgreementResult'
             ),
-            
+
             'ResponseMetadata' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_ResponseMetadata'
             )
-        )
-        ;
+        );
         parent::__construct($data);
     }
 
     /**
      * Construct OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse from XML string
-     * 
+     *
      * @param string $xml XML string to construct from
-     * @return OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse 
+     * @return OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse
      */
     public static function fromXML ($xml)
     {
         $dom = new DOMDocument();
         $dom->loadXML($xml);
         $xpath = new DOMXPath($dom);
-        $xpath->registerNamespace('a', 
+        $xpath->registerNamespace('a',
                 'http://mws.amazonservices.com/schema/OffAmazonPayments/2013-01-01');
         $response = $xpath->query('//a:ConfirmBillingAgreementResponse');
         if ($response->length == 1) {
@@ -79,15 +78,15 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
                     ($response->item(0)));
         } else {
             throw new Exception(
-                    "Unable to construct OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse from provided XML. 
+                    "Unable to construct OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse from provided XML.
                                   Make sure that ConfirmBillingAgreementResponse is a root element");
         }
     }
 
     /**
      * Gets the value of the ConfirmBillingAgreementResult.
-     * 
-     * @return ConfirmBillingAgreementResult ConfirmBillingAgreementResult
+     *
+     * @return OffAmazonPaymentsService_Model_ConfirmBillingAgreementResult ConfirmBillingAgreementResult
      */
     public function getConfirmBillingAgreementResult ()
     {
@@ -96,8 +95,8 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Sets the value of the ConfirmBillingAgreementResult.
-     * 
-     * @param ConfirmBillingAgreementResult ConfirmBillingAgreementResult
+     *
+     * @param OffAmazonPaymentsService_Model_ConfirmBillingAgreementResult ConfirmBillingAgreementResult
      * @return void
      */
     public function setConfirmBillingAgreementResult ($value)
@@ -108,8 +107,8 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Sets the value of the ConfirmBillingAgreementResult  and returns this instance
-     * 
-     * @param ConfirmBillingAgreementResult $value ConfirmBillingAgreementResult
+     *
+     * @param OffAmazonPaymentsService_Model_ConfirmBillingAgreementResult $value ConfirmBillingAgreementResult
      * @return OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse instance
      */
     public function withConfirmBillingAgreementResult ($value)
@@ -120,7 +119,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Checks if ConfirmBillingAgreementResult  is set
-     * 
+     *
      * @return bool true if ConfirmBillingAgreementResult property is set
      */
     public function isSetConfirmBillingAgreementResult ()
@@ -130,8 +129,8 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Gets the value of the ResponseMetadata.
-     * 
-     * @return ResponseMetadata ResponseMetadata
+     *
+     * @return OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      */
     public function getResponseMetadata ()
     {
@@ -140,8 +139,8 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Sets the value of the ResponseMetadata.
-     * 
-     * @param ResponseMetadata ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      * @return void
      */
     public function setResponseMetadata ($value)
@@ -152,8 +151,8 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Sets the value of the ResponseMetadata  and returns this instance
-     * 
-     * @param ResponseMetadata $value ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata $value ResponseMetadata
      * @return OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse instance
      */
     public function withResponseMetadata ($value)
@@ -164,7 +163,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * Checks if ResponseMetadata  is set
-     * 
+     *
      * @return bool true if ResponseMetadata property is set
      */
     public function isSetResponseMetadata ()
@@ -174,7 +173,7 @@ class OffAmazonPaymentsService_Model_ConfirmBillingAgreementResponse extends Off
 
     /**
      * XML Representation for this object
-     * 
+     *
      * @return string XML for this object
      */
     public function toXML ()

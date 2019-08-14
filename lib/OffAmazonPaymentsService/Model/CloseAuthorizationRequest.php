@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_CloseAuthorizationRequest
@@ -33,10 +33,10 @@
  * <li>ClosureReason: string</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_CloseAuthorizationRequest
      * 
@@ -53,36 +53,49 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazon
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-        'SellerId' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AmazonAuthorizationId' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'ClosureReason' => array('FieldValue' => null, 'FieldType' => 'string'),
+        $this->_fields = array(
+            'SellerId' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'AmazonAuthorizationId' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'ClosureReason' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            'MWSAuthToken' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            )
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the SellerId property.
      * 
      * @return string SellerId
      */
-    public function getSellerId() 
+    public function getSellerId()
     {
         return $this->_fields['SellerId']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the SellerId property.
      * 
      * @param string SellerId
      * @return this instance
      */
-    public function setSellerId($value) 
+    public function setSellerId($value)
     {
         $this->_fields['SellerId']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the SellerId and returns this instance
      * 
@@ -94,8 +107,8 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazon
         $this->setSellerId($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if SellerId is set
      * 
@@ -105,29 +118,29 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazon
     {
         return !is_null($this->_fields['SellerId']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AmazonAuthorizationId property.
      * 
      * @return string AmazonAuthorizationId
      */
-    public function getAmazonAuthorizationId() 
+    public function getAmazonAuthorizationId()
     {
         return $this->_fields['AmazonAuthorizationId']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AmazonAuthorizationId property.
      * 
      * @param string AmazonAuthorizationId
      * @return this instance
      */
-    public function setAmazonAuthorizationId($value) 
+    public function setAmazonAuthorizationId($value)
     {
         $this->_fields['AmazonAuthorizationId']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the AmazonAuthorizationId and returns this instance
      * 
@@ -139,8 +152,8 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazon
         $this->setAmazonAuthorizationId($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AmazonAuthorizationId is set
      * 
@@ -150,29 +163,29 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazon
     {
         return !is_null($this->_fields['AmazonAuthorizationId']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the ClosureReason property.
      * 
      * @return string ClosureReason
      */
-    public function getClosureReason() 
+    public function getClosureReason()
     {
         return $this->_fields['ClosureReason']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the ClosureReason property.
      * 
      * @param string ClosureReason
      * @return this instance
      */
-    public function setClosureReason($value) 
+    public function setClosureReason($value)
     {
         $this->_fields['ClosureReason']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the ClosureReason and returns this instance
      * 
@@ -184,8 +197,8 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazon
         $this->setClosureReason($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if ClosureReason is set
      * 
@@ -194,5 +207,38 @@ class OffAmazonPaymentsService_Model_CloseAuthorizationRequest extends OffAmazon
     public function isSetClosureReason()
     {
         return !is_null($this->_fields['ClosureReason']['FieldValue']);
+    }
+    
+    /**
+     * Gets the value of the MWSAuthToken property.
+     *
+     * @return string MWSAuthToken
+     */
+    public function getMWSAuthToken()
+    {
+        return $this->_fields['MWSAuthToken']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the MWSAuthToken and returns this instance
+     *
+     * @param string $value MWSAuthToken
+     * @return OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest instance
+     */
+    public function setMWSAuthToken($value)
+    {
+        $this->_fields['MWSAuthToken']['FieldValue'] = $value;
+        return $this;
+    }
+    
+    
+    /**
+     * Checks if MWSAuthToken is set
+     *
+     * @return bool true if MWSAuthToken is set
+     */
+    public function isSetMWSAuthToken()
+    {
+        return !is_null($this->_fields['MWSAuthToken']['FieldValue']);
     }
 }

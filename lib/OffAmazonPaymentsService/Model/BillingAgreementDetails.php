@@ -35,6 +35,7 @@
  * <li>CreationTimestamp: string</li>
  * <li>ExpirationTimestamp: string</li>
  * <li>BillingAgreementConsent: bool</li>
+ * <li>OrderLanguage: string</li>
  *
  * </ul>
  */
@@ -63,6 +64,7 @@ class OffAmazonPaymentsService_Model_BillingAgreementDetails extends OffAmazonPa
      * <li>CreationTimestamp: string</li>
      * <li>ExpirationTimestamp: string</li>
      * <li>BillingAgreementConsent: bool</li>
+     * <li>OrderLanguage: string</li>
      *
      * </ul>
      */
@@ -134,6 +136,10 @@ class OffAmazonPaymentsService_Model_BillingAgreementDetails extends OffAmazonPa
             'BillingAgreementConsent' => array(
                 'FieldValue' => null,
                 'FieldType' => 'bool'
+            ),
+            'OrderLanguage' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
             )
         );
         parent::__construct($data);
@@ -754,5 +760,51 @@ class OffAmazonPaymentsService_Model_BillingAgreementDetails extends OffAmazonPa
     {
         return ! is_null($this->_fields['BillingAgreementConsent']['FieldValue']);
     }
+    
+    /**
+     * Gets the value of the OrderLanguage.
+     *
+     * @return string OrderLanguage
+     */
+    public function getOrderLanguage()
+    {
+    	return $this->_fields['OrderLanguage']['FieldValue'];
+    }
+    
+    /**
+     * Sets the value of the OrderLanguage.
+     *
+     * @param string OrderLanguage
+     * @return this instance
+     */
+    public function setOrderLanguage($value)
+    {
+    	$this->_fields['OrderLanguage']['FieldValue'] = $value;
+    	return $this;
+    }
+    
+    /**
+     * Sets the value of the OrderLanguage  and returns this instance
+     *
+     * @param ParentDetails $value OrderLanguage
+     * @return OffAmazonPaymentsService_Model_BillingAgreementDetails instance
+     */
+    public function withOrderLanguage($value)
+    {
+    	$this->setOrderLanguage($value);
+    	return $this;
+    }
+    
+    
+    /**
+     * Checks if OrderLanguage is set
+     *
+     * @return bool true if OrderLanguage property is set
+     */
+    public function isSetOrderLanguage()
+    {
+    	return !is_null($this->_fields['OrderLanguage']['FieldValue']);
+    
+    }
+    
 }
-

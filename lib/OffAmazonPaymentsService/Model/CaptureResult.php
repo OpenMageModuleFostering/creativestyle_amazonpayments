@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_CaptureResult
@@ -31,10 +31,10 @@
  * <li>CaptureDetails: OffAmazonPaymentsService_Model_CaptureDetails</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_CaptureResult extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_CaptureResult
      * 
@@ -49,40 +49,43 @@ class OffAmazonPaymentsService_Model_CaptureResult extends OffAmazonPaymentsServ
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-
-        'CaptureDetails' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_CaptureDetails'),
-
+        $this->_fields = array(
+            
+            'CaptureDetails' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_CaptureDetails'
+            )
+            
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the CaptureDetails.
      * 
-     * @return CaptureDetails CaptureDetails
+     * @return OffAmazonPaymentsService_Model_CaptureDetails CaptureDetails
      */
-    public function getCaptureDetails() 
+    public function getCaptureDetails()
     {
         return $this->_fields['CaptureDetails']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the CaptureDetails.
      * 
-     * @param CaptureDetails CaptureDetails
+     * @param OffAmazonPaymentsService_Model_CaptureDetails CaptureDetails
      * @return void
      */
-    public function setCaptureDetails($value) 
+    public function setCaptureDetails($value)
     {
         $this->_fields['CaptureDetails']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the CaptureDetails  and returns this instance
      * 
-     * @param CaptureDetails $value CaptureDetails
+     * @param OffAmazonPaymentsService_Model_CaptureDetails $value CaptureDetails
      * @return OffAmazonPaymentsService_Model_CaptureResult instance
      */
     public function withCaptureDetails($value)
@@ -90,8 +93,8 @@ class OffAmazonPaymentsService_Model_CaptureResult extends OffAmazonPaymentsServ
         $this->setCaptureDetails($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if CaptureDetails  is set
      * 
@@ -100,6 +103,6 @@ class OffAmazonPaymentsService_Model_CaptureResult extends OffAmazonPaymentsServ
     public function isSetCaptureDetails()
     {
         return !is_null($this->_fields['CaptureDetails']['FieldValue']);
-
+        
     }
 }

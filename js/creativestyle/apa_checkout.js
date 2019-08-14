@@ -146,7 +146,7 @@ var APA = {
     renderButtonWidget: function(tooltipContent) {
         if (APA.urls.login != null) {
             $$(APA.layers.payButtons).each(function(button) {
-                new OffAmazonPayments.Button(button.identify(), APA.sellerId, {
+                var buttonParams = {
                     type: button.buttonType || APA.design.payButton.type || 'PwA',
                     size: button.buttonSize || APA.design.payButton.size,
                     color: button.buttonColor || APA.design.payButton.color,
@@ -157,10 +157,14 @@ var APA = {
                         }, APA.urls.pay);
                     },
                     onError: APA.amazonErrorCallback
-                });
+                };
+                if (APA.language) {
+                    buttonParams.language = APA.language;
+                }
+                new OffAmazonPayments.Button(button.identify(), APA.sellerId, buttonParams);
             });
             $$(APA.layers.loginButtons).each(function(button) {
-                new OffAmazonPayments.Button(button.identify(), APA.sellerId, {
+                var buttonParams = {
                     type: button.buttonType || APA.design.loginButton.type || 'LwA',
                     size: button.buttonSize || APA.design.loginButton.size,
                     color: button.buttonColor || APA.design.loginButton.color,
@@ -171,7 +175,11 @@ var APA = {
                         }, APA.urls.login);
                     },
                     onError: APA.amazonErrorCallback
-                });
+                };
+                if (APA.language) {
+                    buttonParams.language = APA.language;
+                }
+                new OffAmazonPayments.Button(button.identify(), APA.sellerId, buttonParams);
             });
         } else {
             $$(APA.layers.payButtons).each(function(button) {
@@ -520,6 +528,7 @@ var APA = {
         return Object.extend(APA, {
             sellerId:         sellerId,
             orderReferenceId: typeof options.orderReferenceId == 'undefined' ? null : options.orderReferenceId,
+            language:         typeof options.language == 'undefined' ? null : options.language,
             live:             typeof options.live == 'undefined' ? true : options.live,
             popup:            typeof options.popup == 'undefined' ? true : options.popup,
             virtual:          typeof options.virtual == 'undefined' ? false : options.virtual,

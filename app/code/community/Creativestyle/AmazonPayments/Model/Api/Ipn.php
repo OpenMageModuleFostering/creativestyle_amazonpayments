@@ -22,7 +22,7 @@ class Creativestyle_AmazonPayments_Model_Api_Ipn extends Creativestyle_AmazonPay
 
     protected function _getApi() {
         if (null === $this->_api) {
-            $this->_api = new OffAmazonPaymentsNotifications_Client();
+            $this->_api = new OffAmazonPaymentsNotifications_Client($this->_getConfig()->getConnectionData(null, $this->_store));
         }
         return $this->_api;
     }

@@ -26,6 +26,6 @@
     APA.Toolbox.initialize(
         <?php echo $this->getSimulationOptions(); ?>,
         {object: 'simulation_object', state: 'simulation_state', reason: 'simulation_reason'},
-        {object: '<?php echo $this->__('--- Select object ---'); ?>', state: '<?php echo $this->__('--- Select state to simulate ---'); ?>', reason: '<?php echo $this->__('--- Select reason code ---'); ?>'}
+        {object: '<?php echo $this->jsQuoteEscape($this->__('--- Select object ---')); ?>', state: '<?php echo $this->jsQuoteEscape($this->__('--- Select state to simulate ---')); ?>', reason: '<?php echo $this->jsQuoteEscape($this->__('--- Select reason code ---')); ?>'}
     );
 </script>

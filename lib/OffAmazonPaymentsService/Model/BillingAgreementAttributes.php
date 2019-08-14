@@ -60,8 +60,7 @@ class OffAmazonPaymentsService_Model_BillingAgreementAttributes extends OffAmazo
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_SellerBillingAgreementAttributes'
             )
-        )
-        ;
+        );
         parent::__construct($data);
     }
 

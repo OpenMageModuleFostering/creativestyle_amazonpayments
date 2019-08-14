@@ -17,7 +17,7 @@
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.6.4</version>
+            <version>1.7.2</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -243,7 +243,7 @@
                                     <ExpiredUnused>
                                         <simulation_allowed>1</simulation_allowed>
                                         <simulation_options>
-                                            <ExpirationTimeInMins type="int">10</ExpirationTimeInMins>
+                                            <ExpirationTimeInMins type="int">5</ExpirationTimeInMins>
                                         </simulation_options>
                                     </ExpiredUnused>
                                     <MaxCapturesProcessed>

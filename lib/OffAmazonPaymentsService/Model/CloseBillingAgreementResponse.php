@@ -55,8 +55,7 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_ResponseMetadata'
             )
-        )
-        ;
+        );
         parent::__construct($data);
     }
 
@@ -87,7 +86,7 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
     /**
      * Gets the value of the CloseBillingAgreementResult.
      * 
-     * @return CloseBillingAgreementResult CloseBillingAgreementResult
+     * @return OffAmazonPaymentsService_Model_CloseBillingAgreementResult CloseBillingAgreementResult
      */
     public function getCloseBillingAgreementResult ()
     {
@@ -97,7 +96,7 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
     /**
      * Sets the value of the CloseBillingAgreementResult.
      * 
-     * @param CloseBillingAgreementResult CloseBillingAgreementResult
+     * @param OffAmazonPaymentsService_Model_CloseBillingAgreementResult CloseBillingAgreementResult
      * @return void
      */
     public function setCloseBillingAgreementResult ($value)
@@ -109,7 +108,7 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
     /**
      * Sets the value of the CloseBillingAgreementResult  and returns this instance
      * 
-     * @param CloseBillingAgreementResult $value CloseBillingAgreementResult
+     * @param OffAmazonPaymentsService_Model_CloseBillingAgreementResult $value CloseBillingAgreementResult
      * @return OffAmazonPaymentsService_Model_CloseBillingAgreementResponse instance
      */
     public function withCloseBillingAgreementResult ($value)
@@ -131,7 +130,7 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
     /**
      * Gets the value of the ResponseMetadata.
      * 
-     * @return ResponseMetadata ResponseMetadata
+     * @return OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      */
     public function getResponseMetadata ()
     {
@@ -141,7 +140,7 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
     /**
      * Sets the value of the ResponseMetadata.
      * 
-     * @param ResponseMetadata ResponseMetadata
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      * @return void
      */
     public function setResponseMetadata ($value)
@@ -153,7 +152,7 @@ class OffAmazonPaymentsService_Model_CloseBillingAgreementResponse extends OffAm
     /**
      * Sets the value of the ResponseMetadata  and returns this instance
      * 
-     * @param ResponseMetadata $value ResponseMetadata
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata $value ResponseMetadata
      * @return OffAmazonPaymentsService_Model_CloseBillingAgreementResponse instance
      */
     public function withResponseMetadata ($value)

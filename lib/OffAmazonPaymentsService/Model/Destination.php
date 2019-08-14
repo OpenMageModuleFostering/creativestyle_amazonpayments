@@ -20,30 +20,30 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_Destination
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>DestinationType: string</li>
  * <li>PhysicalDestination: OffAmazonPaymentsService_Model_Address</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_Destination extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_Destination
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>DestinationType: string</li>
      * <li>PhysicalDestination: OffAmazonPaymentsService_Model_Address</li>
      *
@@ -51,40 +51,46 @@ class OffAmazonPaymentsService_Model_Destination extends OffAmazonPaymentsServic
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-        'DestinationType' => array('FieldValue' => null, 'FieldType' => 'string'),
-
-        'PhysicalDestination' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_Address'),
-
+        $this->_fields = array(
+            'DestinationType' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'PhysicalDestination' => array(
+                'FieldValue' => null,
+                'FieldType' => 'OffAmazonPaymentsService_Model_Address'
+            )
+            
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the DestinationType property.
-     * 
+     *
      * @return string DestinationType
      */
-    public function getDestinationType() 
+    public function getDestinationType()
     {
         return $this->_fields['DestinationType']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the DestinationType property.
-     * 
+     *
      * @param string DestinationType
      * @return this instance
      */
-    public function setDestinationType($value) 
+    public function setDestinationType($value)
     {
         $this->_fields['DestinationType']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the DestinationType and returns this instance
-     * 
+     *
      * @param string $value DestinationType
      * @return OffAmazonPaymentsService_Model_Destination instance
      */
@@ -93,43 +99,43 @@ class OffAmazonPaymentsService_Model_Destination extends OffAmazonPaymentsServic
         $this->setDestinationType($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if DestinationType is set
-     * 
+     *
      * @return bool true if DestinationType  is set
      */
     public function isSetDestinationType()
     {
         return !is_null($this->_fields['DestinationType']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the PhysicalDestination.
-     * 
+     *
      * @return Address PhysicalDestination
      */
-    public function getPhysicalDestination() 
+    public function getPhysicalDestination()
     {
         return $this->_fields['PhysicalDestination']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the PhysicalDestination.
-     * 
+     *
      * @param Address PhysicalDestination
      * @return void
      */
-    public function setPhysicalDestination($value) 
+    public function setPhysicalDestination($value)
     {
         $this->_fields['PhysicalDestination']['FieldValue'] = $value;
         return;
     }
-
+    
     /**
      * Sets the value of the PhysicalDestination  and returns this instance
-     * 
+     *
      * @param Address $value PhysicalDestination
      * @return OffAmazonPaymentsService_Model_Destination instance
      */
@@ -138,16 +144,16 @@ class OffAmazonPaymentsService_Model_Destination extends OffAmazonPaymentsServic
         $this->setPhysicalDestination($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if PhysicalDestination  is set
-     * 
+     *
      * @return bool true if PhysicalDestination property is set
      */
     public function isSetPhysicalDestination()
     {
         return !is_null($this->_fields['PhysicalDestination']['FieldValue']);
-
+        
     }
 }

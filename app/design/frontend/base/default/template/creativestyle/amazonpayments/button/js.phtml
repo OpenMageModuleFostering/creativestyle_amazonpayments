@@ -23,6 +23,10 @@ APA.setup('<?php echo $this->getMerchantId(); ?>', {
     live:    <?php echo ($this->isLive() ? 'true' : 'false'); ?>,
     popup:   <?php echo ($this->isPopup() ? 'true' : 'false'); ?>,
     virtual: <?php echo ($this->isVirtual() ? 'true' : 'false'); ?>,
+<?php if ($this->getDisplayLanguage()): ?>
+    language: '<?php echo $this->getDisplayLanguage(); ?>',
+
+<?php endif; ?>
     layers: {
         payButtons:   '.payButtonWidget',
         loginButtons: '.loginButtonWidget',

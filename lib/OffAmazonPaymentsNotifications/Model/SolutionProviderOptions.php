@@ -109,7 +109,4 @@ class OffAmazonPaymentsNotifications_Model_SolutionProviderOptions extends OffAm
         return count ($this->fields['SolutionProviderOption']['FieldValue']) > 0;
     }
 
-
-
-
 }

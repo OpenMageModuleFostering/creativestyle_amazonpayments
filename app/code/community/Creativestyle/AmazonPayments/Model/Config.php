@@ -32,6 +32,7 @@ class Creativestyle_AmazonPayments_Model_Config {
 
     const XML_PATH_LOGIN_ACTIVE                 = 'amazonpayments/login/active';
     const XML_PATH_LOGIN_CLIENT_ID              = 'amazonpayments/login/client_id';
+    const XML_PATH_LOGIN_LANGUAGE               = 'amazonpayments/login/language';
     const XML_PATH_LOGIN_AUTHENTICATION         = 'amazonpayments/login/authentication';
 
     const XML_PATH_EMAIL_ORDER_CONFIRMATION     = 'amazonpayments/email/order_confirmation';
@@ -77,7 +78,8 @@ class Creativestyle_AmazonPayments_Model_Config {
                 'serviceURL' => '',
                 'widgetURL' => '',
                 'caBundleFile' => '',
-                'clientId' => ''
+                'clientId' => '',
+                'cnName' => 'sns.amazonaws.com'
             );
         }
         return $this->_config[$store];
@@ -114,19 +116,20 @@ class Creativestyle_AmazonPayments_Model_Config {
 
     public function getMerchantValues($store = null) {
         if (null === $this->_merchantValues) {
-            $this->_merchantValues = new OffAmazonPaymentsService_MerchantValues(
-                $this->getConnectionData('merchantId', $store),
-                $this->getConnectionData('accessKey', $store),
-                $this->getConnectionData('secretKey', $store),
-                $this->getConnectionData('applicationName', $store),
-                $this->getConnectionData('applicationVersion', $store),
-                $this->getConnectionData('region', $store),
-                $this->getConnectionData('environment', $store),
-                $this->getConnectionData('serviceURL', $store),
-                $this->getConnectionData('widgetURL', $store),
-                $this->getConnectionData('caBundleFile', $store),
-                $this->getConnectionData('clientId', $store)
-            );
+            $this->_merchantValues = OffAmazonPaymentsService_MerchantValuesBuilder::create(array(
+                'merchantId' => $this->getConnectionData('merchantId', $store),
+                'accessKey' => $this->getConnectionData('accessKey', $store),
+                'secretKey' => $this->getConnectionData('secretKey', $store),
+                'applicationName' => $this->getConnectionData('applicationName', $store),
+                'applicationVersion' => $this->getConnectionData('applicationVersion', $store),
+                'region' => $this->getConnectionData('region', $store),
+                'environment' => $this->getConnectionData('environment', $store),
+                'serviceUrl' => $this->getConnectionData('serviceURL', $store),
+                'widgetUrl' => $this->getConnectionData('widgetURL', $store),
+                'caBundleFile' => $this->getConnectionData('caBundleFile', $store),
+                'clientId' => $this->getConnectionData('clientId', $store),
+                'cnName' => $this->getConnectionData('cnName', $store)
+            ))->build();
         }
         return $this->_merchantValues;
     }
@@ -335,6 +338,10 @@ class Creativestyle_AmazonPayments_Model_Config {
     }
 
     public function isCurrentLocaleAllowed($store = null) {
+        // no language restriction for enabled LwA
+        if (Mage::getStoreConfigFlag(self::XML_PATH_LOGIN_ACTIVE, $store)) {
+            return true;
+        }
         $currentLocale = Mage::app()->getLocale()->getLocaleCode();
         $language = strtolower($currentLocale);
         if (strpos($language, '_')) {
@@ -362,4 +369,14 @@ class Creativestyle_AmazonPayments_Model_Config {
     public function isResponsive($store = null) {
         return Mage::getStoreConfigFlag(self::XML_PATH_DESIGN_RESPONSIVE, $store);
     }
+
+    public function getDisplayLanguage($store = null) {
+        $displayLanguage = Mage::getStoreConfig(self::XML_PATH_LOGIN_LANGUAGE, $store);
+        if (!$displayLanguage) {
+            $currentLocale = Mage::app()->getLocale()->getLocaleCode();
+            $displayLanguage = Mage::getSingleton('amazonpayments/lookup_language')->getLanguageByLocale($currentLocale);
+        }
+        return $displayLanguage;
+    }
+
 }

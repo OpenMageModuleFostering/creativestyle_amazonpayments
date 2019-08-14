@@ -226,11 +226,29 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
                         ));
                         break; // AUTH_PENDING
                     case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_OPEN:
-                    case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED:
                         $stateObject->setData(array(
                             'state' => Mage_Sales_Model_Order::STATE_PROCESSING,
                             'status' => $this->_getConfig()->getAuthorizedOrderStatus($this->_store)
                         ));
+                        break; // AUTH_OPEN
+                    case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED:
+                        switch ($transactionAdapter->getStatusChange(Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_REASON_CODE_KEY)) {
+                            case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_REASON_EXPIRED_UNUSED:
+                            case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_REASON_AMAZON_CLOSED:
+                                $stateObject->setData(array(
+                                    'hold_before_state' => $stateObject->getState(),
+                                    'hold_before_status' => $stateObject->getStatus(),
+                                    'state' => Mage_Sales_Model_Order::STATE_HOLDED,
+                                    'status' => $this->_getConfig()->getHoldedOrderStatus($this->_store)
+                                ));
+                                break;
+                            default:
+                                $stateObject->setData(array(
+                                    'state' => Mage_Sales_Model_Order::STATE_PROCESSING,
+                                    'status' => $this->_getConfig()->getAuthorizedOrderStatus($this->_store)
+                                ));
+                                break;
+                        }
                         break; // AUTH_OPEN
                     case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED:
                         $stateObject->setData(array(
@@ -273,6 +291,10 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
             $this->getOrder()->getBaseCurrency()->formatTxt($transactionAdapter->getTransactionAmount()),
             $transactionAdapter->getTransactionId(),
             sprintf('<strong>%s</strong>', strtoupper($transactionAdapter->getStatusChange(Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_KEY)))
+                . (
+                    $transactionAdapter->getStatusChange(Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_REASON_CODE_KEY) ?
+                    ' (' . $transactionAdapter->getStatusChange(Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_REASON_CODE_KEY) . ')' : ''
+                )
         ));
 
         return $this;

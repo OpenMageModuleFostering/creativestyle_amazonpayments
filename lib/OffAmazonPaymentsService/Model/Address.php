@@ -1,5 +1,4 @@
 <?php
-
 /*******************************************************************************
  *  Copyright 2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +19,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_Address
@@ -41,10 +40,10 @@
  * <li>Phone: string</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_Address
      * 
@@ -69,44 +68,87 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-        'Name' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AddressLine1' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AddressLine2' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'AddressLine3' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'City' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'County' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'District' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'StateOrRegion' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'PostalCode' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'CountryCode' => array('FieldValue' => null, 'FieldType' => 'string'),
-        'Phone' => array('FieldValue' => null, 'FieldType' => 'string'),
+        $this->_fields = array(
+            'Name' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'AddressLine1' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'AddressLine2' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'AddressLine3' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'City' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'County' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'District' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'StateOrRegion' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'PostalCode' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'CountryCode' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            ),
+            
+            'Phone' => array(
+                'FieldValue' => null,
+                'FieldType' => 'string'
+            )
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the Name property.
      * 
      * @return string Name
      */
-    public function getName() 
+    public function getName()
     {
         return $this->_fields['Name']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the Name property.
      * 
      * @param string Name
      * @return this instance
      */
-    public function setName($value) 
+    public function setName($value)
     {
         $this->_fields['Name']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the Name and returns this instance
      * 
@@ -118,8 +160,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setName($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if Name is set
      * 
@@ -129,29 +171,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['Name']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AddressLine1 property.
      * 
      * @return string AddressLine1
      */
-    public function getAddressLine1() 
+    public function getAddressLine1()
     {
         return $this->_fields['AddressLine1']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AddressLine1 property.
      * 
      * @param string AddressLine1
      * @return this instance
      */
-    public function setAddressLine1($value) 
+    public function setAddressLine1($value)
     {
         $this->_fields['AddressLine1']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the AddressLine1 and returns this instance
      * 
@@ -163,8 +205,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setAddressLine1($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AddressLine1 is set
      * 
@@ -174,29 +216,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['AddressLine1']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AddressLine2 property.
      * 
      * @return string AddressLine2
      */
-    public function getAddressLine2() 
+    public function getAddressLine2()
     {
         return $this->_fields['AddressLine2']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AddressLine2 property.
      * 
      * @param string AddressLine2
      * @return this instance
      */
-    public function setAddressLine2($value) 
+    public function setAddressLine2($value)
     {
         $this->_fields['AddressLine2']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the AddressLine2 and returns this instance
      * 
@@ -208,8 +250,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setAddressLine2($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AddressLine2 is set
      * 
@@ -219,29 +261,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['AddressLine2']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the AddressLine3 property.
      * 
      * @return string AddressLine3
      */
-    public function getAddressLine3() 
+    public function getAddressLine3()
     {
         return $this->_fields['AddressLine3']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the AddressLine3 property.
      * 
      * @param string AddressLine3
      * @return this instance
      */
-    public function setAddressLine3($value) 
+    public function setAddressLine3($value)
     {
         $this->_fields['AddressLine3']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the AddressLine3 and returns this instance
      * 
@@ -253,8 +295,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setAddressLine3($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if AddressLine3 is set
      * 
@@ -264,29 +306,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['AddressLine3']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the City property.
      * 
      * @return string City
      */
-    public function getCity() 
+    public function getCity()
     {
         return $this->_fields['City']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the City property.
      * 
      * @param string City
      * @return this instance
      */
-    public function setCity($value) 
+    public function setCity($value)
     {
         $this->_fields['City']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the City and returns this instance
      * 
@@ -298,8 +340,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setCity($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if City is set
      * 
@@ -309,29 +351,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['City']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the County property.
      * 
      * @return string County
      */
-    public function getCounty() 
+    public function getCounty()
     {
         return $this->_fields['County']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the County property.
      * 
      * @param string County
      * @return this instance
      */
-    public function setCounty($value) 
+    public function setCounty($value)
     {
         $this->_fields['County']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the County and returns this instance
      * 
@@ -343,8 +385,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setCounty($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if County is set
      * 
@@ -354,29 +396,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['County']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the District property.
      * 
      * @return string District
      */
-    public function getDistrict() 
+    public function getDistrict()
     {
         return $this->_fields['District']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the District property.
      * 
      * @param string District
      * @return this instance
      */
-    public function setDistrict($value) 
+    public function setDistrict($value)
     {
         $this->_fields['District']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the District and returns this instance
      * 
@@ -388,8 +430,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setDistrict($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if District is set
      * 
@@ -399,29 +441,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['District']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the StateOrRegion property.
      * 
      * @return string StateOrRegion
      */
-    public function getStateOrRegion() 
+    public function getStateOrRegion()
     {
         return $this->_fields['StateOrRegion']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the StateOrRegion property.
      * 
      * @param string StateOrRegion
      * @return this instance
      */
-    public function setStateOrRegion($value) 
+    public function setStateOrRegion($value)
     {
         $this->_fields['StateOrRegion']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the StateOrRegion and returns this instance
      * 
@@ -433,8 +475,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setStateOrRegion($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if StateOrRegion is set
      * 
@@ -444,29 +486,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['StateOrRegion']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the PostalCode property.
      * 
      * @return string PostalCode
      */
-    public function getPostalCode() 
+    public function getPostalCode()
     {
         return $this->_fields['PostalCode']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the PostalCode property.
      * 
      * @param string PostalCode
      * @return this instance
      */
-    public function setPostalCode($value) 
+    public function setPostalCode($value)
     {
         $this->_fields['PostalCode']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the PostalCode and returns this instance
      * 
@@ -478,8 +520,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setPostalCode($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if PostalCode is set
      * 
@@ -489,29 +531,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['PostalCode']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the CountryCode property.
      * 
      * @return string CountryCode
      */
-    public function getCountryCode() 
+    public function getCountryCode()
     {
         return $this->_fields['CountryCode']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the CountryCode property.
      * 
      * @param string CountryCode
      * @return this instance
      */
-    public function setCountryCode($value) 
+    public function setCountryCode($value)
     {
         $this->_fields['CountryCode']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the CountryCode and returns this instance
      * 
@@ -523,8 +565,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setCountryCode($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if CountryCode is set
      * 
@@ -534,29 +576,29 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['CountryCode']['FieldValue']);
     }
-
+    
     /**
      * Gets the value of the Phone property.
      * 
      * @return string Phone
      */
-    public function getPhone() 
+    public function getPhone()
     {
         return $this->_fields['Phone']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the Phone property.
      * 
      * @param string Phone
      * @return this instance
      */
-    public function setPhone($value) 
+    public function setPhone($value)
     {
         $this->_fields['Phone']['FieldValue'] = $value;
         return $this;
     }
-
+    
     /**
      * Sets the value of the Phone and returns this instance
      * 
@@ -568,8 +610,8 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
         $this->setPhone($value);
         return $this;
     }
-
-
+    
+    
     /**
      * Checks if Phone is set
      * 
@@ -579,4 +621,5 @@ class OffAmazonPaymentsService_Model_Address extends OffAmazonPaymentsService_Mo
     {
         return !is_null($this->_fields['Phone']['FieldValue']);
     }
+    
 }

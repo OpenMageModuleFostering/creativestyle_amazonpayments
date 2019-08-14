@@ -75,4 +75,3 @@ class OffAmazonPaymentsNotifications_Impl_Certificate
         return $certSubject;
     }
 }
-

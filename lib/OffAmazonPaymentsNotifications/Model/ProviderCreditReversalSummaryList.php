@@ -109,7 +109,4 @@ class OffAmazonPaymentsNotifications_Model_ProviderCreditReversalSummaryList ext
         return count ($this->fields['ProviderCreditReversalSummary']['FieldValue']) > 0;
     }
 
-
-
-
 }

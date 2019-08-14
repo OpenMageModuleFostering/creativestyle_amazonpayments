@@ -20,7 +20,7 @@
  *  @see OffAmazonPaymentsService_Model
  */
 
-    
+
 
 /**
  * OffAmazonPaymentsService_Model_OrderItemCategories
@@ -31,10 +31,10 @@
  * <li>OrderItemCategory: string</li>
  *
  * </ul>
- */ 
+ */
 class OffAmazonPaymentsService_Model_OrderItemCategories extends OffAmazonPaymentsService_Model
 {
-
+    
     /**
      * Construct new OffAmazonPaymentsService_Model_OrderItemCategories
      * 
@@ -49,38 +49,45 @@ class OffAmazonPaymentsService_Model_OrderItemCategories extends OffAmazonPaymen
      */
     public function __construct($data = null)
     {
-        $this->_fields = array (
-        'OrderItemCategory' => array('FieldValue' => array(), 'FieldType' => array('string')),
+        $this->_fields = array(
+            'OrderItemCategory' => array(
+                'FieldValue' => array(),
+                'FieldType' => array(
+                    'string'
+                )
+            )
         );
         parent::__construct($data);
     }
-
-        /**
+    
+    /**
      * Gets the value of the OrderItemCategory .
      * 
      * @return array of string OrderItemCategory
      */
-    public function getOrderItemCategory() 
+    public function getOrderItemCategory()
     {
         return $this->_fields['OrderItemCategory']['FieldValue'];
     }
-
+    
     /**
      * Sets the value of the OrderItemCategory.
      * 
      * @param string or an array of string OrderItemCategory
      * @return this instance
      */
-    public function setOrderItemCategory($orderItemCategory) 
+    public function setOrderItemCategory($orderItemCategory)
     {
         if (!$this->_isNumericArray($orderItemCategory)) {
-            $orderItemCategory =  array ($orderItemCategory);    
+            $orderItemCategory = array(
+                $orderItemCategory
+            );
         }
         $this->_fields['OrderItemCategory']['FieldValue'] = $orderItemCategory;
         return $this;
     }
-  
-
+    
+    
     /**
      * Sets single or multiple values of OrderItemCategory list via variable number of arguments. 
      * For example, to set the list with two elements, simply pass two values as arguments to this function
@@ -95,9 +102,9 @@ class OffAmazonPaymentsService_Model_OrderItemCategories extends OffAmazonPaymen
             $this->_fields['OrderItemCategory']['FieldValue'][] = $orderItemCategory;
         }
         return $this;
-    }  
-      
-
+    }
+    
+    
     /**
      * Checks if OrderItemCategory list is non-empty
      * 
@@ -105,10 +112,7 @@ class OffAmazonPaymentsService_Model_OrderItemCategories extends OffAmazonPaymen
      */
     public function isSetOrderItemCategory()
     {
-        return count ($this->_fields['OrderItemCategory']['FieldValue']) > 0;
+        return count($this->_fields['OrderItemCategory']['FieldValue']) > 0;
     }
-
-
-
-
+    
 }

@@ -17,10 +17,10 @@
 
 /**
  * OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse
- * 
+ *
  * Properties:
  * <ul>
- * 
+ *
  * <li>CreateOrderReferenceForIdResult: OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult</li>
  * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
  *
@@ -31,12 +31,12 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Construct new OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse
-     * 
-     * @param mixed $data DOMElement or Associative Array to construct from. 
-     * 
+     *
+     * @param mixed $data DOMElement or Associative Array to construct from.
+     *
      * Valid properties:
      * <ul>
-     * 
+     *
      * <li>CreateOrderReferenceForIdResult: OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult</li>
      * <li>ResponseMetadata: OffAmazonPaymentsService_Model_ResponseMetadata</li>
      *
@@ -45,33 +45,32 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
     public function __construct ($data = null)
     {
         $this->_fields = array(
-            
+
             'CreateOrderReferenceForIdResult' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult'
             ),
-            
+
             'ResponseMetadata' => array(
                 'FieldValue' => null,
                 'FieldType' => 'OffAmazonPaymentsService_Model_ResponseMetadata'
             )
-        )
-        ;
+        );
         parent::__construct($data);
     }
 
     /**
      * Construct OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse from XML string
-     * 
+     *
      * @param string $xml XML string to construct from
-     * @return OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse 
+     * @return OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse
      */
     public static function fromXML ($xml)
     {
         $dom = new DOMDocument();
         $dom->loadXML($xml);
         $xpath = new DOMXPath($dom);
-        $xpath->registerNamespace('a', 
+        $xpath->registerNamespace('a',
                 'http://mws.amazonservices.com/schema/OffAmazonPayments/2013-01-01');
         $response = $xpath->query('//a:CreateOrderReferenceForIdResponse');
         if ($response->length == 1) {
@@ -79,15 +78,15 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
                     ($response->item(0)));
         } else {
             throw new Exception(
-                    "Unable to construct OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse from provided XML. 
+                    "Unable to construct OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse from provided XML.
                                   Make sure that CreateOrderReferenceForIdResponse is a root element");
         }
     }
 
     /**
      * Gets the value of the CreateOrderReferenceForIdResult.
-     * 
-     * @return CreateOrderReferenceForIdResult CreateOrderReferenceForIdResult
+     *
+     * @return OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult CreateOrderReferenceForIdResult
      */
     public function getCreateOrderReferenceForIdResult ()
     {
@@ -96,8 +95,8 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Sets the value of the CreateOrderReferenceForIdResult.
-     * 
-     * @param CreateOrderReferenceForIdResult CreateOrderReferenceForIdResult
+     *
+     * @param OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult CreateOrderReferenceForIdResult
      * @return void
      */
     public function setCreateOrderReferenceForIdResult ($value)
@@ -108,8 +107,8 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Sets the value of the CreateOrderReferenceForIdResult  and returns this instance
-     * 
-     * @param CreateOrderReferenceForIdResult $value CreateOrderReferenceForIdResult
+     *
+     * @param OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResult $value CreateOrderReferenceForIdResult
      * @return OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse instance
      */
     public function withCreateOrderReferenceForIdResult ($value)
@@ -120,7 +119,7 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Checks if CreateOrderReferenceForIdResult  is set
-     * 
+     *
      * @return bool true if CreateOrderReferenceForIdResult property is set
      */
     public function isSetCreateOrderReferenceForIdResult ()
@@ -130,8 +129,8 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Gets the value of the ResponseMetadata.
-     * 
-     * @return ResponseMetadata ResponseMetadata
+     *
+     * @return OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      */
     public function getResponseMetadata ()
     {
@@ -140,8 +139,8 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Sets the value of the ResponseMetadata.
-     * 
-     * @param ResponseMetadata ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata ResponseMetadata
      * @return void
      */
     public function setResponseMetadata ($value)
@@ -152,8 +151,8 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Sets the value of the ResponseMetadata  and returns this instance
-     * 
-     * @param ResponseMetadata $value ResponseMetadata
+     *
+     * @param OffAmazonPaymentsService_Model_ResponseMetadata $value ResponseMetadata
      * @return OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse instance
      */
     public function withResponseMetadata ($value)
@@ -164,7 +163,7 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * Checks if ResponseMetadata  is set
-     * 
+     *
      * @return bool true if ResponseMetadata property is set
      */
     public function isSetResponseMetadata ()
@@ -174,7 +173,7 @@ class OffAmazonPaymentsService_Model_CreateOrderReferenceForIdResponse extends O
 
     /**
      * XML Representation for this object
-     * 
+     *
      * @return string XML for this object
      */
     public function toXML ()

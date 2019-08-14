@@ -37,7 +37,7 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
         return null;
     }
 
-    public function setOrderReferenceDetails($orderReferenceId, $orderAmount, $orderCurrency, $magentoOrderId = null) {
+    public function setOrderReferenceDetails($orderReferenceId, $orderAmount, $orderCurrency, $magentoOrderId = null, $storeName = null) {
         $request = new OffAmazonPaymentsService_Model_SetOrderReferenceDetailsRequest(array(
             'SellerId' => $this->getMerchantId(),
             'AmazonOrderReferenceId' => $orderReferenceId,
@@ -47,7 +47,11 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
                     'Amount' => $orderAmount,
                     'CurrencyCode' => $orderCurrency
                 ),
-                'SellerOrderAttributes' => ($magentoOrderId ? array('SellerOrderId' => $magentoOrderId) : null)
+                'SellerOrderAttributes' => array(
+                    'SellerOrderId' => $magentoOrderId ? $magentoOrderId : null,
+                    'StoreName' => $storeName ? $storeName : null,
+                    'CustomInformation' => 'Created by Creativestyle_AmazonPayments/' . (string)Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version') . ' (Platform=Magento/' . trim(Mage::getVersion()) . ')'
+                )
             )
         ));
         $response = $this->_getApi()->setOrderReferenceDetails($request);

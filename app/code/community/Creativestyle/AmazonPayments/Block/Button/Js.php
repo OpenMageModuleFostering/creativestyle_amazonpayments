@@ -50,6 +50,10 @@ class Creativestyle_AmazonPayments_Block_Button_Js
         return '{}';
     }
 
+    public function getDisplayLanguage() {
+        return $this->_getConfig()->getDisplayLanguage();
+    }
+
     public function getCallbackName() {
         return 'window.onAmazonPaymentsReady';
     }

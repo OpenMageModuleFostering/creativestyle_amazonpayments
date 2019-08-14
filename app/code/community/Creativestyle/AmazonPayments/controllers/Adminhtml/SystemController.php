@@ -34,7 +34,8 @@ class Creativestyle_AmazonPayments_Adminhtml_SystemController extends Mage_Admin
                 'serviceURL' => '',
                 'widgetURL' => '',
                 'caBundleFile' => '',
-                'clientId' => ''
+                'clientId' => '',
+                'cnName' => 'sns.amazonaws.com'
             ));
             $apiRequest = new OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest(array(
                 'SellerId' => trim($merchantId),

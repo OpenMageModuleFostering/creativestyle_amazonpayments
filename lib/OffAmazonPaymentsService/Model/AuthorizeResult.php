@@ -51,7 +51,7 @@ class OffAmazonPaymentsService_Model_AuthorizeResult extends OffAmazonPaymentsSe
     {
         $this->_fields = array (
 
-        'AuthorizationDetails' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_AuthorizationDetails'),
+        'AuthorizationDetails' => array('FieldValue' => null, 'FieldType' => 'OffAmazonPaymentsService_Model_AuthorizationDetails')
 
         );
         parent::__construct($data);
@@ -60,7 +60,7 @@ class OffAmazonPaymentsService_Model_AuthorizeResult extends OffAmazonPaymentsSe
         /**
      * Gets the value of the AuthorizationDetails.
      * 
-     * @return AuthorizationDetails AuthorizationDetails
+     * @return OffAmazonPaymentsService_Model_AuthorizationDetails AuthorizationDetails
      */
     public function getAuthorizationDetails() 
     {
@@ -70,7 +70,7 @@ class OffAmazonPaymentsService_Model_AuthorizeResult extends OffAmazonPaymentsSe
     /**
      * Sets the value of the AuthorizationDetails.
      * 
-     * @param AuthorizationDetails AuthorizationDetails
+     * @param OffAmazonPaymentsService_Model_AuthorizationDetails AuthorizationDetails
      * @return void
      */
     public function setAuthorizationDetails($value) 
@@ -82,7 +82,7 @@ class OffAmazonPaymentsService_Model_AuthorizeResult extends OffAmazonPaymentsSe
     /**
      * Sets the value of the AuthorizationDetails  and returns this instance
      * 
-     * @param AuthorizationDetails $value AuthorizationDetails
+     * @param OffAmazonPaymentsService_Model_AuthorizationDetails $value AuthorizationDetails
      * @return OffAmazonPaymentsService_Model_AuthorizeResult instance
      */
     public function withAuthorizationDetails($value)
