@@ -22,8 +22,8 @@
         </div>
         <div class="fieldset config">
             <img class="creativestyle-logo" src="<?php echo $this->getSkinUrl('creativestyle/images/amazon-payments-advanced-creativestyle-logo.png'); ?>" alt="Amazon Payments" />
-            <h3><?php echo $this->__('Login and Pay with Amazon'); ?><small> (v. <?php echo $this->getExtensionVersion(); ?>)</small></h3>
-            <p style="clear:both;"><?php echo $this->__('This extension integrates easily your Magento shop with Pay with Amazon service.'); ?></p>
+            <h3><?php echo $this->__('Amazon Pay and Login with Amazon'); ?><small> (v. <?php echo $this->getExtensionVersion(); ?>)</small></h3>
+            <p style="clear:both;"><?php echo $this->__('This extension integrates easily your Magento shop with Amazon Pay service.'); ?></p>
         </div>
     </div>
     <?php echo $this->getSellerCentralConfigHtml(); ?>
@@ -71,11 +71,11 @@
                 save_button: $('simple-path-validation-save-button'),
                 cancel_button: $('simple-path-validation-cancel-button'),
                 placeholder: '{\n' +
-                    '    merchant_id": "YOUR SELLER ID",\n' +
-                    '    access_key": "YOUR ACCESS KEY ID",\n' +
-                    '    secret_key": "YOUR SECRET ACCESS KEY",\n' +
-                    '    client_id": "YOUR CLIENT ID",\n' +
-                    '    client_secret": "YOUR CLIENT SECRET"\n' +
+                    '    "merchant_id": "YOUR SELLER ID",\n' +
+                    '    "access_key": "YOUR ACCESS KEY ID",\n' +
+                    '    "secret_key": "YOUR SECRET ACCESS KEY",\n' +
+                    '    "client_id": "YOUR CLIENT ID",\n' +
+                    '    "client_secret": "YOUR CLIENT SECRET"\n' +
                     '}'
             }
         });

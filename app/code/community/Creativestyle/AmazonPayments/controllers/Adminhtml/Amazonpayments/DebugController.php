@@ -26,7 +26,7 @@ class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_DebugController exte
 
     public function indexAction() {
         $this->loadLayout()
-            ->_initAction('debug', array('Login and Pay with Amazon', 'Debug data'))
+            ->_initAction('debug', array('Amazon Pay and Login with Amazon', 'Debug data'))
             ->renderLayout();
     }
 

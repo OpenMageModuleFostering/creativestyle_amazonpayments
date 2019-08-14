@@ -23,7 +23,7 @@
     </tabs>
     <sections>
         <amazonpayments translate="label" module="amazonpayments">
-            <label>Pay with Amazon</label>
+            <label>Amazon Pay and Login with Amazon</label>
             <comment>This extension was developed by creativestyle GmbH</comment>
             <class>amazon-payments-advanced-section</class>
             <header_css>amazon-payments-advanced-header</header_css>
@@ -103,7 +103,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <active translate="label">
-                            <label>Enable Pay with Amazon</label>
+                            <label>Enable Amazon Pay</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
@@ -287,9 +287,25 @@
                         </authentication>
                     </fields>
                 </login>
+                <store translate="label">
+                    <label>Store Options</label>
+                    <sort_order>250</sort_order>
+                    <show_in_default>0</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <name translate="label">
+                            <label>Store name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>0</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </name>
+                    </fields>
+                </store>
                 <email translate="label">
                     <label>Email Options</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>300</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -388,7 +404,7 @@
                     </fields>
                 </design>
                 <design_login>
-                    <label>Appearance Settings for Login and Pay with Amazon</label>
+                    <label>Appearance Settings for Amazon Pay and Login with Amazon</label>
                     <sort_order>420</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -422,7 +438,7 @@
                             <show_in_store>1</show_in_store>
                         </login_button_color>
                         <pay_button_type translate="label">
-                            <label>"Pay with Amazon" button type</label>
+                            <label>"Amazon Pay" button type</label>
                             <frontend_type>select</frontend_type>
                             <source_model>amazonpayments/lookup_design_button_type_pay</source_model>
                             <sort_order>40</sort_order>
@@ -431,7 +447,7 @@
                             <show_in_store>1</show_in_store>
                         </pay_button_type>
                         <pay_button_size translate="label">
-                            <label>"Pay with Amazon" button size</label>
+                            <label>"Amazon Pay" button size</label>
                             <frontend_type>select</frontend_type>
                             <source_model>amazonpayments/lookup_design_button_size_loginPay</source_model>
                             <sort_order>50</sort_order>
@@ -440,7 +456,7 @@
                             <show_in_store>1</show_in_store>
                         </pay_button_size>
                         <pay_button_color translate="label">
-                            <label>"Pay with Amazon" button color</label>
+                            <label>"Amazon Pay" button color</label>
                             <frontend_type>select</frontend_type>
                             <source_model>amazonpayments/lookup_design_button_color_loginPay</source_model>
                             <sort_order>60</sort_order>
@@ -451,14 +467,14 @@
                     </fields>
                 </design_login>
                 <design_pay>
-                    <label>Appearance Settings for standalone Pay with Amazon</label>
+                    <label>Appearance Settings for standalone Amazon Pay</label>
                     <sort_order>440</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
                         <button_size translate="label">
-                            <label>"Pay with Amazon" button size</label>
+                            <label>"Amazon Pay" button size</label>
                             <frontend_type>select</frontend_type>
                             <source_model>amazonpayments/lookup_design_button_size</source_model>
                             <sort_order>10</sort_order>
@@ -467,7 +483,7 @@
                             <show_in_store>1</show_in_store>
                         </button_size>
                         <button_color translate="label">
-                            <label>"Pay with Amazon" button color</label>
+                            <label>"Amazon Pay" button color</label>
                             <frontend_type>select</frontend_type>
                             <source_model>amazonpayments/lookup_design_button_color</source_model>
                             <sort_order>20</sort_order>

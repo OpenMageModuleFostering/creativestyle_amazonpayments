@@ -21,7 +21,7 @@
             <sort_order>99</sort_order>
             <children>
                 <amazonpayments translate="title" module="amazonpayments">
-                    <title>Login and Pay with Amazon</title>
+                    <title>Amazon Pay and Login with Amazon</title>
                     <sort_order>1</sort_order>
                     <children>
                         <debug translate="title">
@@ -72,7 +72,7 @@
                         <title>creativestyle Extensions</title>
                         <children>
                             <amazonpayments translate="title" module="amazonpayments">
-                                <title>Login and Pay with Amazon</title>
+                                <title>Amazon Pay and Login with Amazon</title>
                                 <children>
                                     <debug translate="title">
                                         <title>Debug data</title>
@@ -115,7 +115,7 @@
                             <config>
                                 <children>
                                     <amazonpayments translate="title" module="amazonpayments">
-                                        <title>Login and Pay with Amazon settings</title>
+                                        <title>Amazon Pay and Login with Amazon settings</title>
                                     </amazonpayments>
                                 </children>
                             </config>

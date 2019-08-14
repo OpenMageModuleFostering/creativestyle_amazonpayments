@@ -53,16 +53,16 @@ class Creativestyle_AmazonPayments_Model_Lookup_Language extends Creativestyle_A
         return $this->_options;
     }
 
-    public function getLanguageByLocale($locale) {
+    public function getLanguageByLocale($locale, $normalize = true) {
         $allowedLanguages = array(self::LANGUAGE_EN_GB, self::LANGUAGE_DE_DE, self::LANGUAGE_FR_FR, self::LANGUAGE_IT_IT, self::LANGUAGE_ES_ES);
-        $locale = str_replace('_', '-', $locale);
-        if (in_array($locale, $allowedLanguages)) {
-            return $locale;
+        $localeNormalize = str_replace('_', '-', $locale);
+        if (in_array($localeNormalize, $allowedLanguages)) {
+            return $normalize ? $localeNormalize : $locale;
         }
-        $localeLanguage = substr($locale, 0, 2);
+        $localeLanguage = substr($localeNormalize, 0, 2);
         foreach ($allowedLanguages as $allowedLanguage) {
             if (false !== strpos($allowedLanguage, $localeLanguage)) {
-                return $allowedLanguage;
+                return $normalize ? $allowedLanguage : str_replace('-', '_', $allowedLanguage);
             }
         }
         return null;

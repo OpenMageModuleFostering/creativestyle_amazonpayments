@@ -70,7 +70,7 @@ final class Creativestyle_AmazonPayments_Model_Logger {
                 fputcsv($fileHandle, $callData, self::_getConfig()->getLogDelimiter(), self::_getConfig()->getLogEnclosure());
                 fclose($fileHandle);
             } else {
-                Mage::log('PAY WITH AMAZON: unable to open ' . self::getAbsoluteLogFilePath('api') . ' for writing.');
+                Mage::log('AMAZON PAY: unable to open ' . self::getAbsoluteLogFilePath('api') . ' for writing.');
             }
         }
     }
@@ -103,7 +103,7 @@ final class Creativestyle_AmazonPayments_Model_Logger {
                 fputcsv($fileHandle, $callData, self::_getConfig()->getLogDelimiter(), self::_getConfig()->getLogEnclosure());
                 fclose($fileHandle);
             } else {
-                Mage::log('PAY WITH AMAZON: unable to open ' . self::getAbsoluteLogFilePath('ipn') . ' for writing.');
+                Mage::log('AMAZON PAY: unable to open ' . self::getAbsoluteLogFilePath('ipn') . ' for writing.');
             }
         }
     }
@@ -125,7 +125,7 @@ final class Creativestyle_AmazonPayments_Model_Logger {
                 fputcsv($fileHandle, $exceptionData, self::_getConfig()->getLogDelimiter(), self::_getConfig()->getLogEnclosure());
                 fclose($fileHandle);
             } else {
-                Mage::log('PAY WITH AMAZON: unable to open ' . self::getAbsoluteLogFilePath('exception') . ' for writing.');
+                Mage::log('AMAZON PAY: unable to open ' . self::getAbsoluteLogFilePath('exception') . ' for writing.');
             }
         }
     }

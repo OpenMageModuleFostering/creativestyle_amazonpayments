@@ -34,6 +34,19 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
         return $addressData;
     }
 
+    /**
+     * Sets cart coupon code from checkout to quote
+     *
+     * @return $this
+     */
+    protected function _setCartCouponCode()
+    {
+        if ($couponCode = $this->getCheckout()->getCartCouponCode()) {
+            $this->getQuote()->setCouponCode($couponCode);
+        }
+        return $this;
+    }
+
     public function savePayment($data) {
         $data = $this->_getPaymentMethod();
         if ($this->getQuote()->isVirtual()) {
@@ -94,6 +107,8 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
             $this->getCheckout()->setStepData('shipping', 'complete', true);
         }
 
+        $this->_setCartCouponCode();
+
         $this->getQuote()->collectTotals();
         $this->getQuote()->save();
 
@@ -129,6 +144,7 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
     }
 
     public function saveOrder() {
+        $this->getQuote()->collectTotals();
         $this->validate();
         $isNewCustomer = false;
         switch ($this->getCheckoutMethod()) {

@@ -10,14 +10,14 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2017 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.8.2</version>
+            <version>1.8.4</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -116,6 +116,7 @@
         <payment>
             <groups>
                 <amazonpayments>Amazon Payments</amazonpayments>
+                <amazonpayments_legacy>Amazon Payments (Legacy)</amazonpayments_legacy>
             </groups>
         </payment>
         <template>
@@ -408,7 +409,7 @@
     <default>
         <payment>
             <amazonpayments_advanced>
-                <title>Pay with Amazon</title>
+                <title>Amazon Pay</title>
                 <model>amazonpayments/payment_advanced</model>
                 <payment_action>order</payment_action>
                 <order_status>pending</order_status>
@@ -416,7 +417,7 @@
                 <active>1</active>
             </amazonpayments_advanced>
             <amazonpayments_advanced_sandbox>
-                <title>Pay with Amazon (Sandbox)</title>
+                <title>Amazon Pay (Sandbox)</title>
                 <model>amazonpayments/payment_advanced_sandbox</model>
                 <payment_action>order</payment_action>
                 <order_status>pending</order_status>
@@ -426,20 +427,23 @@
             <checkoutbyamazon>
                 <title>Checkout by Amazon</title>
                 <model>amazonpayments/payment_legacy</model>
+                <group>amazonpayments_legacy</group>
                 <active>0</active>
             </checkoutbyamazon>
             <checkoutbyamazon_sandbox>
                 <title>Checkout by Amazon (Sandbox)</title>
                 <model>amazonpayments/payment_legacy</model>
+                <group>amazonpayments_legacy</group>
                 <active>0</active>
             </checkoutbyamazon_sandbox>
         </payment>
         <amazonpayments>
             <account>
-                <region>de</region>
+                <region>EUR</region>
             </account>
             <general>
                 <active>0</active>
+                <login_active>0</login_active>
                 <sandbox>1</sandbox>
                 <sandbox_toolbox>0</sandbox_toolbox>
                 <ipn_active>1</ipn_active>
@@ -447,11 +451,9 @@
                 <authorization_mode>asynchronous</authorization_mode>
                 <new_order_status>pending</new_order_status>
                 <authorized_order_status>processing</authorized_order_status>
-            </general>
-            <login>
-                <active>0</active>
+                <language></language>
                 <authentication>auto</authentication>
-            </login>
+            </general>
             <email>
                 <order_confirmation>1</order_confirmation>
                 <authorization_declined_template>amazonpayments_advanced_authorization_declined</authorization_declined_template>

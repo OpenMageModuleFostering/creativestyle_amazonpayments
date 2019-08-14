@@ -73,6 +73,7 @@ class Creativestyle_AmazonPayments_Advanced_IpnController extends Mage_Core_Cont
                 Creativestyle_AmazonPayments_Model_Logger::logException($e);
                 $this->_sendResponse(503, $e->getMessage());
             }
+            return;
         } else {
             $this->_forward('noRoute');
         }

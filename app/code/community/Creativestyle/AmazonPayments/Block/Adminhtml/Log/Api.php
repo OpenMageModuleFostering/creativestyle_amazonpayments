@@ -20,7 +20,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api extends Creativestyle
     public function __construct() {
         parent::__construct();
         $this->_controller = 'adminhtml_log_api';
-        $this->_headerText = Mage::helper('amazonpayments')->__('Pay with Amazon API Calls');
+        $this->_headerText = Mage::helper('amazonpayments')->__('Amazon Pay API Calls');
     }
 
 }

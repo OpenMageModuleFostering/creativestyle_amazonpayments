@@ -19,6 +19,9 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
 
     protected $_accessToken = null;
 
+    /**
+     * @return Creativestyle_AmazonPayments_Model_Checkout
+     */
     protected function _getCheckout() {
         return Mage::getSingleton('amazonpayments/checkout');
     }
@@ -166,7 +169,7 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
             $this->_getCheckout()->savePayment(null);
 
             $this->loadLayout();
-            $this->getLayout()->getBlock('head')->setTitle($this->__('Pay with Amazon'));
+            $this->getLayout()->getBlock('head')->setTitle($this->__('Amazon Pay'));
             $this->renderLayout();
         } catch (Exception $e) {
             Creativestyle_AmazonPayments_Model_Logger::logException($e);

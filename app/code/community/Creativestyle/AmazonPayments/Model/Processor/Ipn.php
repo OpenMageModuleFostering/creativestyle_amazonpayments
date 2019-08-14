@@ -119,9 +119,10 @@ class Creativestyle_AmazonPayments_Model_Processor_Ipn {
             if ($payment && $transaction) {
                 $transactionAdapter = $this->_getPaymentProcessor($payment)->importTransactionDetails($transaction);
                 if ($transactionAdapter->getStatusChange()) {
+                    $stateObject = new Varien_Object();
                     $transactionAdapter->saveTransaction();
                     $this->_getOrderProcessor($payment->getOrder())
-                        ->importTransactionDetails($transactionAdapter, new Varien_Object())
+                        ->importTransactionDetails($transactionAdapter, $stateObject)
                         ->saveOrder();
                 } else {
                     $relatedTransactionAdapter = $transactionAdapter->processRelatedObjects($payment->getOrder());

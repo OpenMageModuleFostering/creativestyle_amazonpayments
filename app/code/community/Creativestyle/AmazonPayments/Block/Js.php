@@ -63,7 +63,7 @@ class Creativestyle_AmazonPayments_Block_Js extends Creativestyle_AmazonPayments
             foreach ($this->_callbacks as $callbackName => $callbackFunctions) {
                 if (is_array($callbackFunctions)) {
                     array_unshift($callbackFunctions, $callbackName . ' = function() {');
-                    array_push($callbackFunctions, '}');
+                    array_push($callbackFunctions, '};');
                     $output .= implode("\n", $callbackFunctions) . "\n\n";
                 }
             }

@@ -26,14 +26,14 @@ class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_Log_ApiController ex
     protected function _initAction() {
         $this->loadLayout()
             ->_setActiveMenu('creativestyle/amazonpayments/log/api')
-            ->_addBreadcrumb($this->__('Pay with Amazon'), $this->__('Pay with Amazon'))
+            ->_addBreadcrumb($this->__('Amazon Pay'), $this->__('Amazon Pay'))
             ->_addBreadcrumb($this->__('Log preview'), $this->__('Log preview'))
             ->_addBreadcrumb($this->__('API calls'), $this->__('API calls'));
         return $this;
     }
 
     public function indexAction() {
-        $this->_title($this->__('Pay with Amazon'))->_title($this->__('Log preview'))->_title($this->__('API calls'));
+        $this->_title($this->__('Amazon Pay'))->_title($this->__('Log preview'))->_title($this->__('API calls'));
         $this->_initAction()
             ->renderLayout();
     }
@@ -42,7 +42,7 @@ class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_Log_ApiController ex
         $id = $this->getRequest()->getParam('id');
         $log = $this->_getCollection()->getItemById($id);
         if (is_object($log) && $log->getId()) {
-            $this->_title($this->__('Pay with Amazon'))->_title($this->__('Log preview'))->_title($this->__('API calls'))->_title($this->__('Preview'));
+            $this->_title($this->__('Amazon Pay'))->_title($this->__('Log preview'))->_title($this->__('API calls'))->_title($this->__('Preview'));
             $this->_initAction();
             $this->_addContent($this->getLayout()->createBlock('amazonpayments/adminhtml_log_api_view')->setLog($log));
             $this->renderLayout();

@@ -41,9 +41,7 @@ class Creativestyle_AmazonPayments_Model_Payment_Legacy extends Mage_Payment_Mod
     }
 
     public function getCode() {
-        if ($this->getInfoInstance()) {
-            return $this->getInfoInstance()->getMethod();
-        }
-        return $this->_code;
+        return $this->getId();
     }
+
 }

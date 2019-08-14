@@ -18,7 +18,7 @@ abstract class Creativestyle_AmazonPayments_Block_Pay_Abstract extends Creatives
     protected $_widgetHtmlIdPrefix = 'payButtonWidget';
 
     protected function _isActive() {
-        if (($this->_getConfig()->isActive() & Creativestyle_AmazonPayments_Model_Config::PAY_WITH_AMAZON_ACTIVE)
+        if (($this->_getConfig()->isPayActive())
             && $this->_getConfig()->isCurrentIpAllowed()
             && $this->_getConfig()->isCurrentLocaleAllowed()
             && ($this->_isConnectionSecure() || !$this->isPopup()))

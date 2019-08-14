@@ -22,7 +22,7 @@ class Creativestyle_AmazonPayments_Model_Lookup_Design_Button_Type_Pay extends C
     public function toOptionArray() {
         if (null === $this->_options) {
             $this->_options = array(
-                array('value' => self::TYPE_FULL, 'label' => Mage::helper('amazonpayments')->__('Pay with Amazon')),
+                array('value' => self::TYPE_FULL, 'label' => Mage::helper('amazonpayments')->__('Amazon Pay')),
                 array('value' => self::TYPE_SHORT, 'label' => Mage::helper('amazonpayments')->__('Pay')),
                 array('value' => self::TYPE_LOGO, 'label' => Mage::helper('amazonpayments')->__('Amazon logo'))
             );

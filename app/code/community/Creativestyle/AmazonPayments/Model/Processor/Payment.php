@@ -44,8 +44,8 @@ class Creativestyle_AmazonPayments_Model_Processor_Payment {
 
     /**
      * TODO: [getPayment description]
-     *
      * @return Mage_Sales_Model_Order_Payment
+     * @throws Creativestyle_AmazonPayments_Exception
      */
     public function getPayment() {
         if (null === $this->_payment) {
@@ -61,6 +61,15 @@ class Creativestyle_AmazonPayments_Model_Processor_Payment {
      */
     protected function _getApi() {
         return Mage::getSingleton('amazonpayments/api_advanced')->setStore($this->_store);
+    }
+
+    /**
+     * Return Amazon Payments config model instance
+     *
+     * @return Creativestyle_AmazonPayments_Model_Config
+     */
+    protected function _getConfig() {
+        return Mage::getSingleton('amazonpayments/config');
     }
 
     /**
@@ -92,7 +101,7 @@ class Creativestyle_AmazonPayments_Model_Processor_Payment {
                 $amount,
                 $this->getPayment()->getOrder()->getBaseCurrencyCode(),
                 $this->getPayment()->getOrder()->getIncrementId(),
-                $this->getPayment()->getOrder()->getStore()->getFrontendName() . ' (' . $this->getPayment()->getOrder()->getStore()->getName() . ')'
+                $this->_getConfig()->getStoreName()
             );
         }
         $this->_getApi()->confirmOrderReference($transactionSequenceId);

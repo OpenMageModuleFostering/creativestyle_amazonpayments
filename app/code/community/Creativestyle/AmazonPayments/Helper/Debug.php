@@ -221,8 +221,8 @@ class Creativestyle_AmazonPayments_Helper_Debug extends Mage_Core_Helper_Abstrac
      */
     protected function _getGeneralDebugData() {
         return array(
-            'Pay with Amazon extension version' => (string)Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version'),
-            'Pay with Amazon SDK library version' => defined('OffAmazonPaymentsService_Client::APPLICATION_LIBRARY_VERSION')
+            'Amazon Pay extension version' => (string)Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version'),
+            'Amazon Pay SDK library version' => defined('OffAmazonPaymentsService_Client::APPLICATION_LIBRARY_VERSION')
                 ? OffAmazonPaymentsService_Client::APPLICATION_LIBRARY_VERSION
                 : defined('OffAmazonPayments_OffAmazonPaymentsServiceUtils::APPLICATION_LIBRARY_VERSION')
                     ? OffAmazonPayments_OffAmazonPaymentsServiceUtils::APPLICATION_LIBRARY_VERSION

@@ -35,6 +35,8 @@ class Creativestyle_AmazonPayments_Model_Config {
     const XML_PATH_LOGIN_LANGUAGE               = 'amazonpayments/general/language';
     const XML_PATH_LOGIN_AUTHENTICATION         = 'amazonpayments/general/authentication';
 
+    const XML_PATH_STORE_NAME                   = 'amazonpayments/store/name';
+
     const XML_PATH_EMAIL_ORDER_CONFIRMATION     = 'amazonpayments/email/order_confirmation';
     const XML_PATH_EMAIL_DECLINED_TEMPLATE      = 'amazonpayments/email/authorization_declined_template';
     const XML_PATH_EMAIL_DECLINED_IDENTITY      = 'amazonpayments/email/authorization_declined_identity';
@@ -138,6 +140,14 @@ class Creativestyle_AmazonPayments_Model_Config {
         $active = Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_ACTIVE, $store) ? self::PAY_WITH_AMAZON_ACTIVE : 0;
         $active |= Mage::getStoreConfigFlag(self::XML_PATH_LOGIN_ACTIVE, $store) ? self::LOGIN_WITH_AMAZON_ACTIVE : 0;
         return $active;
+    }
+
+    public function isPayActive($store = null) {
+        return Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_ACTIVE, $store);
+    }
+
+    public function isLoginActive($store = null) {
+        return Mage::getStoreConfigFlag(self::XML_PATH_LOGIN_ACTIVE, $store);
     }
 
     public function isIpnActive($store = null) {
@@ -399,4 +409,19 @@ class Creativestyle_AmazonPayments_Model_Config {
         return '';
     }
 
+    /**
+     * @param null|string|bool|int|Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getStoreName($store = null) {
+        $storeName = Mage::getStoreConfig(self::XML_PATH_STORE_NAME, $store);
+        $storeName = $storeName
+            ? $storeName
+            : sprintf(
+                '%s (%s)',
+                Mage::app()->getStore($store)->getFrontendName(),
+                Mage::app()->getStore($store)->getName()
+            );
+        return $storeName;
+    }
 }

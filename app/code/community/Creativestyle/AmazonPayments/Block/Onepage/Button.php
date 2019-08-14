@@ -16,6 +16,14 @@
 class Creativestyle_AmazonPayments_Block_Onepage_Button extends Creativestyle_AmazonPayments_Block_Abstract {
 
     /**
+     * @return bool
+     */
+    protected function _isActive()
+    {
+        return $this->isPayActive();
+    }
+
+    /**
      * Render Amazon Payments button
      *
      * @return string

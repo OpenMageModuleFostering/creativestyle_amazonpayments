@@ -14,9 +14,9 @@
  */
 ?>
 <?php if ($this->isVirtual()): ?>
-var amazonButtonTooltip = '<img src="<?php echo $this->getSkinUrl('creativestyle/images/logo_a-glyph_1x.png'); ?>" alt="<?php echo $this->__('Pay with Amazon'); ?>"/><?php echo $this->__('<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details.'); ?>';
+var amazonButtonTooltip = '<img src="<?php echo $this->getSkinUrl('creativestyle/images/logo_a-glyph_1x.png'); ?>" alt="<?php echo $this->__('Amazon Pay'); ?>"/><?php echo $this->__('<strong>Amazon Pay</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details.'); ?>';
 <?php else: ?>
-var amazonButtonTooltip = '<img src="<?php echo $this->getSkinUrl('creativestyle/images/logo_a-glyph_1x.png'); ?>" alt="<?php echo $this->__('Pay with Amazon'); ?>"/><?php echo $this->__('<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details. All Amazon transactions are protected by Amazon&apos;s A-to-z Guarantee.'); ?>';
+var amazonButtonTooltip = '<img src="<?php echo $this->getSkinUrl('creativestyle/images/logo_a-glyph_1x.png'); ?>" alt="<?php echo $this->__('Amazon Pay'); ?>"/><?php echo $this->__('<strong>Amazon Pay</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details. All Amazon transactions are protected by Amazon&apos;s A-to-z Guarantee.'); ?>';
 <?php endif; ?>
 
 APA.setup('<?php echo $this->getMerchantId(); ?>', {

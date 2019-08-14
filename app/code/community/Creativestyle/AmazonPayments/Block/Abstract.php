@@ -128,7 +128,11 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
     }
 
     public function isLoginActive() {
-        return (bool)($this->_getConfig()->isActive() & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE);
+        return $this->_getConfig()->isLoginActive();
+    }
+
+    public function isPayActive() {
+        return $this->_getConfig()->isPayActive();
     }
 
     public function isLive() {

@@ -18,7 +18,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api_View extends Creative
     public function __construct() {
         parent::__construct();
         $this->_controller = 'adminhtml_log_api';
-        $this->_headerText = $this->__('Pay with Amazon API Call');
+        $this->_headerText = $this->__('Amazon Pay API Call');
         $this->setTemplate('creativestyle/amazonpayments/advanced/log/api/view.phtml');
     }
 

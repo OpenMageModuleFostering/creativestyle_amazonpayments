@@ -20,7 +20,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Exception extends Creativ
     public function __construct() {
         parent::__construct();
         $this->_controller = 'adminhtml_log_exception';
-        $this->_headerText = Mage::helper('amazonpayments')->__('Pay with Amazon Exceptions');
+        $this->_headerText = Mage::helper('amazonpayments')->__('Amazon Pay Exceptions');
     }
 
 }

@@ -18,14 +18,14 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Exception_View extends Cr
     public function __construct() {
         parent::__construct();
         $this->_controller = 'adminhtml_log_exception';
-        $this->_headerText = $this->__('Pay with Amazon Exception');
+        $this->_headerText = $this->__('Amazon Pay Exception');
         $this->setTemplate('creativestyle/amazonpayments/advanced/log/exception/view.phtml');
     }
 
     public function setLog($model) {
         parent::setLog($model);
         if (is_object($model) && $model->getId()) {
-            $this->_headerText = $this->__('Pay with Amazon Exception | %s',
+            $this->_headerText = $this->__('Amazon Pay Exception | %s',
                 $this->getTimestamp()
             );
         }

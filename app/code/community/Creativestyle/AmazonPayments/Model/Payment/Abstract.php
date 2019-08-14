@@ -217,15 +217,16 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
      * @param Mage_Payment_Model_Info $payment
      * @param string $transactionId
      * @param bool $shouldSave
-     *
      * @return array|bool
+     * @throws Creativestyle_AmazonPayments_Exception
      */
     public function fetchTransactionInfo(Mage_Payment_Model_Info $payment, $transactionId, $shouldSave = true) {
         $this->_initInfoInstance($payment);
         if ($transaction = $payment->lookupTransaction($transactionId)) {
             $transactionAdapter = $this->_getPaymentProcessor()->importTransactionDetails($transaction);
             if ($transactionAdapter->getStatusChange()) {
-                $this->_getOrderProcessor()->importTransactionDetails($transactionAdapter, new Varien_Object());
+                $stateObject = new Varien_Object();
+                $this->_getOrderProcessor()->importTransactionDetails($transactionAdapter, $stateObject);
                 if ($shouldSave) $this->_getOrderProcessor()->saveOrder();
             } else {
                 $transactionAdapter->processRelatedObjects($this->getInfoInstance()->getOrder());
@@ -479,7 +480,6 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
      * @return Mage_Payment_Model_Abstract
      */
     public function cancel(Varien_Object $payment) {
-        Mage::log('cancel() method', null, 'apa_devel.log', true);
         $this->_initInfoInstance($payment);
         if ($orderTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER)) {
             if (!$orderTransaction->getIsClosed()) {
@@ -499,7 +499,6 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
      * @return Mage_Payment_Model_Abstract
      */
     public function void(Varien_Object $payment) {
-        Mage::log('void() method', null, 'apa_devel.log', true);
         $this->_initInfoInstance($payment);
         if ($orderTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER)) {
             if (!$orderTransaction->getIsClosed()) {

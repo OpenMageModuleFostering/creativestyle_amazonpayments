@@ -43,7 +43,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Register extends Mage_Adminht
     }
 
     public function getDefaultLanguage() {
-        return Mage::getSingleton('amazonpayments/lookup_language')->getLanguageByLocale(Mage::app()->getLocale()->getLocaleCode());
+        return Mage::getSingleton('amazonpayments/lookup_language')->getLanguageByLocale(Mage::app()->getLocale()->getLocaleCode(), false);
     }
 
     public function getState() {
