@@ -130,6 +130,8 @@
 "Small","Klein"
 "Stores","Stores"
 "Tan","Beige"
+"There has been a problem with the selected payment method from your Amazon account, please choose another payment method from you Amazon account or return to the cart to choose another checkout method.","Es gab ein Problem mit der ausgewählten Zahlungsart aus ihrem Amazon Konto. Bitte wählen Sie eine andere Zahlungsart aus Ihrem Amazon Konto oder wählen Sie einen anderen Checkout im Warenkorb."
+"There has been a problem with the selected payment method from your Amazon account, please update the payment method or choose another one.","Es gab ein Problem mit der ausgewählten Zahlungsart aus ihrem Amazon Konto. Bitte ändern Sie die gewünschte Zahlungsart oder legen Sie eine neue Zahlungsart an."
 "There was an error processing your order. Please contact us or try again later.","Bei der Verarbeitung Ihrer Bestellung ist ein Fehler aufgetreten. Kontaktieren Sie uns oder probieren Sie es bitte später erneut."
 "This extension integrates easily your Magento shop with Pay with Amazon service.","Die Erweiterun integriert den ""Login und Bezahlen mit Amazon"" Service in ihren Magento Shop."
 "This feature requires valid SSL certificate to be installed on this server. Pay attention that the SSL certificate must be issued by a trusted Certificate Authority, self-signed certificates are not permitted.","Diese Funktion erfordert die Installation eines gültigen SSL-Zertifikats auf Ihrem Server. Achten Sie darauf, dass das SSL-Zertifikat von einer vertrauenswürdigen Zertifizierungsstelle ausgestellt wird. Selbst signierte Zertifikate sind nicht gestattet."

@@ -32,7 +32,7 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
      * @param Mage_Sales_Model_Order_Payment $payment
      * @param OffAmazonPaymentsService_Model_AuthorizationDetails|OffAmazonPaymentsNotifications_Model_AuthorizationDetails $authorizationDetails
      */
-    public function sendAuthorizationDeclinedEmail($payment, $authorizationDetails) {
+    public function sendAuthorizationDeclinedEmail($payment, $authorizationDetails = null) {
         $translate = Mage::getSingleton('core/translate');
         /* @var $translate Mage_Core_Model_Translate */
         $translate->setTranslateInline(false);
@@ -102,14 +102,14 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
         return null;
     }
 
-    public function explodeCustomerName($customerName) {
+    public function explodeCustomerName($customerName, $emptyValuePlaceholder = 'n/a') {
         $explodedName = explode(' ', trim($customerName));
         $result = array();
         if (count($explodedName) > 1) {
             $result['firstname'] = reset($explodedName);
             $result['lastname'] = trim(str_replace($result['firstname'], "", $customerName));
         } else {
-            $result['firstname'] = Mage::helper('amazonpayments')->__('n/a');
+            $result['firstname'] = $emptyValuePlaceholder ? Mage::helper('amazonpayments')->__($emptyValuePlaceholder) : null;
             $result['lastname'] = reset($explodedName);
         }
         return new Varien_Object($result);

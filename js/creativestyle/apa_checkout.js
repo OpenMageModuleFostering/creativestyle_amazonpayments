@@ -19,6 +19,7 @@ var APA = {
 
     submitAllowed: false,
     paymentSelected: false,
+    reloaded: false,
 
     Widgets: {
         ShippingMethod: Class.create({
@@ -86,12 +87,9 @@ var APA = {
                 Element.show(loader);
             }
         }
-        if ($('checkoutSteps')) {
-            $('checkoutSteps').insert({
-                top: new Element('div', {'class': 'amazon-widget-overlay'})
-            });
-        }
+        this.showOverlay();
         this.disableSubmit();
+        return this;
     },
 
     unsetOrderSaveWaiting: function() {
@@ -101,10 +99,25 @@ var APA = {
                 Element.hide(loader);
             }
         }
+        this.hideOverlay();
+        return this;
+    },
+
+    showOverlay: function() {
+        if ($('checkoutSteps')) {
+            $('checkoutSteps').insert({
+                top: new Element('div', {'class': 'amazon-widget-overlay'})
+            });
+        }
+        return this;
+    },
+
+    hideOverlay: function() {
         if ($('checkoutSteps') && $('checkoutSteps').down('.amazon-widget-overlay')) {
             $('checkoutSteps').down('.amazon-widget-overlay').remove();
         }
         this.toggleSubmit();
+        return this;
     },
 
     initCheckout: function() {
@@ -220,6 +233,17 @@ var APA = {
         return this;
     },
 
+    renderReadOnlyAddressBookWidget: function() {
+        new OffAmazonPayments.Widgets.AddressBook({
+            sellerId: APA.sellerId,
+            amazonOrderReferenceId: APA.orderReferenceId,
+            design: (APA.design.responsive ? {designMode: 'responsive'} : APA.design.addressBook),
+            onError: APA.amazonErrorCallback,
+            displayMode: 'Read'
+        }).bind(APA.layers.addressBook);
+        return this;
+    },
+
     orderReferenceCreateCallback: function(orderReference) {
         if (!APA.orderReferenceId) {
             APA.orderReferenceId = orderReference.getAmazonOrderReferenceId();
@@ -283,6 +307,11 @@ var APA = {
         APA.selectPayment(true);
     },
 
+    reloadWallet: function() {
+        this.renderReadOnlyAddressBookWidget().renderWalletWidget();
+        return this;
+    },
+
     renderReviewWidget: function(html) {
         new APA.Widgets.Review({
             onError: APA.magentoErrorCallback
@@ -324,6 +353,15 @@ var APA = {
         if (response.error) {
             APA.unsetOrderSaveWaiting();
             APA.magentoErrorCallback(response.error_messages);
+            if (response.reload) {
+                APA.reloaded = false;
+                APA.orderReferenceId = null;
+                APA.initCheckout();
+            };
+            if (response.reload_wallet) {
+                APA.reloaded = true;
+                APA.disableSubmit().reloadWallet();
+            };
         };
     },
 
@@ -336,7 +374,7 @@ var APA = {
             console.trace();
             alert(error.getErrorMessage());
         }
-        var redirectErrors = ['BuyerNotAssociated', 'BuyerSessionExpired', 'StaleOrderReference'];
+        var redirectErrors = ['BuyerNotAssociated', 'BuyerSessionExpired', 'StaleOrderReference', 'InvalidOrderReferenceId'];
         if (redirectErrors.any(function(errorCode) { return errorCode == error.getErrorCode() })) {
             window.location.href = APA.urls.failure;
         }
@@ -423,6 +461,9 @@ var APA = {
             if ($('checkout-agreements')) {
                 params += '&' + Form.serialize($('checkout-agreements'));
             }
+        }
+        if (APA.reloaded) {
+            params += '&' + Object.toQueryString({reloaded: 1});
         }
         params.save = true;
         return params;

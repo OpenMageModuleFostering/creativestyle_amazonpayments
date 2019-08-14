@@ -130,6 +130,8 @@
 "Small","Small"
 "Stores","Stores"
 "Tan","Tan"
+"There has been a problem with the selected payment method from your Amazon account, please choose another payment method from you Amazon account or return to the cart to choose another checkout method.","There has been a problem with the selected payment method from your Amazon account, please choose another payment method from you Amazon account or return to the cart to choose another checkout method."
+"There has been a problem with the selected payment method from your Amazon account, please update the payment method or choose another one.","There has been a problem with the selected payment method from your Amazon account, please update the payment method or choose another one."
 "There was an error processing your order. Please contact us or try again later.","There was an error processing your order. Please contact us or try again later."
 "This extension integrates easily your Magento shop with Pay with Amazon service.","This extension integrates easily your Magento shop with Pay with Amazon service."
 "This feature requires valid SSL certificate to be installed on this server. Pay attention that the SSL certificate must be issued by a trusted Certificate Authority, self-signed certificates are not permitted.","This feature requires valid SSL certificate to be installed on this server. Pay attention that the SSL certificate must be issued by a trusted Certificate Authority, self-signed certificates are not permitted."

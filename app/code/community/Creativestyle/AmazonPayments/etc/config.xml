@@ -17,7 +17,7 @@
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.3.4</version>
+            <version>1.6.0</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -430,6 +430,8 @@
                 <sandbox_toolbox>0</sandbox_toolbox>
                 <ipn_active>1</ipn_active>
                 <payment_action>authorize</payment_action>
+                <authorization_mode>asynchronous</authorization_mode>
+                <new_order_status>pending</new_order_status>
                 <authorized_order_status>processing</authorized_order_status>
             </general>
             <login>
