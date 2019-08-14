@@ -72,9 +72,9 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 return false;
             }
         }
-        if (!$this->_getQuote()->getPayment()->getMethod()) {
-            return false;
-        }
+
+        // TODO add checking if customer selected payment method in the Amazon Wallet widget
+
         return true;
     }
 
@@ -155,7 +155,6 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 return;
             }
 
-            $this->_getCheckout()->savePayment(null);
             $this->_getCheckoutSession()->setCartWasUpdated(false);
 
             $this->_saveOrderReferenceInSessionData();
@@ -270,6 +269,18 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                     return;
                 }
             }
+
+            $giftMessages = $this->getRequest()->getPost('giftmessage');
+            if (is_array($giftMessages)) {
+                Mage::dispatchEvent('checkout_controller_onepage_save_shipping_method',
+                    array(
+                        'request' => $this->getRequest(),
+                        'quote' => $this->_getQuote()
+                    )
+                );
+            }
+
+            $this->_getCheckout()->savePayment(null);
 
             $this->_getQuote()->getPayment()->setTransactionId($this->_getOrderReferenceId());
             $simulation = $this->getRequest()->getPost('simulation', array());

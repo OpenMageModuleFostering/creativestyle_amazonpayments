@@ -30,6 +30,7 @@ class Creativestyle_AmazonPayments_Model_Config {
 
     const XML_PATH_LOGIN_ACTIVE                 = 'amazonpayments/login/active';
     const XML_PATH_LOGIN_CLIENT_ID              = 'amazonpayments/login/client_id';
+    const XML_PATH_LOGIN_AUTHENTICATION         = 'amazonpayments/login/authentication';
 
     const XML_PATH_EMAIL_ORDER_CONFIRMATION     = 'amazonpayments/email/order_confirmation';
     const XML_PATH_EMAIL_DECLINED_TEMPLATE      = 'amazonpayments/email/authorization_declined_template';
@@ -64,13 +65,13 @@ class Creativestyle_AmazonPayments_Model_Config {
     protected function _getConfig($store = null)  {
         if (!array_key_exists($store, $this->_config)) {
             $this->_config[$store] = array(
-                'merchantId' => trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_MERCHANT_ID, $store)),
+                'merchantId' => $this->getMerchantId($store),
                 'accessKey' => trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_ACCESS_KEY, $store)),
                 'secretKey' => trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_SECRET_KEY, $store)),
                 'applicationName' => 'Creativestyle Amazon Payments Advanced Magento Extension',
                 'applicationVersion' => Mage::getConfig()->getNode('modules/Creativestyle_AmazonPayments/version'),
-                'region' => Mage::getStoreConfig(self::XML_PATH_ACCOUNT_REGION, $store),
-                'environment' => Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX, $store) ? 'sandbox' : 'live',
+                'region' => $this->getRegion($store),
+                'environment' => $this->isSandbox($store) ? 'sandbox' : 'live',
                 'serviceURL' => '',
                 'widgetURL' => '',
                 'caBundleFile' => '',
@@ -142,12 +143,16 @@ class Creativestyle_AmazonPayments_Model_Config {
         return Mage::getStoreConfigFlag(self::XML_PATH_DEVELOPER_LOG_ACTIVE, $store);
     }
 
+    public function isSandbox($store = null) {
+        return Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX, $store);
+    }
+
     public function getMerchantId($store = null) {
-        return $this->getConnectionData('merchantId', $store);
+        return trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_MERCHANT_ID, $store));
     }
 
     public function getRegion($store = null) {
-        return $this->getConnectionData('region', $store);
+        return Mage::getStoreConfig(self::XML_PATH_ACCOUNT_REGION, $store);
     }
 
     public function getEnvironment($store = null) {
@@ -156,6 +161,14 @@ class Creativestyle_AmazonPayments_Model_Config {
 
     public function getClientId($store = null) {
         return Mage::getStoreConfig(self::XML_PATH_LOGIN_CLIENT_ID, $store);
+    }
+
+    public function getAuthenticationExperience($store = null) {
+        return Mage::getStoreConfig(self::XML_PATH_LOGIN_AUTHENTICATION, $store);
+    }
+
+    public function isPopupAuthenticationExperience($store = null) {
+        return $this->getAuthenticationExperience($store) == Creativestyle_AmazonPayments_Model_Lookup_Authentication::POPUP_EXPERIENCE;
     }
 
     public function getWidgetUrl($store = null) {
@@ -190,7 +203,7 @@ class Creativestyle_AmazonPayments_Model_Config {
     }
 
     public function showSandboxToolbox($store = null) {
-        return $this->getEnvironment($store) == 'sandbox' && Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX_TOOLBOX, $store);
+        return $this->isSandbox($store) && Mage::getStoreConfigFlag(self::XML_PATH_GENERAL_SANDBOX_TOOLBOX, $store);
     }
 
 

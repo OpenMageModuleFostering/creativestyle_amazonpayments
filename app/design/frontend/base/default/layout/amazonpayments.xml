@@ -73,7 +73,7 @@
             <block type="amazonpayments/checkout" name="amazonpayments.checkout" as="checkout" template="creativestyle/amazonpayments/checkout.phtml">
                 <block type="amazonpayments/checkout_notice" name="amazonpayments.checkout.capture_notice" as="capture_notice" template="creativestyle/amazonpayments/checkout/capture_notice.phtml"/>
                 <block type="checkout/onepage_shipping_method" name="amazonpayments.checkout.shipping_method" as="shipping_method" template="creativestyle/amazonpayments/checkout/shipping_method.phtml"/>
-                <!--<block type="checkout/onepage_shipping_method_additional" name="amazonpayments.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>-->
+                <block type="checkout/onepage_shipping_method_additional" name="amazonpayments.checkout.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
                 <block type="amazonpayments/checkout_sandboxToolbox" name="amazonpayments.checkout.sandbox_toolbox" as="sandbox_toolbox" template="creativestyle/amazonpayments/checkout/sandbox_toolbox.phtml"/>
                 <block type="checkout/onepage_review_info" name="amazonpayments_advanced.checkout.review" as="review" template="checkout/onepage/review/info.phtml">
                     <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/item.phtml</template></action>
@@ -138,6 +138,16 @@
             <action method="setTemplate"><template>page/1column.phtml</template></action>
         </reference>
     </amazonpayments_advanced_login_index>
+    <amazonpayments_advanced_login_redirect>
+        <remove name="right"/>
+        <remove name="left"/>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="amazonpayments/login_redirect" name="amazonpayments_login_redirect" template="creativestyle/amazonpayments/login/redirect.phtml" />
+        </reference>
+    </amazonpayments_advanced_login_redirect>
     <amazonpayments_account_confirm>
         <reference name="content">
             <block type="amazonpayments/login_account_confirm" name="amazonpayments_login_account_confirm" template="creativestyle/amazonpayments/login/form/account_confirm.phtml" />

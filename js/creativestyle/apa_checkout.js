@@ -17,9 +17,8 @@ if (!window.Review)
 
 var APA = {
 
-    live: true,
-    virtual: false,
     submitAllowed: false,
+    paymentSelected: false,
 
     Widgets: {
         ShippingMethod: Class.create({
@@ -105,13 +104,13 @@ var APA = {
         if ($('checkoutSteps') && $('checkoutSteps').down('.amazon-widget-overlay')) {
             $('checkoutSteps').down('.amazon-widget-overlay').remove();
         }
-        this.enableSubmit();
+        this.toggleSubmit();
     },
 
     initCheckout: function() {
         this.disableSubmit().scaffoldPaymentWidget();
         if (this.virtual) {
-            return this.setLoadWaiting(APA.layers.wallet).renderWalletWidget();
+            return this.setLoadWaiting(APA.layers.wallet).renderWalletWidget().allowSubmit(true);
         }
         if (!this.orderReferenceId) {
             return this.setLoadWaiting(APA.layers.shippingMethod, APA.layers.wallet, APA.layers.review).renderAddressBookWidget();
@@ -141,7 +140,7 @@ var APA = {
                     authorization: function() {
                         amazon.Login.authorize({
                             scope: 'profile payments:widget payments:shipping_address',
-                            popup: true
+                            popup: APA.popup
                         }, APA.urls.pay);
                     },
                     onError: APA.amazonErrorCallback
@@ -155,7 +154,7 @@ var APA = {
                     authorization: function() {
                         amazon.Login.authorize({
                             scope: 'profile payments:widget payments:shipping_address',
-                            popup: true
+                            popup: APA.popup
                         }, APA.urls.login);
                     },
                     onError: APA.amazonErrorCallback
@@ -231,6 +230,7 @@ var APA = {
     },
 
     addressSelectCallback: function() {
+        APA.selectPayment(false);
         APA.setLoadWaiting(APA.layers.shippingMethod, APA.layers.review);
         new Ajax.Request(APA.urls.saveShipping, {
             method: 'post',
@@ -273,16 +273,21 @@ var APA = {
             onOrderReferenceCreate: APA.orderReferenceCreateCallback,
             amazonOrderReferenceId: APA.orderReferenceId,
             design: (APA.design.responsive ? {designMode: 'responsive'} : APA.design.wallet),
+            onPaymentSelect: APA.paymentSelectCallback,
             onError: APA.amazonErrorCallback
         }).bind(APA.layers.wallet);
         return this;
+    },
+
+    paymentSelectCallback: function() {
+        APA.selectPayment(true);
     },
 
     renderReviewWidget: function(html) {
         new APA.Widgets.Review({
             onError: APA.magentoErrorCallback
         }).update(html);
-        this.submitAllowed ? this.enableSubmit() : this.disableSubmit();
+        this.toggleSubmit();
         return this;
     },
 
@@ -351,11 +356,19 @@ var APA = {
 
     allowSubmit: function(allowed) {
         this.submitAllowed = allowed;
-        if (allowed) {
+        return this.toggleSubmit();
+    },
+
+    selectPayment: function(selected) {
+        this.paymentSelected = selected;
+        return this.toggleSubmit();
+    },
+
+    toggleSubmit: function() {
+        if (this.submitAllowed && this.paymentSelected) {
             return this.enableSubmit();
-        } else {
-            return this.disableSubmit();
         }
+        return this.disableSubmit();
     },
 
     disableSubmit: function() {
@@ -373,7 +386,7 @@ var APA = {
     },
 
     enableSubmit: function() {
-        if (this.submitAllowed) {
+        if (this.submitAllowed && this.paymentSelected) {
             var buttonContainers = $(this.layers.review).select('div.buttons-set');
             if (buttonContainers) {
                 buttonContainers.each(function(buttonContainer) {
@@ -401,8 +414,9 @@ var APA = {
     getSaveOrderParams: function() {
         var params = '';
         if (APA.virtual) {
+            params += Object.toQueryString({orderReferenceId: APA.orderReferenceId});
             if ($('checkout-agreements')) {
-                params += Form.serialize($('checkout-agreements'));
+                params += '&' + Form.serialize($('checkout-agreements'));
             }
         } else {
             params = Form.serialize($('co-shipping-method-form'));
@@ -459,7 +473,41 @@ var APA = {
                 }
             }, design)
         });
+    },
+
+    setup: function(sellerId, options) {
+        return Object.extend(APA, {
+            sellerId:         sellerId,
+            orderReferenceId: typeof options.orderReferenceId == 'undefined' ? null : options.orderReferenceId,
+            live:             typeof options.live == 'undefined' ? true : options.live,
+            popup:            typeof options.popup == 'undefined' ? true : options.popup,
+            virtual:          typeof options.virtual == 'undefined' ? false : options.virtual,
+            layers: Object.extend({
+                payButtons:         '.payButtonWidget',
+                loginButtons:       '.loginButtonWidget',
+                addressBook:        'addressBookWidgetDiv',
+                wallet:             'walletWidgetDiv',
+                shippingMethod:     'shippingMethodWidgetDiv',
+                review:             'reviewWidgetDiv'
+            }, options.layers),
+            urls: Object.extend({
+                login:              null,
+                pay:                null,
+                checkout:           null,
+                saveShipping:       null,
+                saveShippingMethod: null,
+                saveOrder:          null,
+                success:            null,
+                failure:            null
+            }, options.urls),
+            design: Object.extend({
+                responsive:         true,
+                addressBook:        {size: {width: '440px', height: '260px'}},
+                wallet:             {size: {width: '440px', height: '260px'}},
+                payButton:          {type: 'PwA'},
+                loginButton:        {type: 'LwA'}
+            }, options.design)
+        });
     }
 
 };
-

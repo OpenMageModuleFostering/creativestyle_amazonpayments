@@ -35,21 +35,23 @@
         <div id="walletWidgetDiv"></div>
     </li>
     <?php if (!$this->isVirtual()): ?>
-        <li id="apa-shipping_method" class="section narrow-section store-widget">
-            <div class="step-title">
-                <h2><?php echo $this->helper('checkout')->__('Shipping Method'); ?></h2>
-            </div>
-            <div class="section-content"><?php echo $this->getChildHtml('shipping_method'); ?></div>
-            <div class="section-please-wait"></div>
-        </li>
-        <?php if ($additional = $this->getChildHtml('additional')): ?>
-            <li id="apa-shipping_method_additional" class="section store-widget">
-                <div class="step-title"></div>
-                <div class="section-content" id="amazonpayments-checkout-shipping-method-additional-load">
-                    <?php echo $additional; ?>
+        <form id="co-shipping-method-form" action="">
+            <li id="apa-shipping_method" class="section narrow-section store-widget">
+                <div class="step-title">
+                    <h2><?php echo $this->helper('checkout')->__('Shipping Method'); ?></h2>
                 </div>
+                <div class="section-content"><?php echo $this->getChildHtml('shipping_method'); ?></div>
+                <div class="section-please-wait"></div>
             </li>
-        <?php endif; ?>
+            <?php if ($additional = $this->getChildHtml('additional')): ?>
+                <li id="apa-shipping_method_additional" class="section store-widget">
+                    <div class="step-title"></div>
+                    <div class="section-content" id="amazonpayments-checkout-shipping-method-additional-load">
+                        <?php echo $additional; ?>
+                    </div>
+                </li>
+            <?php endif; ?>
+        </form>
     <?php endif; ?>
     <li id="apa-review" class="section review-section store-widget">
         <div class="step-title">

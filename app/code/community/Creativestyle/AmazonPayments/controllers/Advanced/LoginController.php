@@ -15,6 +15,12 @@
  */
 class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Controller_Front_Action {
 
+    const ACCESS_TOKEN_PARAM_NAME = 'access_token';
+
+    private function _extractAccessTokenFromUrl() {
+        return $this->getRequest()->getParam(self::ACCESS_TOKEN_PARAM_NAME, null);
+    }
+
     private function _getApi() {
         return Mage::getModel('amazonpayments/api_login');
     }
@@ -27,10 +33,22 @@ class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Co
         return Mage::getSingleton('customer/session');
     }
 
+    protected function _getRedirectUrl() {
+        return Mage::getUrl('*/*/index', array(
+            self::ACCESS_TOKEN_PARAM_NAME => '%s',
+            'target' => $this->getRequest()->getParam('target', null)
+        ));
+    }
+
+    protected function _getRedirectFailureUrl() {
+        if (strtolower($this->getRequest()->getParam('target', null)) == 'checkout') {
+            return Mage::getUrl('checkout/cart');
+        }
+        return Mage::getUrl('customer/account/login');
+    }
     protected function _getTargetUrl() {
-        $target = $this->getRequest()->getParam('target', null);
-        if (strtolower($target) == 'checkout') {
-            $accessToken = $this->getRequest()->getParam('access_token', null);
+        if (strtolower($this->getRequest()->getParam('target', null)) == 'checkout') {
+            $accessToken = $this->_extractAccessTokenFromUrl();
             return Mage::getUrl('amazonpayments/advanced_checkout/', array('accessToken' => $accessToken));
         }
         return Mage::getUrl('customer/account/');
@@ -52,7 +70,7 @@ class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Co
     }
 
     public function indexAction() {
-        $accessToken = $this->getRequest()->getParam('access_token', null);
+        $accessToken = $this->_extractAccessTokenFromUrl();
         if (null !== $accessToken) {
             $accessToken = urldecode($accessToken);
             try {
@@ -157,6 +175,16 @@ class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Co
             }
         }
         $this->_forward('noRoute');
+    }
+
+    public function redirectAction() {
+        $this->loadLayout();
+        $this->getLayout()->getBlock('head')->setTitle($this->__('Login with Amazon'));
+        $this->getLayout()->getBlock('amazonpayments_login_redirect')
+            ->setAccessTokenParamName(self::ACCESS_TOKEN_PARAM_NAME)
+            ->setRedirectUrl($this->_getRedirectUrl())
+            ->setFailureUrl($this->_getRedirectFailureUrl());
+        $this->renderLayout();
     }
 
 }

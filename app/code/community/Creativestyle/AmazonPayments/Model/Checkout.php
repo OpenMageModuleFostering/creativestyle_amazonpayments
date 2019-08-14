@@ -20,7 +20,7 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
     }
 
     protected function _getPaymentMethod() {
-        if ($this->_getConfig()->getEnvironment() == 'sandbox') {
+        if ($this->_getConfig()->isSandbox()) {
             return array('method' => 'amazonpayments_advanced_sandbox');
         }
         return array('method' => 'amazonpayments_advanced');

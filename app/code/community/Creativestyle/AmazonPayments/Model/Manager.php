@@ -50,25 +50,14 @@ class Creativestyle_AmazonPayments_Model_Manager {
      * @return bool
      */
     protected function _compareAddresses($address1st, $address2nd) {
-
-        // if 2nd address is incomplete do not compare
-        if (!isset($address2nd['firstname'])
-            || !isset($address2nd['lastname'])
-            || !isset($address2nd['city'])
-            || !isset($address2nd['postcode'])
-            || !isset($address2nd['country_id'])
-            || !isset($address2nd['street']))
-        {
-            return false;
-        }
-
         // compare both addresses, but streets due their array nature in a separate call
         $streetDiff = array_diff($address2nd['street'], $address1st->getStreet());
-        return (($address1st->getFirstname() != $address2nd['firstname'])
-            || ($address1st->getLastname() != $address2nd['lastname'])
-            || ($address1st->getCity() != $address2nd['city'])
-            || ($address1st->getPostcode() != $address2nd['postcode'])
-            || ($address1st->getCountryId() != $address2nd['country_id'])
+        return ((isset($address2nd['firstname']) && $address1st->getFirstname() != $address2nd['firstname'])
+            || (isset($address2nd['lastname']) && $address1st->getLastname() != $address2nd['lastname'])
+            || (isset($address2nd['company']) && $address1st->getCompany() != $address2nd['company'])
+            || (isset($address2nd['city']) && $address1st->getCity() != $address2nd['city'])
+            || (isset($address2nd['postcode']) && $address1st->getPostcode() != $address2nd['postcode'])
+            || (isset($address2nd['country_id']) && $address1st->getCountryId() != $address2nd['country_id'])
             || (!empty($streetDiff)));
     }
 
@@ -84,6 +73,9 @@ class Creativestyle_AmazonPayments_Model_Manager {
             }
             if (isset($newAddress['lastname'])) {
                 $address->setLastname($newAddress['lastname']);
+            }
+            if (isset($newAddress['company'])) {
+                $address->setCompany($newAddress['company']);
             }
             if (isset($newAddress['street'])) {
                 $address->setStreet($newAddress['street']);
@@ -162,26 +154,84 @@ class Creativestyle_AmazonPayments_Model_Manager {
     }
 
     /**
+     * Check whether provided address lines contain PO Box data
+     */
+    protected function _isPoBox($addressLine1, $addressLine2 = null) {
+        if (is_numeric($addressLine1)) {
+            return true;
+        }
+        if (strpos(strtolower($addressLine1), 'packstation') !== false) {
+            return true;
+        }
+        if (strpos(strtolower($addressLine2), 'packstation') !== false) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Convert Amazon AddressLine fields to the array
+     * Try to guess if address lines contain company name or PO Box
+     *
+     * @param string $addressLine1
+     * @param string $addressLine2
+     * @param string $addressLine3
+     * @param string $countryId
+     *
+     * @return array
+     */
+    protected function _convertAmazonAddressLinesToArray($addressLine1, $addressLine2 = null, $addressLine3 = null, $countryId = null) {
+        $data = array('street' => array());
+        if ($countryId && in_array($countryId, array('DE', 'AT'))) {
+            if ($addressLine3) {
+                if ($this->_isPoBox($addressLine1, $addressLine2)) {
+                    $data['street'][] = $addressLine1;
+                    $data['street'][] = $addressLine2;
+                } else {
+                    $data['company'] = trim($addressLine1 . ' ' . $addressLine2);
+                }
+                $data['street'][] = $addressLine3;
+            } else if ($addressLine2) {
+                if ($this->_isPoBox($addressLine1)) {
+                    $data['street'][] = $addressLine1;
+                } else {
+                    $data['company'] = $addressLine1;
+                }
+                $data['street'][] = $addressLine2;
+            } else {
+                $data['street'][] = $addressLine1;
+            }
+        } else {
+            if ($addressLine1) {
+                $data['street'][] = $addressLine1;
+            }
+            if ($addressLine2) {
+                $data['street'][] = $addressLine2;
+            }
+            if ($addressLine3) {
+                $data['street'][] = $addressLine3;
+            }
+        }
+        return $data;
+    }
+
+    /**
      * Converts Amazon address object to the array
      *
      * @return OffAmazonPaymentsService_Model_Address $amazonAddress
      * @return array
      */
     protected function _convertAmazonAddressToArray($amazonAddress) {
-        $address = array('street' => array());
+        $address = $this->_convertAmazonAddressLinesToArray(
+            $amazonAddress->getAddressLine1(),
+            $amazonAddress->getAddressLine2(),
+            $amazonAddress->getAddressLine3(),
+            $amazonAddress->getCountryCode()
+        );
         if ($amazonAddress->isSetName()) {
             $customerName = Mage::helper('amazonpayments')->explodeCustomerName($amazonAddress->getName());
             $address['firstname'] = $customerName->getFirstname();
             $address['lastname'] = $customerName->getLastname();
-        }
-        if ($amazonAddress->isSetAddressLine1()) {
-            $address['street'][] = $amazonAddress->getAddressLine1();
-        }
-        if ($amazonAddress->isSetAddressLine2()) {
-            $address['street'][] = $amazonAddress->getAddressLine2();
-        }
-        if ($amazonAddress->isSetAddressLine3()) {
-            $address['street'][] = $amazonAddress->getAddressLine3();
         }
         if ($amazonAddress->isSetCity()) {
             $address['city'] = $amazonAddress->getCity();

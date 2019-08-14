@@ -261,6 +261,17 @@ class Creativestyle_AmazonPayments_Model_Observer {
         return $this;
     }
 
+    public function setSecureUrls($observer) {
+        $secureUrlsConfigNode = Mage::getConfig()->getNode('frontend/secure_url');
+        if ($this->_getConfig()->isPopupAuthenticationExperience()) {
+            $secureUrlsConfigNode->addChild('amazonpayments_cart', '/checkout/cart');
+        }
+        if ($this->_getConfig()->isSandbox()) {
+            unset($secureUrlsConfigNode->amazonpayments_ipn);
+        }
+        return $this;
+    }
+
 
 
     // **********************************************************************

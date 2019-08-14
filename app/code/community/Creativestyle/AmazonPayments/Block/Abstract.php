@@ -32,7 +32,9 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
 
     protected function _isConnectionSecure() {
         if ($this->_getConfig()->isActive() & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE) {
-            return Mage::app()->getStore()->isCurrentlySecure();
+            if ($this->isPopup()) {
+                return Mage::app()->getStore()->isCurrentlySecure();
+            }
         }
         return true;
     }
@@ -74,11 +76,17 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
         if ($this->_isOnepageCheckout()) {
             return $this->getPayRedirectUrl();
         }
-        return Mage::getUrl('amazonpayments/advanced_login');
+        if ($this->isPopup()) {
+            return Mage::getUrl('amazonpayments/advanced_login');
+        }
+        return Mage::getUrl('amazonpayments/advanced_login/redirect');
     }
 
     public function getPayRedirectUrl() {
-        return Mage::getUrl('amazonpayments/advanced_login', array('target' => 'checkout'));
+        if ($this->isPopup()) {
+            return Mage::getUrl('amazonpayments/advanced_login', array('target' => 'checkout'));
+        }
+        return Mage::getUrl('amazonpayments/advanced_login/redirect', array('target' => 'checkout'));
     }
 
     public function getMerchantId() {
@@ -89,6 +97,9 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
         return $this->_getConfig()->getRegion();
     }
 
+    /**
+     * @deprecated deprecated since 1.3.4
+     */
     public function getEnvironment() {
         return $this->_getConfig()->getEnvironment();
     }
@@ -113,7 +124,7 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
     }
 
     public function isLive() {
-        return $this->getEnvironment() != 'sandbox';
+        return !$this->_getConfig()->isSandbox();
     }
 
     public function isVirtual() {
@@ -134,6 +145,10 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
             Creativestyle_AmazonPayments_Model_Logger::logException($e);
         }
         return '';
+    }
+
+    public function isPopup() {
+        return $this->_getConfig()->isPopupAuthenticationExperience();
     }
 
 }

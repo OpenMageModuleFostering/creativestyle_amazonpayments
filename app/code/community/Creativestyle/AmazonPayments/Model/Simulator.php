@@ -81,7 +81,7 @@ class Creativestyle_AmazonPayments_Model_Simulator {
      */
     public static function simulate(Varien_Object $payment, $transactionType = null) {
         // object state simulations are available only in the sandbox mode
-        if (null !== $transactionType && self::_getConfig()->getEnvironment() == 'sandbox') {
+        if (null !== $transactionType && self::_getConfig()->isSandbox()) {
             $availableSimulations = self::getAvailableSimulations();
             // check if the requested transaction type is on the list of allowed simulations
             if (array_key_exists($transactionType, $availableSimulations)) {

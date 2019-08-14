@@ -32,7 +32,7 @@ class Creativestyle_AmazonPayments_Block_Checkout extends Mage_Checkout_Block_On
     }
 
     public function isLive() {
-        return $this->_getConfig()->getEnvironment() != 'sandbox';
+        return !$this->_getConfig()->isSandbox();
     }
 
     public function isVirtual() {
