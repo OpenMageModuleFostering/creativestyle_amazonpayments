@@ -39,7 +39,8 @@ class Creativestyle_AmazonPayments_Adminhtml_OrderController extends Mage_Adminh
                         $order->getPayment()
                             ->setAmountAuthorized($order->getTotalDue())
                             ->setBaseAmountAuthorized($order->getBaseTotalDue())
-                            ->getMethodInstance()->authorize($order->getPayment(), $order->getBaseTotalDue())->saveOrder($order);
+                            ->getMethodInstance()->authorize($order->getPayment(), $order->getBaseTotalDue());
+                        $order->save();
                     }
                 }
             } catch (OffAmazonPaymentsService_Exception $e) {

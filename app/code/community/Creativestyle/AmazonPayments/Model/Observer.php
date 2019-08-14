@@ -66,19 +66,19 @@ class Creativestyle_AmazonPayments_Model_Observer {
             try {
                 $txnType = $transaction->getTxnType();
                 switch (Mage::helper('amazonpayments')->getTransactionStatus($transaction)) {
-                    case Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_PENDING:
+                    case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_PENDING:
                         $recentTransactionId = $this->_fetchTransactionInfo($transaction)->getId();
                         $count++;
                         usleep(self::DATA_POLL_SLEEP_BETWEEN_TIME);
                         break;
-                    case Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_SUSPENDED:
+                    case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_SUSPENDED:
                         if ($txnType == Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER) {
                             $recentTransactionId = $this->_fetchTransactionInfo($transaction)->getId();
                             $count++;
                             usleep(self::DATA_POLL_SLEEP_BETWEEN_TIME);
                         }
                         break;
-                    case Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_OPEN:
+                    case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_OPEN:
                         $txnAge = floor(($dateModel->timestamp() - $dateModel->timestamp($transaction->getCreatedAt())) / (60 * 60 * 24));
                         if (($txnType == Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER && $txnAge > 180) ||
                             ($txnType == Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH && $txnAge > 30)) {
@@ -111,22 +111,22 @@ class Creativestyle_AmazonPayments_Model_Observer {
     }
 
     protected function _shouldUpdateParentTransaction($transaction) {
-        switch ($transaction->getTxnType()) {
+        switch ($transaction->getTxnType() && !$transaction->getData('skip_update_parent_transaction')) {
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH:
                 return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_DECLINED,
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_CLOSED
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED,
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED
                 ));
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE:
                 return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_COMPLETED,
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_DECLINED,
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_CLOSED
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED,
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED,
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED
                 ));
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND:
                 return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_COMPLETED,
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_DECLINED
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED,
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED
                 ));
         }
         return false;
@@ -135,6 +135,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
     protected function _updateParentTransaction($transaction) {
         if ($this->_shouldUpdateParentTransaction($transaction)) {
             if ($parentTransaction = $transaction->getParentTransaction()) {
+                $transaction->setData('skip_update_parent_transaction', true);
                 $this->_fetchTransactionInfo($parentTransaction);
             }
         }
@@ -231,10 +232,10 @@ class Creativestyle_AmazonPayments_Model_Observer {
             $transaction = $observer->getEvent()->getOrderPaymentTransaction();
             if ($transaction->getId() && in_array($transaction->getOrderPaymentObject()->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
                 if (in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_DECLINED,
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_COMPLETED,
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_CANCELED,
-                    Creativestyle_AmazonPayments_Model_Payment_Abstract::TRANSACTION_STATE_CLOSED
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED,
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED,
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CANCELED,
+                    Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED
                 ))) {
                     $transaction->setIsClosed(true);
                 }
