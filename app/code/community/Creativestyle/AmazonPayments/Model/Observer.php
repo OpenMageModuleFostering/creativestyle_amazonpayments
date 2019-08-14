@@ -44,6 +44,10 @@ class Creativestyle_AmazonPayments_Model_Observer {
         return $transaction->save();
     }
 
+    protected function _getTransactionStatus($transaction) {
+        return Mage::helper('amazonpayments')->getTransactionInformation($transaction, Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_KEY);
+    }
+
     protected function _pollTransactionData() {
         $collection = Mage::getModel('sales/order_payment_transaction')->getCollection()
             ->addPaymentInformation(array('method'))
@@ -65,7 +69,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
         foreach ($collection as $transaction) {
             try {
                 $txnType = $transaction->getTxnType();
-                switch (Mage::helper('amazonpayments')->getTransactionStatus($transaction)) {
+                switch ($this->_getTransactionStatus($transaction)) {
                     case Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_PENDING:
                         $recentTransactionId = $this->_fetchTransactionInfo($transaction)->getId();
                         $count++;
@@ -113,19 +117,19 @@ class Creativestyle_AmazonPayments_Model_Observer {
     protected function _shouldUpdateParentTransaction($transaction) {
         switch ($transaction->getTxnType() && !$transaction->getData('skip_update_parent_transaction')) {
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH:
-                return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
+                return in_array($this->_getTransactionStatus($transaction), array(
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED,
                     /* temporary disabled as resulting in missing panrent order transaction for auth & capture */
                     // Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED
                 ));
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE:
-                return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
+                return in_array($this->_getTransactionStatus($transaction), array(
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED,
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED,
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CLOSED
                 ));
             case Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND:
-                return in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
+                return in_array($this->_getTransactionStatus($transaction), array(
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED,
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED
                 ));
@@ -145,13 +149,12 @@ class Creativestyle_AmazonPayments_Model_Observer {
 
     protected function _updateOrderTransaction($transaction, $shouldSave = true) {
         if ($transaction->getTxnType() == Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE) {
-            $txnStatus = strtolower(Mage::helper('amazonpayments')->getTransactionStatus($transaction));
-            if (in_array($txnStatus, array('completed', 'closed'))) {
+            if ($this->_getTransactionStatus($transaction) == Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED) {
                 $payment = $transaction->getOrderPaymentObject();
                 if ($payment) {
-                    $payment->getMethodInstance()
-                        ->setOrder($transaction->getOrder())
-                        ->closeOrderReference($payment);
+                    Mage::getModel('amazonpayments/processor_payment')
+                        ->setPaymentObject($payment)
+                        ->closeOrderReference();
                 }
             }
         }
@@ -232,7 +235,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
         try {
             $transaction = $observer->getEvent()->getOrderPaymentTransaction();
             if ($transaction->getId() && in_array($transaction->getOrderPaymentObject()->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
-                if (in_array(Mage::helper('amazonpayments')->getTransactionStatus($transaction), array(
+                if (in_array($this->_getTransactionStatus($transaction), array(
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_DECLINED,
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED,
                     Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_CANCELED,
@@ -251,6 +254,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
         try {
             $transaction = $observer->getEvent()->getOrderPaymentTransaction();
             if ($transaction->getId() && in_array($transaction->getOrderPaymentObject()->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
+                $this->_updateOrderTransaction($transaction);
                 $this->_updateParentTransaction($transaction);
             }
         } catch (Exception $e) {

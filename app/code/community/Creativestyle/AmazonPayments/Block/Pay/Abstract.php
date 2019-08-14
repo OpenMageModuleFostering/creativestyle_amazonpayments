@@ -23,6 +23,9 @@ abstract class Creativestyle_AmazonPayments_Block_Pay_Abstract extends Creatives
             && $this->_getConfig()->isCurrentLocaleAllowed()
             && $this->_isConnectionSecure())
         {
+            if (!$this->isLoginActive() && $this->_quoteHasVirtualItems()) {
+                return false;
+            }
             $methodInstance = $this->isLive() ? Mage::getModel('amazonpayments/payment_advanced') : Mage::getModel('amazonpayments/payment_advanced_sandbox');
             return $methodInstance->isAvailable($this->_getQuote());
         }

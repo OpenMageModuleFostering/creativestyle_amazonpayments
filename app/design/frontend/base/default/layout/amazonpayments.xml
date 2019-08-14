@@ -126,6 +126,14 @@
             </block>
         </reference>
     </customer_account_login>
+    <customer_account_create>
+        <reference name="content">
+            <block type="amazonpayments/login_button" name="amazonpayments_login" template="creativestyle/amazonpayments/login/button/account_login.phtml">
+                <action method="setIdSuffix"><value>div</value></action>
+                <action method="setMoveBefore"><value>form-validate</value></action>
+            </block>
+        </reference>
+    </customer_account_create>
     <customer_account_logoutsuccess translate="label">
         <reference name="amazonpayments.js">
             <block type="amazonpayments/login_js" name="amazonpayments.js.logout" as="amazonpayments_logout_js" template="creativestyle/amazonpayments/login/logout.phtml"/>

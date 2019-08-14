@@ -172,4 +172,26 @@ class Creativestyle_AmazonPayments_Model_Processor_Payment {
         return $this->_importTransactionDetails($transaction, $transactionDetails);
     }
 
+    /**
+     * Cancel order reference on Amazon Payments gateway
+     */
+    public function cancelOrderReference() {
+        $orderTransaction = $this->getPayment()->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER);
+        if ($orderTransaction && !$orderTransaction->getIsClosed()) {
+            $this->_getApi()->cancelOrderReference($orderTransaction->getTxnId());
+            $orderTransaction->setIsClosed(true)->save();
+        }
+    }
+
+    /**
+     * [closeOrderReference description]
+     */
+    public function closeOrderReference() {
+        $orderTransaction = $this->getPayment()->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER);
+        if ($orderTransaction && !$orderTransaction->getIsClosed()) {
+            $this->_getApi()->closeOrderReference($orderTransaction->getTxnId());
+            $orderTransaction->setIsClosed(true)->save();
+        }
+    }
+
 }

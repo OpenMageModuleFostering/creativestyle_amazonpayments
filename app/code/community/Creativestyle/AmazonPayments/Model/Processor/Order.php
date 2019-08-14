@@ -55,7 +55,7 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
      *
      * @return bool
      */
-    protected function _isPoBox($addressLine1, $addressLine2 = null) {
+    public static function isPoBox($addressLine1, $addressLine2 = null) {
         if (is_numeric($addressLine1)) {
             return true;
         }
@@ -69,6 +69,13 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
     }
 
     /**
+     * @deprecated deprecated since 1.7.4
+     */
+    protected function _isPoBox($addressLine1, $addressLine2 = null) {
+        return self::isPoBox($addressLine1, $addressLine2);
+    }
+
+    /**
      * Convert address object from Amazon Payments API response to Varien_Object
      * indexed with the same keys Magento order address entities
      *
@@ -76,8 +83,8 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
      *
      * @return Varien_Object
      */
-    protected function _mapAmazonAddress($amazonAddress) {
-        $data = $this->_mapAmazonAddressLines(
+    public static function mapAmazonAddress($amazonAddress) {
+        $data = self::mapAmazonAddressLines(
             $amazonAddress->getAddressLine1(),
             $amazonAddress->getAddressLine2(),
             $amazonAddress->getAddressLine3(),
@@ -94,6 +101,13 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
     }
 
     /**
+     * @deprecated deprecated since 1.7.4
+     */
+    protected function _mapAmazonAddress($amazonAddress) {
+        return self::mapAmazonAddress($amazonAddress);
+    }
+
+    /**
      * Convert Amazon AddressLine fields to the array indexed with the same
      * keys Magento order address entities are using. Try to guess if address
      * lines contain company name or PO Box
@@ -105,11 +119,11 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
      *
      * @return array
      */
-    protected function _mapAmazonAddressLines($addressLine1, $addressLine2 = null, $addressLine3 = null, $countryId = null) {
+    public static function mapAmazonAddressLines($addressLine1, $addressLine2 = null, $addressLine3 = null, $countryId = null) {
         $data = array('street' => array());
         if ($countryId && in_array($countryId, array('DE', 'AT'))) {
             if ($addressLine3) {
-                if ($this->_isPoBox($addressLine1, $addressLine2)) {
+                if (self::isPoBox($addressLine1, $addressLine2)) {
                     $data['street'][] = $addressLine1;
                     $data['street'][] = $addressLine2;
                 } else {
@@ -117,7 +131,7 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
                 }
                 $data['street'][] = $addressLine3;
             } else if ($addressLine2) {
-                if ($this->_isPoBox($addressLine1)) {
+                if (self::isPoBox($addressLine1)) {
                     $data['street'][] = $addressLine1;
                 } else {
                     $data['company'] = $addressLine1;
@@ -141,6 +155,13 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
     }
 
     /**
+     * @deprecated deprecated since 1.7.4
+     */
+    protected function _mapAmazonAddressLines($addressLine1, $addressLine2 = null, $addressLine3 = null, $countryId = null) {
+        return self::mapAmazonAddressLines($addressLine1, $addressLine2, $addressLine3, $countryId);
+    }
+
+    /**
      * Convert transaction details object to Varien_Object indexed
      * with the same keys as Magento order entity
      *
@@ -160,12 +181,12 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
             }
             if ($transactionDetails->isSetDestination()) {
                 if ($transactionDetails->getDestination()->isSetPhysicalDestination()) {
-                    $data['shipping_address'] = $this->_mapAmazonAddress($transactionDetails->getDestination()->getPhysicalDestination());
+                    $data['shipping_address'] = self::mapAmazonAddress($transactionDetails->getDestination()->getPhysicalDestination());
                 }
             }
             if ($transactionDetails->isSetBillingAddress()) {
                 if ($transactionDetails->getBillingAddress()->isSetPhysicalAddress()) {
-                    $data['billing_address'] = $this->_mapAmazonAddress($transactionDetails->getBillingAddress()->getPhysicalAddress());
+                    $data['billing_address'] = self::mapAmazonAddress($transactionDetails->getBillingAddress()->getPhysicalAddress());
                     $data['customer_firstname'] = $data['billing_address']->getFirstname();
                     $data['customer_lastname'] = $data['billing_address']->getLastname();
                 }
@@ -176,7 +197,7 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
         // AuthorizationDetails from API response
         elseif ($transactionDetails instanceof OffAmazonPaymentsService_Model_AuthorizationDetails) {
             if ($transactionDetails->isSetAuthorizationBillingAddress()) {
-                $data['billing_address'] = $this->_mapAmazonAddress($transactionDetails->getAuthorizationBillingAddress());
+                $data['billing_address'] = self::mapAmazonAddress($transactionDetails->getAuthorizationBillingAddress());
                 $data['customer_firstname'] = $data['billing_address']->getFirstname();
                 $data['customer_lastname'] = $data['billing_address']->getLastname();
             }
@@ -401,7 +422,8 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
 
         $this->_sendTransactionEmails($transactionAdapter, $stateObject);
 
-        if ($stateObject->getState() != $this->getOrder()->getState() || $stateObject->getStatus() != $this->getOrder()->getStatus()) {
+        if (!($this->getOrder()->isCanceled() || $this->getOrder()->getState() == Mage_Sales_Model_Order::STATE_CLOSED)
+            && ($stateObject->getState() != $this->getOrder()->getState() || $stateObject->getStatus() != $this->getOrder()->getStatus())) {
             $this->getOrder()
                 ->setHoldBeforeState($stateObject->getHoldBeforeState() ? $stateObject->getHoldBeforeState() : null)
                 ->setHoldBeforeStatus($stateObject->getHoldBeforeStatus() ? $stateObject->getHoldBeforeStatus() : null)

@@ -122,8 +122,9 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
     public function preDispatch() {
         parent::preDispatch();
         $this->_orderReferenceId = $this->getRequest()->getParam('orderReferenceId', $this->_getCheckoutSession()->getOrderReferenceId());
-        $this->_accessToken = $this->getRequest()->getParam('accessToken', null);
+        $this->_accessToken = $this->getRequest()->getParam('accessToken', $this->_getCheckoutSession()->getAccessToken());
         $this->_getCheckoutSession()->setOrderReferenceId($this->_orderReferenceId);
+        $this->_getCheckoutSession()->setAccessToken($this->_accessToken);
     }
 
     public function indexAction() {
@@ -171,12 +172,11 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 $this->_getApi()->setOrderReferenceDetails($this->_getOrderReferenceId(), $this->_getQuote()->getBaseGrandTotal(), $this->_getQuote()->getBaseCurrencyCode());
 
                 // fetch address data from Amazon gateway and save it as a billing address
-                $orderReference = $this->_getApi()->getOrderReferenceDetails($this->_getOrderReferenceId());
-                $result = $this->_getCheckout()->saveShipping(array(
-                    'city' => $orderReference->getDestination()->getPhysicalDestination()->getCity(),
-                    'postcode' => $orderReference->getDestination()->getPhysicalDestination()->getPostalCode(),
-                    'country_id' => $orderReference->getDestination()->getPhysicalDestination()->getCountryCode(),
-                    'use_for_shipping' => true
+                $orderReference = $this->_getApi()->getOrderReferenceDetails($this->_getOrderReferenceId(), $this->_getAccessToken());
+                $shippingAddress = Creativestyle_AmazonPayments_Model_Processor_Order::mapAmazonAddress($orderReference->getDestination()->getPhysicalDestination());
+                $result = $this->_getCheckout()->saveShipping(array_merge(
+                    $shippingAddress->toArray(),
+                    array('use_for_shipping' => true)
                 ), false);
             } catch (Exception $e) {
                 Creativestyle_AmazonPayments_Model_Logger::logException($e);

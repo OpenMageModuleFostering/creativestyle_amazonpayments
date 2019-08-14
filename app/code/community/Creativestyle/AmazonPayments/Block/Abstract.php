@@ -68,6 +68,16 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
         return $this->_quote;
     }
 
+    public function _quoteHasVirtualItems() {
+        if ($this->_getQuote()->isVirtual()) return true;
+        foreach ($this->_getQuote()->getAllVisibleItems() as $item) {
+            if ($item->getIsVirtual()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getCheckoutUrl() {
         return Mage::getUrl('amazonpayments/advanced_checkout');
     }

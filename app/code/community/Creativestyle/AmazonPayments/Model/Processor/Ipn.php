@@ -51,12 +51,17 @@ class Creativestyle_AmazonPayments_Model_Processor_Ipn {
      * TODO: [_lookupPayment description]
      *
      * @param  string $orderReferenceId
-     * @return Mage_Sales_Model_Order_Payment|null
+     *
+     * @return Mage_Sales_Model_Order_Payment
+     *
+     * @throws Creativestyle_AmazonPayments_Exception
      */
     protected function _lookupPayment($orderReferenceId) {
         $order = Mage::getModel('sales/order')->loadByAttribute('ext_order_id', $orderReferenceId);
-        if (is_object($order) && $order->getId()) return $order->getPayment();
-        return null;
+        if (!is_object($order) || !$order->getId()) {
+            throw new Creativestyle_AmazonPayments_Exception('Payment transaction with such ID not found');
+        }
+        return $order->getPayment();
     }
 
     /**

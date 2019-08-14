@@ -22,10 +22,11 @@ class Creativestyle_AmazonPayments_Model_Api_Advanced extends Creativestyle_Amaz
         return $this->_api;
     }
 
-    public function getOrderReferenceDetails($orderReferenceId) {
+    public function getOrderReferenceDetails($orderReferenceId, $accessToken = null) {
         $request = new OffAmazonPaymentsService_Model_GetOrderReferenceDetailsRequest(array(
             'SellerId' => $this->getMerchantId(),
-            'AmazonOrderReferenceId' => $orderReferenceId
+            'AmazonOrderReferenceId' => $orderReferenceId,
+            'AddressConsentToken' => $accessToken
         ));
         $response = $this->_getApi()->getOrderReferenceDetails($request);
         if ($response->isSetGetOrderReferenceDetailsResult()) {

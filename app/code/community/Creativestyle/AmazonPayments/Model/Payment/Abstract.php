@@ -343,6 +343,16 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
     }
 
     /**
+     * Payment void
+     */
+    protected function _void() {
+        if (!$this->canVoid($this->getInfoInstance())) {
+            throw new Creativestyle_AmazonPayments_Exception('Operation not allowed');
+        }
+        $this->_getPaymentProcessor()->cancelOrderReference();
+    }
+
+    /**
      * Public wrapper for payment order
      *
      * @param Varien_Object $payment
@@ -462,7 +472,6 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
     }
 
     /**
-     * @todo
      * Cancel payment abstract method
      *
      * @param Varien_Object $payment
@@ -470,12 +479,19 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
      * @return Mage_Payment_Model_Abstract
      */
     public function cancel(Varien_Object $payment) {
+        Mage::log('cancel() method', null, 'apa_devel.log', true);
         $this->_initInfoInstance($payment);
+        if ($orderTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER)) {
+            if (!$orderTransaction->getIsClosed()) {
+                $this->_void();
+            }
+        }
+        // avoid transaction duplicates
+        $payment->setSkipTransactionCreation(true);
         return $this;
     }
 
     /**
-     * @todo
      * Void payment abstract method
      *
      * @param Varien_Object $payment
@@ -483,10 +499,15 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
      * @return Mage_Payment_Model_Abstract
      */
     public function void(Varien_Object $payment) {
+        Mage::log('void() method', null, 'apa_devel.log', true);
         $this->_initInfoInstance($payment);
-        if (!$this->canVoid($payment)) {
-            throw new Creativestyle_AmazonPayments_Exception('Void action is not available');
+        if ($orderTransaction = $payment->lookupTransaction(false, Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER)) {
+            if (!$orderTransaction->getIsClosed()) {
+                $this->_void();
+            }
         }
+        // avoid transaction duplicates
+        $payment->setSkipTransactionCreation(true);
         return $this;
     }
 
@@ -524,6 +545,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
         $this->setStore($payment->getOrder()->getStoreId());
         switch ($paymentAction) {
             case self::ACTION_MANUAL:
+            case self::ACTION_ERP:
                 $orderTransaction = null;
                 $orderReferenceAdapter = $this->_order($this->getInfoInstance()->getOrder()->getBaseTotalDue(), $orderTransaction);
                 $orderReferenceAdapter->validateTransactionStatus();
