@@ -355,6 +355,9 @@ var APA = {
         if (response.success) {
             window.location = APA.urls.success;
         };
+        if (response.logout && typeof amazon != 'undefined') {
+            amazon.Login.logout();
+        };
         if (response.redirect) {
             window.location = response.redirect;
         }

@@ -408,6 +408,7 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
      *
      * @return bool
      *
+     * @throws Creativestyle_AmazonPayments_Exception_InvalidStatus_Unrecoverable
      * @throws Creativestyle_AmazonPayments_Exception_InvalidStatus_Recoverable
      * @throws Creativestyle_AmazonPayments_Exception_InvalidStatus
      * @throws Creativestyle_AmazonPayments_Exception
@@ -436,8 +437,9 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
                                 case self::TRANSACTION_REASON_INVALID_PAYMENT:
                                     throw new Creativestyle_AmazonPayments_Exception_InvalidStatus_Recoverable('Invalid Authorization status');
                                 case self::TRANSACTION_REASON_TIMEOUT:
-                                case self::TRANSACTION_REASON_AMAZON_REJECTED:
                                     throw new Creativestyle_AmazonPayments_Exception_InvalidStatus('Invalid Authorization status');
+                                case self::TRANSACTION_REASON_AMAZON_REJECTED:
+                                    throw new Creativestyle_AmazonPayments_Exception_InvalidStatus_Unrecoverable('Invalid Authorization status');
                             }
                         default:
                             throw new Creativestyle_AmazonPayments_Exception('Invalid Authorization status');

@@ -309,6 +309,15 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
                 'error_messages' => $this->__('There has been a problem with the selected payment method from your Amazon account, please update the payment method or choose another one.'),
                 'reload_wallet'  => true
             )));
+        } catch (Creativestyle_AmazonPayments_Exception_InvalidStatus_Unrecoverable $e) {
+            $this->_shiftOrderReferenceId();
+            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode(array(
+                'success'        => false,
+                'error'          => true,
+                'error_messages' => $this->__('There has been a problem with the selected payment method from your Amazon account, please choose another payment method from you Amazon account or return to the cart to choose another checkout method.'),
+                'logout'         => true,
+                'redirect'       => Mage::getUrl('checkout/cart')
+            )));
         } catch (Creativestyle_AmazonPayments_Exception_InvalidStatus $e) {
             $this->_getApi()->cancelOrderReference($this->_shiftOrderReferenceId());
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode(array(

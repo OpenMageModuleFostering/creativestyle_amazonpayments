@@ -151,7 +151,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
         if ($transaction->getTxnType() == Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE) {
             if ($this->_getTransactionStatus($transaction) == Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter::TRANSACTION_STATE_COMPLETED) {
                 $payment = $transaction->getOrderPaymentObject();
-                if ($payment) {
+                if ($payment && !$payment->getOrder()->canInvoice()) {
                     Mage::getModel('amazonpayments/processor_payment')
                         ->setPaymentObject($payment)
                         ->closeOrderReference();

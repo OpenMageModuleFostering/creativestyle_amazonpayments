@@ -41,7 +41,7 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
     protected $_canOrder                    = true;
     protected $_canAuthorize                = true;
     protected $_canCapture                  = true;
-    protected $_canCapturePartial           = false;
+    protected $_canCapturePartial           = true;
     protected $_canCaptureOnce              = true;
     protected $_canRefund                   = true;
     protected $_canRefundInvoicePartial     = true;

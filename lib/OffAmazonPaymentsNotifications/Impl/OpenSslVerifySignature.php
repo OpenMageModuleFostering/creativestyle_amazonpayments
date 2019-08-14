@@ -30,6 +30,14 @@ class OffAmazonPaymentsNotifications_Impl_OpenSslVerifySignature implements OffA
     private $_expectedCnName = null;
 
     /**
+      * @var string  A pattern that will match all regional SNS endpoints, e.g.:
+      *                  - sns.<region>.amazonaws.com        (AWS)
+      *                  - sns.us-gov-west-1.amazonaws.com   (AWS GovCloud)
+      *                  - sns.cn-north-1.amazonaws.com.cn   (AWS China)
+      */
+    private $defaultHostPattern = '/^sns\.[a-zA-Z0-9\-]{3,}\.amazonaws\.com(\.cn)?$/';
+
+    /**
      * IHttpRequestFactory for creating http requests
      *
      */
@@ -136,26 +144,51 @@ class OffAmazonPaymentsNotifications_Impl_OpenSslVerifySignature implements OffA
             );
         }
     }
-    
+
     /**
      * Request the signing certificate from the given path, in order to
      * get the public key
-     * 
+     *
      * @param string $certificatePath certificate path to retreive
-     * 
+     *
      * @throws OffAmazonPaymentsNotifications_InvalidMessageException
-     * 
+     *
      * @return void
      */
     private function _getCertificateFromCertifcatePath($certificatePath)
     {
+        $this->_validateUrl($certificatePath);
+
         try {
             return $this->_httpRequestFactory->createGetRequest($certificatePath)->execute();
         } catch (OffAmazonPayments_HttpRequest_HttpException $ex) {
             throw new OffAmazonPaymentsNotifications_InvalidMessageException(
-                "Error with signature validation - unable to request signing certificate at " . $certificatePath . 
+                "Error with signature validation - unable to request signing certificate at " . $certificatePath .
                     " - underlying exception of " . $ex->getMessage()
                 );
+        }
+    }
+
+    /* Ensures that the URL of the certificate is one belonging to AWS, and not
+     * just something from the amazonaws domain, which could include S3 buckets.
+     *
+     * @param string $url Certificate URL
+     *
+     * @throws InvalidSnsMessageException if the cert url is invalid.
+     */
+
+    private function _validateUrl($url)
+    {
+        $parsed = parse_url($url);
+        if (empty($parsed['scheme'])
+            || empty($parsed['host'])
+            || $parsed['scheme'] !== 'https'
+            || substr($url, -4) !== '.pem'
+            || !preg_match($this->defaultHostPattern, $parsed['host'])
+        ) {
+            throw new OffAmazonPaymentsNotifications_InvalidMessageException(
+                'The certificate is located on an invalid domain.'
+            );
         }
     }
 }
