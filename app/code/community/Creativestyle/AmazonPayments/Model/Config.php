@@ -159,14 +159,9 @@ class Creativestyle_AmazonPayments_Model_Config {
 
     public function getWidgetUrl($store = null) {
         if ($this->isActive() & self::LOGIN_WITH_AMAZON_ACTIVE) {
-            $widgetUrls = $this->getGlobalDataValue('login_widget_urls');
-            if (isset($widgetUrls[$this->getRegion($store)][$this->getEnvironment($store)])) {
-                return sprintf($widgetUrls[$this->getRegion($store)][$this->getEnvironment($store)] . '?sellerId=%s',
-                    $this->getMerchantId($store)
-                );
-            }
-        } else if ($this->isActive()) {
             return $this->getMerchantValues()->getWidgetUrl();
+        } else if ($this->isActive()) {
+            return str_replace('lpa/', '', $this->getMerchantValues()->getWidgetUrl());
         }
         return null;
     }

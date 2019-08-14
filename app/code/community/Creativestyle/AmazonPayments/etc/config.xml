@@ -17,7 +17,7 @@
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.2.2</version>
+            <version>1.2.4</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -144,16 +144,6 @@
                         <live>https://api.amazon.co.uk/</live>
                     </uk>
                 </login_api_urls>
-                <login_widget_urls>
-                    <de>
-                        <sandbox>https://static-eu.payments-amazon.com/OffAmazonPayments/de/sandbox/lpa/js/Widgets.js</sandbox>
-                        <live>https://static-eu.payments-amazon.com/OffAmazonPayments/de/lpa/js/Widgets.js</live>
-                    </de>
-                    <uk>
-                        <sandbox>https://static-eu.payments-amazon.com/OffAmazonPayments/uk/sandbox/lpa/js/Widgets.js</sandbox>
-                        <live>https://static-eu.payments-amazon.com/OffAmazonPayments/uk/lpa/js/Widgets.js</live>
-                    </uk>
-                </login_widget_urls>
                 <customer_attributes>
                     <prefix />
                     <middlename/>
