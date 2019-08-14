@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 class Creativestyle_AmazonPayments_Block_Adminhtml_Debug extends Mage_Adminhtml_Block_Template {

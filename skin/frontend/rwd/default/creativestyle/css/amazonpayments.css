@@ -39,7 +39,7 @@
     padding: 5px 0 5px 10px;
 }
 .pay-with-amazon-onepage-shortcut {
-    padding-bottom: 10px;
+    padding: 20px 0;
 }
 .pay-with-amazon-onepage-shortcut p {
     padding: 10px 0;
@@ -155,6 +155,7 @@ ol.apa {
 }
 .amazon-login {
     padding-top: 27px;
+    margin-top: 20px;
 }
 .amazon-login.position-before {
     padding-top: 0 !important;
@@ -162,6 +163,9 @@ ol.apa {
 }
 .amazon-login .content {
     min-height: 100px;
+}
+.amazon-login .buttons-set {
+    border-top: 0;
 }
 .buttons-set button.cancel span {
     border-color:#406a83;

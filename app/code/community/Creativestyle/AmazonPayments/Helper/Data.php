@@ -67,8 +67,6 @@ class Creativestyle_AmazonPayments_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @deprecated deprecated since 1.2.6
-     *
      * Check if the current User Agent is specific for any mobile device
      *
      * @return bool

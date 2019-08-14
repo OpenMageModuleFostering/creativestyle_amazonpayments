@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 class Creativestyle_AmazonPayments_Model_Config {
@@ -77,7 +77,7 @@ class Creativestyle_AmazonPayments_Model_Config {
                 'environment' => $this->isSandbox($store) ? 'sandbox' : 'live',
                 'serviceURL' => '',
                 'widgetURL' => '',
-                'caBundleFile' => '',
+                'caBundleFile' => $this->getCaBundleFile(),
                 'clientId' => '',
                 'cnName' => 'sns.amazonaws.com'
             );
@@ -153,7 +153,7 @@ class Creativestyle_AmazonPayments_Model_Config {
     }
 
     public function getMerchantId($store = null) {
-        return trim(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_MERCHANT_ID, $store));
+        return trim(strtoupper(Mage::getStoreConfig(self::XML_PATH_ACCOUNT_MERCHANT_ID, $store)));
     }
 
     public function getRegion($store = null) {
@@ -174,6 +174,14 @@ class Creativestyle_AmazonPayments_Model_Config {
 
     public function isPopupAuthenticationExperience($store = null) {
         return $this->getAuthenticationExperience($store) == Creativestyle_AmazonPayments_Model_Lookup_Authentication::POPUP_EXPERIENCE;
+    }
+
+    public function isAutoAuthenticationExperience($store = null) {
+        return $this->getAuthenticationExperience($store) == Creativestyle_AmazonPayments_Model_Lookup_Authentication::AUTO_EXPERIENCE;
+    }
+
+    public function isRedirectAuthenticationExperience($store = null) {
+        return $this->getAuthenticationExperience($store) == Creativestyle_AmazonPayments_Model_Lookup_Authentication::REDIRECT_EXPERIENCE;
     }
 
     public function getAuthorizationMode($store = null) {
@@ -377,6 +385,12 @@ class Creativestyle_AmazonPayments_Model_Config {
             $displayLanguage = Mage::getSingleton('amazonpayments/lookup_language')->getLanguageByLocale($currentLocale);
         }
         return $displayLanguage;
+    }
+
+    public function getCaBundleFile() {
+        $caBundlePath = $this->getGlobalDataValue('ca_bundle');
+        if ($caBundlePath && file_exists($caBundlePath)) return $caBundlePath;
+        return '';
     }
 
 }

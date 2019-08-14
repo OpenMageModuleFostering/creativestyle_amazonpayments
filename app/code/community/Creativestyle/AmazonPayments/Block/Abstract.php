@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Block_Template {
@@ -32,9 +32,7 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
 
     protected function _isConnectionSecure() {
         if ($this->_getConfig()->isActive() & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE) {
-            if ($this->isPopup()) {
-                return Mage::app()->getStore()->isCurrentlySecure();
-            }
+            return Mage::app()->getStore()->isCurrentlySecure();
         }
         return true;
     }
@@ -158,7 +156,9 @@ abstract class Creativestyle_AmazonPayments_Block_Abstract extends Mage_Core_Blo
     }
 
     public function isPopup() {
-        return $this->_getConfig()->isPopupAuthenticationExperience();
+        if (Mage::helper('amazonpayments')->isMobileDevice()) return false;
+        return $this->_getConfig()->isAutoAuthenticationExperience() && $this->_isConnectionSecure()
+            || $this->_getConfig()->isPopupAuthenticationExperience();
     }
 
 }

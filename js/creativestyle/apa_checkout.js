@@ -152,7 +152,7 @@ var APA = {
                     color: button.buttonColor || APA.design.payButton.color,
                     authorization: function() {
                         amazon.Login.authorize({
-                            scope: 'profile payments:widget payments:shipping_address',
+                            scope: 'profile payments:widget payments:shipping_address payments:billing_address',
                             popup: APA.popup
                         }, APA.urls.pay);
                     },
@@ -170,7 +170,7 @@ var APA = {
                     color: button.buttonColor || APA.design.loginButton.color,
                     authorization: function() {
                         amazon.Login.authorize({
-                            scope: 'profile payments:widget payments:shipping_address',
+                            scope: 'profile payments:widget payments:shipping_address payments:billing_address',
                             popup: APA.popup
                         }, APA.urls.login);
                     },

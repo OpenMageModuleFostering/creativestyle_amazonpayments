@@ -10,30 +10,30 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Adminhtml_Log_ExceptionController extends Mage_Adminhtml_Controller_Action {
+class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_Log_ApiController extends Mage_Adminhtml_Controller_Action {
 
     protected function _getConfig() {
         return Mage::getSingleton('amazonpayments/config');
     }
 
     protected function _getCollection() {
-        return Mage::getModel('amazonpayments/log_collection')->setLogType('exception');
+        return Mage::getModel('amazonpayments/log_collection')->setLogType('api');
     }
 
     protected function _initAction() {
         $this->loadLayout()
-            ->_setActiveMenu('creativestyle/amazonpayments/log/exception')
+            ->_setActiveMenu('creativestyle/amazonpayments/log/api')
             ->_addBreadcrumb($this->__('Pay with Amazon'), $this->__('Pay with Amazon'))
             ->_addBreadcrumb($this->__('Log preview'), $this->__('Log preview'))
-            ->_addBreadcrumb($this->__('Exceptions'), $this->__('Exceptions'));
+            ->_addBreadcrumb($this->__('API calls'), $this->__('API calls'));
         return $this;
     }
 
     public function indexAction() {
-        $this->_title($this->__('Pay with Amazon'))->_title($this->__('Log preview'))->_title($this->__('Exceptions'));
+        $this->_title($this->__('Pay with Amazon'))->_title($this->__('Log preview'))->_title($this->__('API calls'));
         $this->_initAction()
             ->renderLayout();
     }
@@ -42,9 +42,9 @@ class Creativestyle_AmazonPayments_Adminhtml_Log_ExceptionController extends Mag
         $id = $this->getRequest()->getParam('id');
         $log = $this->_getCollection()->getItemById($id);
         if (is_object($log) && $log->getId()) {
-            $this->_title($this->__('Pay with Amazon'))->_title($this->__('Log preview'))->_title($this->__('Exceptions'))->_title($this->__('Preview'));
+            $this->_title($this->__('Pay with Amazon'))->_title($this->__('Log preview'))->_title($this->__('API calls'))->_title($this->__('Preview'));
             $this->_initAction();
-            $this->_addContent($this->getLayout()->createBlock('amazonpayments/adminhtml_log_exception_view')->setLog($log));
+            $this->_addContent($this->getLayout()->createBlock('amazonpayments/adminhtml_log_api_view')->setLog($log));
             $this->renderLayout();
         } else {
             Mage::getSingleton('adminhtml/session')->addError(Mage::helper('amazonpayments')->__('Log does not exist'));
@@ -53,9 +53,9 @@ class Creativestyle_AmazonPayments_Adminhtml_Log_ExceptionController extends Mag
     }
 
     public function downloadAction() {
-        $logFilePath = Creativestyle_AmazonPayments_Model_Logger::getAbsoluteLogFilePath('exception');
+        $logFilePath = Creativestyle_AmazonPayments_Model_Logger::getAbsoluteLogFilePath('api');
         if (file_exists($logFilePath)) {
-            $output = implode($this->_getConfig()->getLogDelimiter(), Creativestyle_AmazonPayments_Model_Logger::getColumnMapping('exception')) . "\n";
+            $output = implode($this->_getConfig()->getLogDelimiter(), Creativestyle_AmazonPayments_Model_Logger::getColumnMapping('api')) . "\n";
             $output .= file_get_contents($logFilePath);
             Mage::app()->getResponse()->setHeader('Content-type', 'text/csv');
             Mage::app()->getResponse()->setHeader('Content-disposition', 'attachment;filename=' . basename($logFilePath) . '.csv');
@@ -64,6 +64,10 @@ class Creativestyle_AmazonPayments_Adminhtml_Log_ExceptionController extends Mag
         } else {
             $this->_redirect('*/*/');
         }
+    }
+
+    protected function _isAllowed() {
+        return Mage::getSingleton('admin/session')->isAllowed('admin/creativestyle/amazonpayments/log/api');
     }
 
 }

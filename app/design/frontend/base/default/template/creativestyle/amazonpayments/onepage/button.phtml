@@ -15,7 +15,11 @@
 ?>
 <div class="pay-with-amazon-onepage-shortcut">
     <h3><?php echo $this->__('Pay with Amazon'); ?></h3>
-    <p><?php echo $this->getChildHtml('amazonpayments_button_tooltip'); ?></p>
+    <?php if ($this->isVirtual()): ?>
+        <p><?php echo $this->__('<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details.'); ?></p>
+    <?php else: ?>
+        <p><?php echo $this->__('<strong>Amazon Payments</strong> helps you shop quickly, safely and securely. You can pay on our website without re-entering your payment and address details. All Amazon transactions are protected by Amazon&apos;s A-to-z Guarantee.'); ?></p>
+    <?php endif; ?>
     <div id="<?php echo $this->getWidgetHtmlId(); ?>" class="<?php echo $this->getWidgetClass(); ?>">
         <?php if ($buttonImgUrl = $this->getButtonWidgetUrl()): ?>
             <img src="<?php echo $buttonImgUrl; ?>"/>

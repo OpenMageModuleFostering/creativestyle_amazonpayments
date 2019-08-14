@@ -401,21 +401,23 @@ class Creativestyle_AmazonPayments_Model_Processor_Order {
      * @return Creativestyle_AmazonPayments_Model_Processor_Order
      */
     protected function _updateOrderData($transactionAdapter, &$stateObject) {
-        $orderData = $this->_mapTransactionDetails($transactionAdapter->getTransactionDetails());
-        if ($orderData->hasCustomerEmail() && $this->getOrder()->getCustomerEmail() != $orderData->getCustomerEmail()) {
-            $this->getOrder()->setCustomerEmail($orderData->getCustomerEmail());
-        }
-        if ($orderData->hasCustomerFirstname() && $this->getOrder()->getCustomerFirstname() != $orderData->getCustomerFirstname()) {
-            $this->getOrder()->setCustomerFirstname($orderData->getCustomerFirstname());
-        }
-        if ($orderData->hasCustomerLastname() && $this->getOrder()->getCustomerLastname() != $orderData->getCustomerLastname()) {
-            $this->getOrder()->setCustomerLastname($orderData->getCustomerLastname());
-        }
-        if ($orderData->hasBillingAddress()) {
-            $this->_updateAddress($this->getOrder()->getBillingAddress(), $orderData->getBillingAddress());
-        }
-        if ($orderData->hasShippingAddress()) {
-            $this->_updateAddress($this->getOrder()->getShippingAddress(), $orderData->getShippingAddress());
+        if ($transactionAdapter->shouldUpdateOrderData()) {
+            $orderData = $this->_mapTransactionDetails($transactionAdapter->getTransactionDetails());
+            if ($orderData->hasCustomerEmail() && $this->getOrder()->getCustomerEmail() != $orderData->getCustomerEmail()) {
+                $this->getOrder()->setCustomerEmail($orderData->getCustomerEmail());
+            }
+            if ($orderData->hasCustomerFirstname() && $this->getOrder()->getCustomerFirstname() != $orderData->getCustomerFirstname()) {
+                $this->getOrder()->setCustomerFirstname($orderData->getCustomerFirstname());
+            }
+            if ($orderData->hasCustomerLastname() && $this->getOrder()->getCustomerLastname() != $orderData->getCustomerLastname()) {
+                $this->getOrder()->setCustomerLastname($orderData->getCustomerLastname());
+            }
+            if ($orderData->hasBillingAddress()) {
+                $this->_updateAddress($this->getOrder()->getBillingAddress(), $orderData->getBillingAddress());
+            }
+            if ($orderData->hasShippingAddress()) {
+                $this->_updateAddress($this->getOrder()->getShippingAddress(), $orderData->getShippingAddress());
+            }
         }
 
         $this->_mapTransactionStatus($transactionAdapter, $stateObject);

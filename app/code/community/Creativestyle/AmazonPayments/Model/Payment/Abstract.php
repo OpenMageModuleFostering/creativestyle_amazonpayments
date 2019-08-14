@@ -586,6 +586,9 @@ abstract class Creativestyle_AmazonPayments_Model_Payment_Abstract extends Mage_
         if ($quote && !$quote->validateMinimumAmount()) {
             $isActive = false;
         }
+        if (Mage::app()->getStore()->roundPrice($quote->getGrandTotal()) == 0) {
+            $isActive = false;
+        }
         $checkResult->isAvailable = $isActive;
         $checkResult->isDeniedInConfig = !$isActive;
         Mage::dispatchEvent('payment_method_is_active', array(

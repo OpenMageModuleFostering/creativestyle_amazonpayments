@@ -10,24 +10,10 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Adminhtml_OrderController extends Mage_Adminhtml_Controller_Action {
-
-    protected function _initAction() {
-        $this->loadLayout()
-            ->_setActiveMenu('amazonpayments/orders')
-            ->_addBreadcrumb($this->__('Pay with Amazon'), $this->__('Pay with Amazon'))
-            ->_addBreadcrumb($this->__('Orders'), $this->__('Orders'));
-        return $this;
-    }
-
-    public function indexAction() {
-        $this->_title($this->__('Pay with Amazon'))->_title($this->__('Orders'));
-        $this->_initAction()
-            ->renderLayout();
-    }
+class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_OrderController extends Mage_Adminhtml_Controller_Action {
 
     public function authorizeAction() {
         $orderId = $this->getRequest()->getParam('order_id', null);
@@ -53,7 +39,10 @@ class Creativestyle_AmazonPayments_Adminhtml_OrderController extends Mage_Adminh
             $this->_redirect('adminhtml/sales_order/view', array('order_id' => $orderId));
             return;
         }
-        $this->_redirect('*/*/index');
+        $this->_redirect('adminhtml/sales_order');
     }
 
+    protected function _isAllowed() {
+        return Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/amazonpayments_authorize');
+    }
 }

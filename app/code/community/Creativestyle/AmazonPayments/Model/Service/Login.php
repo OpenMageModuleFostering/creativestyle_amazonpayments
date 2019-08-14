@@ -49,6 +49,11 @@ class Creativestyle_AmazonPayments_Model_Service_Login {
     }
 
     protected function _getCustomer() {
+        $amazonUserIdAttr = Mage::getResourceModel('catalog/eav_attribute')->loadByCode('customer', 'amazon_user_id');
+        if (!$amazonUserIdAttr->getId()) {
+            throw new Creativestyle_AmazonPayments_Exception('[LWA-service] amazon_user_id customer attribute does not exist');
+        }
+        
         if (null === $this->_customer) {
             $customer = Mage::getModel('customer/customer');
             $collection = $customer->getCollection()

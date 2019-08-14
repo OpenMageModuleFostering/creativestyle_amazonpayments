@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
@@ -24,22 +24,10 @@
                     <title>Login and Pay with Amazon</title>
                     <sort_order>1</sort_order>
                     <children>
-                        <!--
-                        <orders translate="title" module="adminhtml">
-                            <title>Pay with Amazon orders</title>
-                            <action>amazonpayments/adminhtml_order</action>
-                            <sort_order>10</sort_order>
-                        </orders>
-                        <documentation translate="title">
-                            <title>Documentation</title>
-                            <sort_order>200</sort_order>
-                            <action>admin_amazonpayments/adminhtml_documentation</action>
-                        </documentation>
-                        -->
                         <debug translate="title">
                             <title>Debug data</title>
                             <sort_order>800</sort_order>
-                            <action>admin_amazonpayments/adminhtml_debug</action>
+                            <action>adminhtml/amazonpayments_debug</action>
                         </debug>
                         <log translate="title">
                             <title>Log preview</title>
@@ -48,17 +36,17 @@
                                 <exception translate="title">
                                     <title>Exceptions</title>
                                     <sort_order>10</sort_order>
-                                    <action>admin_amazonpayments/adminhtml_log_exception</action>
+                                    <action>adminhtml/amazonpayments_log_exception</action>
                                 </exception>
                                 <api translate="title">
                                     <title>API Calls</title>
                                     <sort_order>100</sort_order>
-                                    <action>admin_amazonpayments/adminhtml_log_api</action>
+                                    <action>adminhtml/amazonpayments_log_api</action>
                                 </api>
                                 <ipn translate="title">
                                     <title>IPN Notifications</title>
                                     <sort_order>200</sort_order>
-                                    <action>admin_amazonpayments/adminhtml_log_ipn</action>
+                                    <action>adminhtml/amazonpayments_log_ipn</action>
                                 </ipn>
                             </children>
                         </log>
@@ -81,15 +69,11 @@
             <admin>
                 <children>
                     <creativestyle>
+                        <title>creativestyle Extensions</title>
                         <children>
                             <amazonpayments translate="title" module="amazonpayments">
                                 <title>Login and Pay with Amazon</title>
                                 <children>
-                                    <!--
-                                    <orders translate="title">
-                                        <title>Orders</title>
-                                    </orders>
-                                    -->
                                     <debug translate="title">
                                         <title>Debug data</title>
                                     </debug>
@@ -111,6 +95,21 @@
                             </amazonpayments>
                         </children>
                     </creativestyle>
+                    <sales>
+                        <children>
+                            <order>
+                                <children>
+                                    <actions>
+                                        <children>
+                                            <amazonpayments_authorize translate="title" module="amazonpayments">
+                                                <title>Authorize Amazon Payments</title>
+                                            </amazonpayments_authorize>
+                                        </children>
+                                    </actions>
+                                </children>
+                            </order>
+                        </children>
+                    </sales>
                     <system>
                         <children>
                             <config>

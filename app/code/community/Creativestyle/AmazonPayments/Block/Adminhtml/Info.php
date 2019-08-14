@@ -16,9 +16,19 @@
 class Creativestyle_AmazonPayments_Block_Adminhtml_Info extends Mage_Adminhtml_Block_System_Config_Form_Fieldset {
 
     protected function _getInfo() {
+        if (!$this->getChild('seller_central_config')) {
+            $this->setChild('seller_central_config', $this->getLayout()->createBlock('amazonpayments/adminhtml_sellerCentral')->setHtmlId('amazonpayments_plugin_info_seller_central'));
+        }
         $this->setTemplate('creativestyle/amazonpayments/info.phtml');
         $output = $this->toHtml();
         return $output;
+    }
+
+    public function getSellerCentralConfigHtml() {
+        if ($this->getChild('seller_central_config')) {
+            return $this->getChild('seller_central_config')->toHtml();
+        }
+        return '';
     }
 
     public function getExtensionVersion() {

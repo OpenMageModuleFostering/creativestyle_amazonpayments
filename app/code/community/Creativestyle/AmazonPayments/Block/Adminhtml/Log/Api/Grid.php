@@ -10,22 +10,18 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api_Grid extends Mage_Adminhtml_Block_Widget_Grid {
+class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api_Grid extends Creativestyle_AmazonPayments_Block_Adminhtml_Log_Grid_Abstract {
+
+    protected $_logType = 'api';
 
     public function __construct() {
         parent::__construct();
         $this->setId('amazonpayments_log_api_grid');
         $this->setFilterVisibility(false);
         $this->setSaveParametersInSession(true);
-    }
-
-    protected function _prepareCollection() {
-        $collection = Mage::getModel('amazonpayments/log_collection')->setLogType('api');
-        $this->setCollection($collection);
-        return parent::_prepareCollection();
     }
 
     protected function _prepareColumns() {
@@ -63,29 +59,7 @@ class Creativestyle_AmazonPayments_Block_Adminhtml_Log_Api_Grid extends Mage_Adm
             'sortable'      => false
         ));
 
-        $this->addColumn('preview_action', array(
-            'header'    => Mage::helper('amazonpayments')->__('Preview'),
-            'type'      => 'action',
-            'align'     => 'center',
-            'width'     => '50px',
-            'getter'    => 'getId',
-            'actions'   => array(
-                array(
-                    'caption' => Mage::helper('amazonpayments')->__('Preview'),
-                    'url'     => array('base' => '*/*/view'),
-                    'field'   => 'id'
-                )
-            ),
-            'filter'    => false,
-            'sortable'  => false,
-            'is_system' => true
-        ));
-
         return parent::_prepareColumns();
-    }
-
-    public function getRowUrl($row) {
-        return $this->getUrl('*/*/view', array('id' => $row->getId()));
     }
 
 }

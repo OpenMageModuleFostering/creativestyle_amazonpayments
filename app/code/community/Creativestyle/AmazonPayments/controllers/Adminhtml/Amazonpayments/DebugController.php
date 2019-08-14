@@ -10,22 +10,23 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Adminhtml_DebugController extends Mage_Adminhtml_Controller_Action {
+class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_DebugController extends Mage_Adminhtml_Controller_Action {
 
-    protected function _initAction() {
-        $this->loadLayout()
-            ->_setActiveMenu('creativestyle/amazonpayments/debug')
-            ->_addBreadcrumb($this->__('Pay with Amazon'), $this->__('Pay with Amazon'))
-            ->_addBreadcrumb($this->__('Debug data'), $this->__('Debug data'));
+    protected function _initAction($actionMenuItem, $actionBreadcrumbs) {
+        $this->_setActiveMenu('creativestyle/amazonpayments/' . $actionMenuItem);
+        foreach ($actionBreadcrumbs as $breadcrumb) {
+            $this->_addBreadcrumb($this->__($breadcrumb), $this->__($breadcrumb))
+                ->_title($breadcrumb);
+        }
         return $this;
     }
 
     public function indexAction() {
-        $this->_title($this->__('Pay with Amazon'))->_title($this->__('Debug data'));
-        $this->_initAction()
+        $this->loadLayout()
+            ->_initAction('debug', array('Login and Pay with Amazon', 'Debug data'))
             ->renderLayout();
     }
 
@@ -37,6 +38,10 @@ class Creativestyle_AmazonPayments_Adminhtml_DebugController extends Mage_Adminh
         Mage::app()->getResponse()->setHeader('Content-type', 'application/base64');
         Mage::app()->getResponse()->setHeader('Content-disposition', 'attachment;filename=' . $filename);
         Mage::app()->getResponse()->setBody($debugData);
+    }
+
+    protected function _isAllowed() {
+        return Mage::getSingleton('admin/session')->isAllowed('admin/creativestyle/amazonpayments/debug');
     }
 
 }

@@ -25,6 +25,7 @@
         <reference name="cart_sidebar.extra_actions">
             <block type="amazonpayments/pay_button" name="top_cart.amazonpayments.pay_button" before="-">
                 <action method="setIdSuffix"><value>sidebar</value></action>
+                <action method="setEnableOr"><value>1</value></action>
             </block>
         </reference>
         <reference name="before_body_end">
@@ -53,11 +54,9 @@
             <block type="amazonpayments/onepage_button" name="onepage.amazonpayments.button">
                 <block type="amazonpayments/pay_button" name="onepage.amazonpayments.button.pay" template="creativestyle/amazonpayments/onepage/button.phtml">
                     <action method="setIdSuffix"><value>onepage</value></action>
-                    <block type="core/template" name="onepage.amazonpayments.button.tooltip" as="amazonpayments_button_tooltip" template="creativestyle/amazonpayments/button/tooltip.phtml"/>
                 </block>
                 <block type="amazonpayments/login_button" name="onepage.amazonpayments.button.login" template="creativestyle/amazonpayments/onepage/button.phtml">
                     <action method="setIdSuffix"><value>onepage</value></action>
-                    <block type="core/template" name="onepage.amazonpayments.button.tooltip" as="amazonpayments_button_tooltip" template="creativestyle/amazonpayments/button/tooltip.phtml"/>
                 </block>
             </block>
         </reference>

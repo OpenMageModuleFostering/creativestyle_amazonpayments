@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
@@ -23,58 +23,48 @@
             <block type="core/template" template="creativestyle/amazonpayments/init.phtml" />
         </reference>
     </default>
-    <admin_amazonpayments_adminhtml_documentation_index>
-        <reference name="content">
-            <block type="core/template" name="amazonpayments_documentation" template="creativestyle/amazonpayments/advanced/documentation.phtml"/>
-        </reference>
-    </admin_amazonpayments_adminhtml_documentation_index>
-    <admin_amazonpayments_adminhtml_order_index>
-        <reference name="content">
-            <block type="amazonpayments/adminhtml_sales_order" name="sales_order.grid.container"></block>
-        </reference>
-    </admin_amazonpayments_adminhtml_order_index>
-    <admin_amazonpayments_adminhtml_debug_index>
+    <adminhtml_amazonpayments_debug_index>
         <reference name="content">
             <block type="amazonpayments/adminhtml_debug" name="amazonpayments_debug_data" />
         </reference>
-    </admin_amazonpayments_adminhtml_debug_index>
-    <admin_amazonpayments_adminhtml_log_api_index>
+    </adminhtml_amazonpayments_debug_index>
+    <adminhtml_amazonpayments_log_api_index>
         <reference name="content">
             <block type="amazonpayments/adminhtml_log_api" name="amazonpayments_log_api"/>
         </reference>
-    </admin_amazonpayments_adminhtml_log_api_index>
-    <admin_amazonpayments_adminhtml_log_exception_index>
+    </adminhtml_amazonpayments_log_api_index>
+    <adminhtml_amazonpayments_log_exception_index>
         <reference name="content">
             <block type="amazonpayments/adminhtml_log_exception" name="amazonpayments_log_exception"/>
         </reference>
-    </admin_amazonpayments_adminhtml_log_exception_index>
-    <admin_amazonpayments_adminhtml_log_ipn_index>
+    </adminhtml_amazonpayments_log_exception_index>
+    <adminhtml_amazonpayments_log_ipn_index>
         <reference name="content">
             <block type="amazonpayments/adminhtml_log_ipn" name="amazonpayments_log_ipn"/>
         </reference>
-    </admin_amazonpayments_adminhtml_log_ipn_index>
-    <admin_amazonpayments_adminhtml_log_api_view>
+    </adminhtml_amazonpayments_log_ipn_index>
+    <adminhtml_amazonpayments_log_api_view>
         <reference name="head">
             <action method="addCss"><stylesheet>creativestyle/css/amazonpayments-highlight.css</stylesheet></action>
         </reference>
         <reference name="before_body_end">
             <block type="core/template" name="amazonpayments_log_api.js" template="creativestyle/amazonpayments/advanced/log/js.phtml"/>
         </reference>
-    </admin_amazonpayments_adminhtml_log_api_view>
-    <admin_amazonpayments_adminhtml_log_exception_view>
+    </adminhtml_amazonpayments_log_api_view>
+    <adminhtml_amazonpayments_log_exception_view>
         <reference name="head">
             <action method="addCss"><stylesheet>creativestyle/css/amazonpayments-highlight.css</stylesheet></action>
         </reference>
         <reference name="before_body_end">
             <block type="core/template" name="amazonpayments_log_api.js" template="creativestyle/amazonpayments/advanced/log/js.phtml"/>
         </reference>
-    </admin_amazonpayments_adminhtml_log_exception_view>
-    <admin_amazonpayments_adminhtml_log_ipn_view>
+    </adminhtml_amazonpayments_log_exception_view>
+    <adminhtml_amazonpayments_log_ipn_view>
         <reference name="head">
             <action method="addCss"><stylesheet>creativestyle/css/amazonpayments-highlight.css</stylesheet></action>
         </reference>
         <reference name="before_body_end">
             <block type="core/template" name="amazonpayments_log_api.js" template="creativestyle/amazonpayments/advanced/log/js.phtml"/>
         </reference>
-    </admin_amazonpayments_adminhtml_log_ipn_view>
+    </adminhtml_amazonpayments_log_ipn_view>
 </layout>

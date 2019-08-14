@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 abstract class Creativestyle_AmazonPayments_Block_Login_Abstract extends Creativestyle_AmazonPayments_Block_Abstract {
@@ -21,7 +21,7 @@ abstract class Creativestyle_AmazonPayments_Block_Login_Abstract extends Creativ
         return ($this->_getConfig()->isActive() & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE)
             && $this->_getConfig()->isCurrentIpAllowed()
             && $this->_getConfig()->isCurrentLocaleAllowed()
-            && $this->_isConnectionSecure();
+            && ($this->_isConnectionSecure() || !$this->isPopup());
     }
 
 }

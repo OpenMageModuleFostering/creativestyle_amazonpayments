@@ -461,4 +461,25 @@ class Creativestyle_AmazonPayments_Model_Processor_TransactionAdapter {
         throw new Creativestyle_AmazonPayments_Exception('Invalid transaction status');
     }
 
+    public function shouldUpdateOrderData() {
+        $transactionStatus = $this->getStatusChange();
+        if (is_array($transactionStatus)) {
+            $state = array_key_exists(self::TRANSACTION_STATE_KEY, $transactionStatus) ? $transactionStatus[self::TRANSACTION_STATE_KEY] : null;
+            switch ($this->getTransactionType()) {
+                case Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER:
+                    switch ($state) {
+                        case self::TRANSACTION_STATE_CLOSED:
+                            return false;
+                        default:
+                            return true;
+                    }
+                    return true;
+                case Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return false;
+    }
 }

@@ -10,14 +10,14 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 -->
 <config>
     <modules>
         <Creativestyle_AmazonPayments>
-            <version>1.7.4</version>
+            <version>1.7.6</version>
         </Creativestyle_AmazonPayments>
     </modules>
     <global>
@@ -363,13 +363,13 @@
     </frontend>
     <admin>
         <routers>
-            <admin_amazonpayments>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Creativestyle_AmazonPayments</module>
-                    <frontName>admin_amazonpayments</frontName>
+                    <modules>
+                        <amazonpayments after="Mage_Adminhtml">Creativestyle_AmazonPayments_Adminhtml</amazonpayments>
+                    </modules>
                 </args>
-            </admin_amazonpayments>
+            </adminhtml>
         </routers>
     </admin>
     <adminhtml>
@@ -436,7 +436,7 @@
             </general>
             <login>
                 <active>0</active>
-                <authentication>popup</authentication>
+                <authentication>auto</authentication>
             </login>
             <email>
                 <order_confirmation>1</order_confirmation>

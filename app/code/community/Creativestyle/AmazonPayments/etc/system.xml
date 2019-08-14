@@ -164,19 +164,6 @@
                             <show_in_store>0</show_in_store>
                             <depends><active>1</active></depends>
                         </ipn_active>
-                        <ipn_url>
-                            <label>IPN endpoint URL</label>
-                            <comment><![CDATA[Please enter this URL in the <strong>Merchant URL</strong> field of the <a target="_blank" href="https://sellercentral-europe.amazon.com/gp/pyop/seller/account/settings/user-settings-view.html">Integration Settings</a> in your Amazon Seller Central.]]></comment>
-                            <frontend_model>amazonpayments/adminhtml_ipnUrl</frontend_model>
-                            <sort_order>60</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <active>1</active>
-                                <ipn_active>1</ipn_active>
-                            </depends>
-                        </ipn_url>
                         <polling_frequency>
                             <label>Data polling frequency</label>
                             <frontend_type>select</frontend_type>

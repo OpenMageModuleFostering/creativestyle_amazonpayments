@@ -13,17 +13,18 @@
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 ?>
-<div class="creativestyle-info">
-    <a class="creativestyle-logo" href="http://www.creativestyle.de" target="_blank">
-        <img src="<?php echo $this->getSkinUrl('creativestyle/images/amazon-payments-advanced-creativestyle-logo.png'); ?>" alt="creativestyle" />
-    </a>
-    <h3><?php echo $this->__('Login and Pay with Amazon'); ?><small> (v. <?php echo $this->getExtensionVersion(); ?>)</small></h3>
-    <p style="clear:both;"><?php echo $this->__('This extension integrates easily your Magento shop with Pay with Amazon service.'); ?></p>
-    <p>--------------------------------------------------------<br />
-        <?php echo $this->helper('amazonpayments')->__(
-            'Visit <a href="%s" target="_blank">%s</a> to get more information.',
-            $this->helper('amazonpayments')->__('http://www.creativestyle.net/services/magento.html'),
-            $this->helper('amazonpayments')->__('http://www.creativestyle.net/services/magento.html'));
-        ?>
-    </p>
+<div class="creativestyle-info section-config">
+    <div class="section-config">
+        <div class="entry-edit-head a-right">
+            <a style="background:0;" href="https://sellercentral-europe.amazon.com" target="_blank"><?php echo $this->helper('amazonpayments')->__('Amazon Seller Central'); ?></a> |
+            <a style="background:0;" href="http://amazon.creativestyle.de" target="_blank"><?php echo $this->helper('amazonpayments')->__('Extension documentation'); ?></a> |
+            <a style="background:0;" href="<?php echo $this->helper('amazonpayments')->__('http://www.creativestyle.net/services/magento.html'); ?>" target="_blank"><?php echo $this->helper('amazonpayments')->__('More about <em>creativestyle</em>'); ?></a>
+        </div>
+        <div class="fieldset config">
+            <img class="creativestyle-logo" src="<?php echo $this->getSkinUrl('creativestyle/images/amazon-payments-advanced-creativestyle-logo.png'); ?>" alt="Amazon Payments" />
+            <h3><?php echo $this->__('Login and Pay with Amazon'); ?><small> (v. <?php echo $this->getExtensionVersion(); ?>)</small></h3>
+            <p style="clear:both;"><?php echo $this->__('This extension integrates easily your Magento shop with Pay with Amazon service.'); ?></p>
+        </div>
+    </div>
+    <?php echo $this->getSellerCentralConfigHtml(); ?>
 </div>

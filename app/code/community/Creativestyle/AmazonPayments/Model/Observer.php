@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2016 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 class Creativestyle_AmazonPayments_Model_Observer {
@@ -176,7 +176,8 @@ class Creativestyle_AmazonPayments_Model_Observer {
         try {
             $order = Mage::registry('sales_order');
             // check if object instance exists and whether manual authorization is enabled
-            if (is_object($order) && $order->getId() && $this->_getConfig()->isManualAuthorizationAllowed()) {
+            if (is_object($order) && $order->getId() && $this->_getConfig()->isManualAuthorizationAllowed()
+                && Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/amazonpayments_authorize')) {
                 $payment = $order->getPayment();
                 if (in_array($payment->getMethod(), Mage::helper('amazonpayments')->getAvailablePaymentMethods())) {
                     // check if payment wasn't authorized already
@@ -186,7 +187,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
                     if ($orderTransaction && !$orderTransaction->getIsClosed() && (!$authTransaction || $authTransaction->getIsClosed())) {
                         $block = Mage::getSingleton('core/layout')->getBlock('sales_order_edit');
                         if ($block) {
-                            $url = Mage::getModel('adminhtml/url')->getUrl('admin_amazonpayments/adminhtml_order/authorize', array('order_id' => $order->getId()));
+                            $url = Mage::getModel('adminhtml/url')->getUrl('adminhtml/amazonpayments_order/authorize', array('order_id' => $order->getId()));
                             $message = Mage::helper('amazonpayments')->__('Are you sure you want to authorize payment for this order?');
                             $block->addButton('payment_authorize', array(
                                 'label'     => Mage::helper('amazonpayments')->__('Authorize payment'),
@@ -267,7 +268,7 @@ class Creativestyle_AmazonPayments_Model_Observer {
         try {
             $secureUrlsConfigNode = Mage::getConfig()->getNode('frontend/secure_url');
             if ($this->_getConfig()->isActive() & Creativestyle_AmazonPayments_Model_Config::LOGIN_WITH_AMAZON_ACTIVE
-                && $this->_getConfig()->isPopupAuthenticationExperience())
+                && !$this->_getConfig()->isRedirectAuthenticationExperience())
             {
                 $secureUrlsConfigNode->addChild('amazonpayments_cart', '/checkout/cart');
             }

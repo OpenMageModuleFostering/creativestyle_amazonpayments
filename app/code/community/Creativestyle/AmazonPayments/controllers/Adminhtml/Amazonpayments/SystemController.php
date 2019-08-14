@@ -10,10 +10,10 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2015 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
-class Creativestyle_AmazonPayments_Adminhtml_SystemController extends Mage_Adminhtml_Controller_Action {
+class Creativestyle_AmazonPayments_Adminhtml_Amazonpayments_SystemController extends Mage_Adminhtml_Controller_Action {
 
     protected function _checkCredentials($merchantId, $accessKey, $secretKey, $region, $sandbox) {
         if (!($merchantId && $accessKey && $secretKey)) {
@@ -83,6 +83,10 @@ class Creativestyle_AmazonPayments_Adminhtml_SystemController extends Mage_Admin
             </ul>', $this->_checkCredentials($merchantId, $accessKey, $secretKey, $region, $sandbox));
 
         $this->getResponse()->setBody($response);
+    }
+
+    protected function _isAllowed() {
+        return Mage::getSingleton('admin/session')->isAllowed('admin/system/config/amazonpayments');
     }
 
 }

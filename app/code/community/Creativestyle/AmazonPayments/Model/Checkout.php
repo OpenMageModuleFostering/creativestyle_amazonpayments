@@ -26,6 +26,14 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
         return array('method' => 'amazonpayments_advanced');
     }
 
+    protected function _sanitizeShippingAddress($addressData) {
+        $allowedCountries = explode(',', (string)Mage::getStoreConfig('general/country/allow'));
+        if (!(isset($addressData['country_id']) && in_array($addressData['country_id'], $allowedCountries))) {
+            $addressData['country_id'] = null;
+        }
+        return $addressData;
+    }
+
     public function savePayment($data) {
         $data = $this->_getPaymentMethod();
         if ($this->getQuote()->isVirtual()) {
@@ -41,8 +49,8 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
 
         $data['checks'] = Creativestyle_AmazonPayments_Model_Payment_Abstract::CHECK_USE_FOR_COUNTRY
             | Creativestyle_AmazonPayments_Model_Payment_Abstract::CHECK_USE_FOR_CURRENCY
-            | Creativestyle_AmazonPayments_Model_Payment_Abstract::CHECK_ORDER_TOTAL_MIN_MAX;
-//            | Creativestyle_AmazonPayments_Model_Payment_Abstract::CHECK_ZERO_TOTAL
+            | Creativestyle_AmazonPayments_Model_Payment_Abstract::CHECK_ORDER_TOTAL_MIN_MAX
+            | Creativestyle_AmazonPayments_Model_Payment_Abstract::CHECK_ZERO_TOTAL;
 
 
         $payment = $this->getQuote()->getPayment();
@@ -61,6 +69,8 @@ class Creativestyle_AmazonPayments_Model_Checkout extends Mage_Checkout_Model_Ty
         if (empty($data)) {
             return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid data.'));
         }
+
+        $data = $this->_sanitizeShippingAddress($data);
 
         unset($data['address_id']);
         $address = $this->getQuote()->getBillingAddress();
