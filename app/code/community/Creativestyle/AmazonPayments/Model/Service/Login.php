@@ -37,6 +37,13 @@ class Creativestyle_AmazonPayments_Model_Service_Login {
         return Mage::getSingleton('amazonpayments/config');
     }
 
+    /**
+     * @return Mage_Customer_Model_Session
+     */
+    protected function _getCustomerSession() {
+        return Mage::getSingleton('customer/session');
+    }
+
     protected function _getWebsiteId() {
         if (null === $this->_websiteId) {
             $this->_websiteId = Mage::app()->getStore()->getWebsiteId();
@@ -139,6 +146,13 @@ class Creativestyle_AmazonPayments_Model_Service_Login {
                 'customer' => $this->_getCustomer()
             ));
         } elseif (null !== $this->_getCustomerByEmail()) {
+            if ($this->_getCustomerSession()->isLoggedIn()) {
+                $this->_getCustomerByEmail()->setAmazonUserId($this->_amazonUserData->getUserId())->save();
+                return new Varien_Object(array(
+                    'status' => self::ACCOUNT_STATUS_OK,
+                    'customer' => $this->_getCustomerByEmail()
+                ));
+            }
             return new Varien_Object(array(
                 'status' => self::ACCOUNT_STATUS_CONFIRM,
                 'customer' => $this->_getCustomerByEmail()

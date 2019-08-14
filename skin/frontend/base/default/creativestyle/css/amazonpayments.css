@@ -33,6 +33,7 @@
     -webkit-box-shadow: 0 0 5px#888;
     -moz-box-shadow: 0 0 5px #888;
     -o-box-shadow: 0 0 5px #888;
+    z-index: 1000;
 }
 .pay-with-amazon-tooltip img {
     float: right;
@@ -166,4 +167,18 @@ ol.apa {
 .buttons-set button.cancel span {
     border-color:#406a83;
     background:#618499;
+}
+.dashboard .box-amazon-account {
+    padding-bottom: 45px;
+}
+.dashboard .box-amazon-account .box {
+    padding-top: 15px;
+}
+.dashboard .box-amazon-account .box .buttons {
+    padding-top: 10px;
+}
+.dashboard .box-amazon-account .box .buttons .loginButtonWidget {
+    float: right;
+}
+.apa .discount {
 }

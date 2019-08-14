@@ -201,7 +201,7 @@ var APA = {
                 var tooltip = document.createElement('div');
                 tooltip.setAttribute('id', 'pay-with-amazon-tooltip');
                 tooltip.addClassName('pay-with-amazon-tooltip');
-                tooltip.setStyle({display: 'none', zIndex: 10});
+                tooltip.setStyle({display: 'none'});
                 tooltip.update(tooltipContent);
                 document.body.appendChild(tooltip);
                 tooltipButtons.each(function(button) {
@@ -500,6 +500,28 @@ var APA = {
         });
     },
 
+    submitCoupon: function() {
+        APA.setLoadWaiting(APA.layers.review);
+        new Ajax.Request(APA.urls.coupon, {
+            method: 'post',
+            parameters: Form.serialize($('discount-coupon-form')),
+            evalScripts: true,
+            onSuccess: APA.successCallback,
+            onFailure: APA.ajaxFailureCallback
+        });
+    },
+
+    cancelCoupon: function() {
+        APA.setLoadWaiting(APA.layers.review);
+        new Ajax.Request(APA.urls.coupon, {
+            method: 'post',
+            parameters: {remove: 1},
+            evalScripts: true,
+            onSuccess: APA.successCallback,
+            onFailure: APA.ajaxFailureCallback
+        });
+    },
+
     getSaveOrderParams: function() {
         var params = '';
         if (APA.virtual) {
@@ -594,6 +616,7 @@ var APA = {
                 saveShipping:       null,
                 saveShippingMethod: null,
                 saveOrder:          null,
+                coupon:             null,
                 clear:              null,
                 void:               null,
                 success:            null,

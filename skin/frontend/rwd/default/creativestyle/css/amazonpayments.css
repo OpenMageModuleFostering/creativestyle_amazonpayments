@@ -171,3 +171,19 @@ ol.apa {
     border-color:#406a83;
     background:#618499;
 }
+.dashboard .box-amazon-account {
+    padding-bottom: 45px;
+}
+.dashboard .box-amazon-account .box {
+    padding-top: 15px;
+}
+.dashboard .box-amazon-account .box .buttons {
+    padding-top: 10px;
+}
+.dashboard .box-amazon-account .box .buttons .loginButtonWidget {
+    float: right;
+}
+.apa .discount {
+    padding: 15px 0 10px;
+    text-align: right;
+}

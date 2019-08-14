@@ -366,4 +366,42 @@ class Creativestyle_AmazonPayments_Advanced_CheckoutController extends Mage_Core
         return;
     }
 
+    public function couponPostAction() {
+        if ($this->getRequest()->isPost()) {
+            try {
+                if ($this->_expireAjax()) {
+                    return;
+                }
+                $couponCode = (string) $this->getRequest()->getParam('coupon_code');
+                if ($this->getRequest()->getParam('remove') == 1) {
+                    $couponCode = '';
+                }
+
+                $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
+                $result = $this->_getQuote()->setCouponCode($couponCode)
+                    ->collectTotals()
+                    ->save();
+
+            } catch (Exception $e) {
+                Creativestyle_AmazonPayments_Model_Logger::logException($e);
+                $result = array(
+                    'error' => -1,
+                    'error_messages' => $e->getMessage()
+                );
+            }
+
+            if (!isset($result['error'])) {
+                $result = array(
+                    'render_widget' => array(
+                        'review' => $this->_getReviewHtml()
+                    ),
+                    'allow_submit' => $this->_isSubmitAllowed()
+                );
+            };
+        } else {
+            $this->_forward('noRoute');
+        }
+
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    }
 }

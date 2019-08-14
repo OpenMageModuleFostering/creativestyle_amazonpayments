@@ -10,7 +10,7 @@
  *
  * @category   Creativestyle
  * @package    Creativestyle_AmazonPayments
- * @copyright  Copyright (c) 2014 creativestyle GmbH
+ * @copyright  Copyright (c) 2014 - 2017 creativestyle GmbH
  * @author     Marek Zabrowarny / creativestyle GmbH <amazon@creativestyle.de>
  */
 class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Controller_Front_Action {
@@ -205,4 +205,12 @@ class Creativestyle_AmazonPayments_Advanced_LoginController extends Mage_Core_Co
         $this->renderLayout();
     }
 
+    public function disconnectAction() {
+        if ($customer = $this->_getCustomerSession()->getCustomer()) {
+            if ($customer->getAmazonUserId()) {
+                $customer->setAmazonUserId(null)->save();
+            }
+        }
+        $this->_redirect('customer/account');
+    }
 }
